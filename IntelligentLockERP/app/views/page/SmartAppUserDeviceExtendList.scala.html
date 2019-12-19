@@ -1,0 +1,223 @@
+
+@htmlhead("绑定设备扩展信息 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(function(){
+		//枚举初始化
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+			height : 505,
+			dataType : "json",
+			dataSource : '/SmartAppUserDeviceExtend/List',
+			showIndex : false,
+			limit : 13,									
+			errorMsg : "获取数据出错",
+			emptyMsg : "没有数据",
+			
+			//Grid的header配置   ！！！！
+			colModel : [
+				{
+					header : '设备表ID',
+					name : 'deviceidd',
+						width : 80,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '用户表ID',
+					name : 'userid',
+						width : 80,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '用户手机号',
+					name : 'phone',
+						width : 180,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '设备号',
+					name : 'deviceid',
+						width : 240,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '绑定设备时间',
+					name : 'addtime',
+						width : 200,
+					align : 'center',
+					sort:'clientSide',
+					renderer:function(colValue){
+	            		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+	         		}
+				}
+			]
+		});
+		
+		//其他iframe 对话框 初始化-->
+		$( "#dialog-modal").omDialog({
+            autoOpen: false,
+            width:535,
+            height: 465,
+            modal: true
+        });
+		
+        $( "#user_auth_form").omDialog({
+            autoOpen: false,
+            width:535,
+            height: 465,
+            modal: true
+        });
+			
+		//搜索按钮加图片
+		var searchPanel = $("#search-panel").omPanel({
+        	title : "工具栏",collapsible:true
+        });
+		$('span#button-search').omButton({
+         	   	icons : {left : '/public/images/search.png'},width : 70
+      	 	});
+		$('span#button-noSearch').omButton({
+        	icons : {left : '/public/images/searchNo.png'},width : 70
+       	});
+		 $('span#button-export').omButton({
+          	   	width : 90
+       	 });
+			 
+		//下载表数据
+       	$('span#button-export').bind('click', function(e){
+       		var searchStr='';
+			searchStr += 'deviceidd='+encodeURI($("input[name='deviceidd']", searchPanel).val())+"&";
+		
+			searchStr += 'userid='+encodeURI($("input[name='userid']", searchPanel).val())+"&";
+			
+			searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+		
+			searchStr += 'deviceid='+encodeURI($("input[name='deviceid']", searchPanel).val())+"&";
+		
+			searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+			
+            var url = '/SmartAppUserDeviceExtend/List?export=1&'+searchStr;
+            window.location.href = url;
+        });	
+			
+		//搜索绑定 =》grid ！！！！
+     	$('span#button-search').bind('click', function(e){
+	        var searchStr='';
+	              
+	        searchStr += 'deviceidd='+encodeURI($("input[name='deviceidd']", searchPanel).val())+"&";
+			
+			searchStr += 'userid='+encodeURI($("input[name='userid']", searchPanel).val())+"&";
+			
+			searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+		
+			searchStr += 'deviceid='+encodeURI($("input[name='deviceid']", searchPanel).val())+"&";
+		
+			searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+		
+	        $('#mygrid').omGrid("setData", '/SmartAppUserDeviceExtend/List?'+searchStr );
+       	});
+ 				
+		/*$("input[name='idd']", searchPanel).omCombo({
+          	 dataSource : '/SmartAppUserDeviceExtend/All',
+               optionField : function(data, index) {
+                   return data.idd;
+               },
+               valueField : 'idd',
+               inputField : 'idd'
+        });*/
+ 				
+		//不搜索 =》grid
+   	 	$('span#button-noSearch').bind('click', function(e) {
+        	$('#mygrid').omGrid("setData", '/SmartAppUserDeviceExtend/List?key=');
+        });	
+        
+        // 点击页面其他地方的时候隐藏表格里面的菜单
+		$("body").click(function(){
+			$("#mygrid").find("div.op-menu:visible").hide();
+		});		
+	});	
+	
+    //通用对话框 -- 提问是否 
+    function doAsk( title , function_call , data){
+ 	  	$.omMessageBox.confirm({
+            title:'提问',
+            content:title,
+            onClose:function(v){
+            if(v)
+           		function_call(data);
+        	}
+     	});
+    }
+       
+    //通用对话框 -- 警告提示 
+    function showMessage( title )
+    {
+ 	   $.omMessageBox.alert({ content:title });
+    }
+
+    //通用对话框  -- 获取输入提示 
+    function doPrompt( title , function_call , data )
+    {
+ 	   $.omMessageBox.prompt({
+            title:'输入',
+            content:title,
+            onClose:function(v){
+                if(v===false){
+                    return;
+                }
+                if(v==''){
+                    alert('输入不能为空！');
+                    return false;
+                }
+                function_call(v,data);             
+            }
+        });
+    }
+</script>
+	<!-- 搜索DIV -->
+	<div id="search-panel">
+		<div style="width: 100%; font-size: 12px;">
+			<span class="label">设备表ID：</span> 
+			<input name="deviceidd" id="deviceidd" />
+			
+			<span class="label">用户手机号：</span> 
+			<input name="phone" id="phone" />
+			
+			<span class="label">设备号：</span> 
+			<input name="deviceid" id="deviceid" />
+			
+			<span class="label">用户表ID：</span> 
+			<input name="userid" id="userid" /><br>
+			
+			<!-- <span class="label">绑定设备时间：</span>  -->
+			<input name="addtime" id="addtime" style="display:none" />
+			 
+			<span id="button-search">搜索</span>
+			<span id="button-noSearch">看全部</span>
+			<span id="button-export">下载表数据</span>
+		</div>
+	</div>
+	
+	<!-- GRID 组件 -->
+	<table id="mygrid"></table>
+	
+	<!-- 其他iframe 对话框 -->
+	<div id="dialog-modal" title="管理EC">
+		<iframe id="ec_dialog" frameborder="0"
+			style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+			marginwidth='0' marginheight='0'></iframe>
+	</div>
+	<div id="user_auth_form" title="权限分配">
+		<iframe id="func_dialog" frameborder="0"
+			style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+			marginwidth='0' marginheight='0'></iframe>
+	</div>
+}

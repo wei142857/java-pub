@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		#no_fingerprint p{
+  			margin-top: 50%;
+  			width:100%;
+  			height: calc(100% - 40px);
+  			text-align: center;
+  			color: gray;
+  		}
+  		#btn_box{
+  			width:100%;
+  			height: 40px;
+  		}
+  		#btn_box button{
+  			position: fixed;
+  			width:100%;
+  			height: 40px;
+  			bottom: 0px;
+  			left: 0px;
+  			background-color: #da4242;
+  			border: 1px solid #da4242;
+  			color: white; 
+  			cursor: pointer;
+  		}
+  		.fingerprint{/* fingerprint */
+  			height: 48px;
+  			background-color: white;
+  			padding: 0px 10px 0px 10px;
+  			margin: 0px;
+  			margin-bottom: 7px;
+  			width: 100%;
+  		}
+  		.fingerprint_info{/* fingerprintNameDiv */
+  			display: inline-block;
+  			height: 48px;
+  			padding-top: 4px;
+  		}
+  		.fingerprint_info p{/* fingerprintNameDiv */
+  			margin-bottom: 0px;
+  			line-height: 20px;
+  		}
+  		.fingerprint_buttons{/* 重命名＋删除按钮div */
+  			display: inline-block;
+  			float: right;
+  			height: 48px;
+    		padding-top: 11px;
+  		}
+  		.validity_period{
+  			font-size: 12px;
+  			color: gray;
+  		}
+  		.rename_btn{/* 重命名按钮 */
+  			border: 1px solid #da4242;
+  			color: #da4242;
+  			background-color: white;
+  			width: 60px;
+  			height: 26px;
+  			padding: 1px 6px 1px 6px;
+  			margin-right: 10px;
+  		}
+  		.delete_btn{/* 删除按钮 */
+  			border: 1px solid #da4242;
+  			color: white;
+  			background-color: #da4242;
+  			width: 60px;
+  			height: 26px;
+  			padding: 1px 6px 1px 6px;
+  		}
+  	</style>
+	<title>指纹管理</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>指纹管理</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-top: 37px;">
+		<div id="no_fingerprint" v-if="fps==null"><p>未添加指纹</p></div>
+		<template v-else v-for="fp in fps">
+			<div class="row fingerprint"><!-- 一个fingerprint-->
+				<div class="fingerprint_info">
+					<p>{{fp.fingerprintname}}</p>
+					<p class="validity_period">{{fp.fingerprintvalidity | fpValidityFilter}}</p>
+				</div>
+				<div class="fingerprint_buttons">
+					<button class="rename_btn" @click="alertReName(fp.fingerprintid)">重命名</button>
+					
+					<button class="delete_btn" @click="delFP(fp.fingerprintid)" v-if="fp.fingerprintstatu==0">删除</button>
+					<button class="delete_btn2" v-else>{{fp.fingerprintstatu | delStatFilter}}</button>
+				</div>
+			</div>
+		</template>
+		<div  id="btn_box"><!-- 绑定设备 -->
+			<button @click="addFP()">添加指纹</button>
+		</div>
+	</div>
+	<!-- 弹出框1 重命名 -->
+	<div id="rename_alert" class="alert_div"><!-- 引入tools.css -->
+		<div class="alert_box">
+			<div class="alert_title">
+				<p>重命名</p>
+			</div>
+			<div class="alert_text_center_input">
+				<input type="text" name="rename" v-model="newName" placeholder="请输入名称" @blur="blur()">
+			</div>
+			<div class="alert_bottom_a_or_b">
+				<div class="alert_bottom_d">
+					<button @click="close()">取消</button>
+				</div>
+				<div class="alert_bottom_c">
+					<button @click="define()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 弹出框2 删除 -->
+	<div id="delete_alert" class="alert_div"><!-- 引入tools.css -->
+		<div class="alert_box">
+			<div class="alert_title_alone">
+				<p>确定删除吗？</p>
+			</div>
+			<div class="alert_bottom_a_or_b">
+				<div class="alert_bottom_d">
+					<button @click="close()">再想想</button>
+				</div>
+				<div class="alert_bottom_del">
+					<button @click="deletePsw()">删除</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			toptitle()//头部标题
+			var lockid = GetRequest()['lockid']
+			$.ajax({
+  				url: "/gzh/v1/getLockDeviceFingerPrintList",
+  				data:{
+  					lockid:lockid,
+  				},
+  				type:"GET",
+  				dataType:"json",
+  				async: false,
+  				success: function(res){
+  					if(res.code==202){//首先判断用户是否登陆
+						window.location.href = "/public/app/gzh/devicelogin.html";
+					}
+  					if(res.code="0"){
+  						if(res.data.items.length!=0){
+  							fips.fps = res.data.items
+  						}
+  						console.log(res)
+  					}else{
+  						console.log(res.message)
+  					}
+  				},
+  				error: function(err){
+  					alert("失败的请求！")
+  				}
+  			})
+		}
+		var fips = new Vue({
+			el: '.container',
+			data:{
+				fps:null,
+				fingerprintid:""
+			},
+			methods:{
+				alertReName(fingerprintid){
+					this.fingerprintid=fingerprintid
+					$("#rename_alert").css({'visibility': 'visible'})//显示
+				},
+				delFP(fingerprintid){
+					this.fingerprintid=fingerprintid
+					$("#delete_alert").css({'visibility': 'visible'})//显示
+				},
+				addFP(){
+					window.location.href = "/public/app/gzh/AddFingerprint.html";
+				}
+			},
+			filters:{
+				fpValidityFilter: function(fpValidity){
+					if(fpValidity=="-1"){
+						return "永久有效";
+					}else{
+						return fpValidity;
+					}
+				},
+				delStatFilter: function(stat){
+					if(stat=="0"){
+						return "删除";
+					}else if(stat=="1"){
+						return "添加中";
+					}else if(stat=="2"){
+						return "删除中";
+					}
+				}
+			}
+		}) 
+		var rename = new Vue({
+			el:'#rename_alert',
+			data:{
+				newName:""
+			},
+			methods:{
+				close(){
+					$("#rename_alert").css({'visibility': 'hidden'});
+					fips.fingerprintid=""
+					this.newName=""
+				},
+				define(){
+					if(this.newName.trim()==""){
+						alert("名称不能为空")
+					}else if(this.newName.trim().length>15){
+						alert("名称长度不能超过15")
+						this.newName=""
+					}else{
+						var lockid = GetRequest()['lockid']
+						$.ajax({
+			  				url: "/gzh/v1/setLockDeviceFingerPrint",
+			  				data:{
+			  					lockid:lockid,
+			  					fingerprintid:fips.fingerprintid,
+			  					fingerprintname:this.newName
+			  				},
+			  				type:"GET",
+			  				dataType:"json",
+			  				async: false,
+			  				success: function(res){
+			  					if(res.code==202){//首先判断用户是否登陆
+									window.location.href = "/public/app/gzh/devicelogin.html";
+								}
+			  					if(res.code==0){
+			  						 window.location.reload();
+			  					}
+			  				},
+			  				error: function(err){
+			  					alert("失败的请求！")
+			  				}
+			  			})
+						this.newName=""
+						$("#rename_alert").css({'visibility': 'hidden'});
+						fips.fingerprintid=""
+					}
+				},
+				blur() {
+		     		setTimeout(function () {//防止输入框失去焦点时 Iphone的页面背景卡住
+						var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+						window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+					}, 100)
+		    	}
+			}
+		})
+		var delpsw = new Vue({
+			el:'#delete_alert',
+			data:{},
+			methods:{
+				close(){
+					$("#delete_alert").css({'visibility': 'hidden'})
+					fips.fingerprintid=""
+				},
+				deletePsw(){
+					var lockid = GetRequest()['lockid']
+					$.ajax({
+		  				url: "/gzh/v1/delLockDeviceFingerPrint",
+		  				data:{
+		  					lockid:lockid,
+		  					fingerprintid:fips.fingerprintid
+		  				},
+		  				type:"GET",
+		  				dataType:"json",
+		  				async: false,
+		  				success: function(res){
+		  					if(res.code==202){//首先判断用户是否登陆
+								window.location.href = "/public/app/gzh/devicelogin.html";
+							}
+		  					if(res.code==0){
+		  						window.location.reload();
+		  					}else{
+		  						alert(res.message)
+		  					}
+		  				},
+		  				error: function(err){
+		  					alert("失败的请求！")
+		  				}
+		  			})
+					$("#delete_alert").css({'visibility': 'hidden'})
+					fips.fingerprintid=""
+				}
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+	</script>
+</body>
+</html>

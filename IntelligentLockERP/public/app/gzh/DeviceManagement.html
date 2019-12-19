@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		.rows{
+  			background-color: white;
+  			padding-left: 10px;
+  			cursor: pointer;
+  		}
+  		.rows div{
+  			display: inline-block;
+  			line-height: 48px;
+  		}
+  		.row_title{/* 一行的左侧标题 */
+  			
+  		}
+  		.row_right{
+  			float: right;
+  		}
+  		.row_info{/* 一行的右侧信息 */
+  			margin-right: 10px;
+  		}
+  		.row_arrow img{/* 右侧箭头 */
+  			width: 30px;
+  			height: 30px;
+  		}
+  		.bottom_special{
+  			margin-bottom: 7px;
+  		}
+  		.top_special{
+  			border-top:1px solid #eee;
+  			cursor: pointer;
+  		}
+  		#btn_box{
+  			width:100%;
+  			height: 40px;
+  			margin-top: 30px;
+  		}
+  		#btn_box button{
+  			display: block;
+  			width:90%;
+  			max-width: 600px;
+  			height: 40px;
+  			background-color: white;
+  			border: 1px solid #da4242;
+  			color: #da4242; 
+  			margin: 0 auto;
+  			cursor: pointer;
+  		}
+  	</style>
+	<title>设备管理</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>设备管理</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-top: 30px;">
+		<div class="rows bottom_special" @click="editDeviceName(deviceInfo.lockid)">
+			<div class="row_title">设备名称</div>
+			<div class="row_right">
+				<div>{{deviceInfo.lockname}}</div>
+				<div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div>
+			</div>
+		</div>
+		<div class="rows" v-if="deviceInfo.locktype.indexOf('A7')== -1&deviceInfo.locktype.indexOf('N1')== -1" @click="editDevicePassword(deviceInfo.lockid)">
+			<div class="row_title">密码管理</div>
+			<div class="row_right">
+				<div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div>
+			</div>
+		</div>
+		<div class="rows top_special" v-if="deviceInfo.locktype.indexOf('A7')== -1&deviceInfo.locktype.indexOf('N1')== -1" @click="fingerprint(deviceInfo.lockid)">
+			<div class="row_title">指纹管理</div>
+			<div class="row_right">
+				<div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div>
+			</div>
+		</div>
+		<div class="rows top_special bottom_special" v-if="deviceInfo.locktype.indexOf('A7')== -1&deviceInfo.locktype.indexOf('N1')== -1" @click="icmanagement(deviceInfo.lockid)">
+			<div class="row_title">IC卡管理</div>
+			<div class="row_right">
+				<div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div>
+			</div>
+		</div>
+		<div class="rows bottom_special" v-if="deviceInfo.locktype.indexOf('A7')== -1&deviceInfo.locktype.indexOf('N1')== -1"  @click="openrecord(deviceInfo.lockid)">
+			<div class="row_title">开门记录</div>
+			<div class="row_right">
+				<div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div>
+			</div>
+		</div>
+		<div class="rows" v-if="deviceInfo.locktype.indexOf('A7')== -1&deviceInfo.locktype.indexOf('N1')== -1" >
+			<div class="row_title">设备电量</div>
+			<div class="row_right">
+				<div class="row_info" style="color: #da4242;" v-if="deviceInfo.lockelectricity<=20">{{deviceInfo.lockelectricity | powerFilter}}</div>
+				<div class="row_info" v-else>{{deviceInfo.lockelectricity | powerFilter}}</div>
+				<!-- <div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div> -->
+			</div>
+		</div>
+		<div class="rows top_special" v-if="deviceInfo.locktype.indexOf('A7')== -1&deviceInfo.locktype.indexOf('N1')== -1"  @click="openrecord(deviceInfo.lockid)">
+			<div class="row_title">设备型号</div>
+			<div class="row_right">
+				<div class="row_info">{{deviceInfo.locktype}}</div>
+				<!-- <div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div> -->
+			</div>
+		</div>
+		<div class="rows" v-else>
+			<div class="row_title">设备型号</div>
+			<div class="row_right">
+				<div class="row_info">{{deviceInfo.locktype}}</div>
+				<!-- <div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div> -->
+			</div>
+		</div>
+		<div class="rows top_special bottom_special">
+			<div class="row_title">设备码</div>
+			<div class="row_right">
+				<div class="row_info">{{deviceInfo.lockdeviceid}}</div>
+				<!-- <div class="row_arrow"><img alt="详情" src="./images/right_arrow.png"></div> -->
+			</div>
+		</div>
+		<!-- 按钮 -->
+		<!-- <div id="btn_box">
+			<button>删除设备</button>
+		</div> -->
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			toptitle()//头部标题
+			var lockid = GetRequest()['lockid']
+			$.ajax({
+  				url: "/gzh/v1/getLockDeviceDetail",
+  				data:{
+  					lockid:lockid,
+  				},
+  				type:"GET",
+  				dataType:"json",
+  				async: false,
+  				success: function(res){
+  					if(res.code==202){//首先判断用户是否登陆
+						window.location.href = "/public/app/gzh/devicelogin.html";
+					}
+  					deviceManagement.deviceInfo = res.data
+  				},
+  				error: function(err){
+  					alert("失败的请求！")
+  				}
+  			})
+		}
+		var deviceManagement = new Vue({
+			el: '.container',
+			data:{
+				deviceInfo: ""
+			},
+			methods:{
+				editDeviceName(lockid){//编辑设备名称
+		  			window.location.href = "/public/app/gzh/DeviceName.html?lockid="+lockid;
+				},
+				editDevicePassword(lockid){//密码管理
+					window.location.href = "/public/app/gzh/PswManagement.html?lockid="+lockid;
+				},
+				fingerprint(lockid){//指纹管理
+					window.location.href = "/public/app/gzh/FingerprintManagement.html?lockid="+lockid;
+				},
+				icmanagement(lockid){//IC卡管理
+					window.location.href = "/public/app/gzh/ICCardManagement.html?lockid="+lockid;
+				},
+				openrecord(lockid){//IC卡管理
+					window.location.href = "/public/app/gzh/OpenRecord.html?lockid="+lockid;
+				}
+			},
+			filters:{
+				powerFilter: function(num){
+					if(num){
+						return num+"%";
+					}else{
+						return "0%";
+					}
+				}
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+	</script>
+</body>
+</html>

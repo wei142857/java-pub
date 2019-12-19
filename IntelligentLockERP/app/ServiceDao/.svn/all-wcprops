@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/xuanwenchao.intelligentLockERP/!svn/ver/1573/trunk/IntelligentLockERP/app/ServiceDao
+END
+SysFunctionService.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xuanwenchao.intelligentLockERP/!svn/ver/13/trunk/IntelligentLockERP/app/ServiceDao/SysFunctionService.java
+END
+SysUserService.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xuanwenchao.intelligentLockERP/!svn/ver/13/trunk/IntelligentLockERP/app/ServiceDao/SysUserService.java
+END
+UserService.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/xuanwenchao.intelligentLockERP/!svn/ver/13/trunk/IntelligentLockERP/app/ServiceDao/UserService.java
+END
+JdbcOper.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/xuanwenchao.intelligentLockERP/!svn/ver/21/trunk/IntelligentLockERP/app/ServiceDao/JdbcOper.java
+END
+SysRoleService.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xuanwenchao.intelligentLockERP/!svn/ver/13/trunk/IntelligentLockERP/app/ServiceDao/SysRoleService.java
+END
+WxGzhService.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xuanwenchao.intelligentLockERP/!svn/ver/1573/trunk/IntelligentLockERP/app/ServiceDao/WxGzhService.java
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/xuanwenchao.intelligentLockERP/!svn/ver/1567/trunk/IntelligentLockERP/app/worker
+END
+BaseWorker.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/xuanwenchao.intelligentLockERP/!svn/ver/13/trunk/IntelligentLockERP/app/worker/BaseWorker.java
+END
+SubPayOrdersOverWorker.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/xuanwenchao.intelligentLockERP/!svn/ver/1405/trunk/IntelligentLockERP/app/worker/SubPayOrdersOverWorker.java
+END
+LogQueueWorker.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/xuanwenchao.intelligentLockERP/!svn/ver/13/trunk/IntelligentLockERP/app/worker/LogQueueWorker.java
+END
+LogOne.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/xuanwenchao.intelligentLockERP/!svn/ver/13/trunk/IntelligentLockERP/app/worker/LogOne.java
+END

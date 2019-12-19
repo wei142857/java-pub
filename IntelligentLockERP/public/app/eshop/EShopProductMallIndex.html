@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>商城</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<style type="text/css">
+  		body{
+  			padding: 0px;
+  		}
+  		.head_div{/* 头部整体div */
+  			margin: 0 auto;
+  			height:100px;
+  			display: block;
+  			max-width: 380px;
+  		}
+  		.head_div div{/* 头部中的所有div按钮 */
+  			width: 40%;
+    		height: 100%;
+   		    max-width: 200px;
+  		}
+  		.left_box{/* 头部div左边按钮 */
+  			float:left;
+  			background-image: url(/public/app/eshop/images/IndexTopLeftBanner.png);
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			background-size: 100% auto;
+  			cursor: pointer;
+  			margin-left: 10px;
+  		}
+  		.right_box{/* 头部div右边按钮 */
+  			float:right;
+  			background-image: url(/public/app/eshop/images/IndexTopRightBanner.png);
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			background-size: 100% auto;
+  			cursor: pointer;
+  			margin-right: 10px;
+  		}
+  		.pro_div>div{/* 商品列表中单个商品div */
+  			display:block;
+  			width: 100%;
+  			height: 300px;
+  			background-color: #ff000000;
+  			background-image: url(/public/app/eshop/images/spbj.png);
+  			background-position: center;/* 背景图片居中 */
+  			background-repeat: no-repeat;/* 背景图片不重复 */
+  			background-size: 100% 100%;/* 左右和上下宽度 */
+  		}
+  		.pro_div>ul{
+  			padding-left: 0px;
+  			list-style: none;
+  		}
+  		.container{
+  			margin: 0px;
+  			padding: 0px;
+  			width: 100%;
+  			height: 100%;
+  		}
+  		.pro_img{
+  			width: 100%;
+  			height: 60%;
+  			background-color: #ff000000;
+  			background-position: center;/* 背景图片居中 */
+  			background-repeat: no-repeat;/* 背景图片不重复 */
+  			background-size: auto 100%;/* 图片左右和上下宽度 */
+  		}
+  		.pro_l_title{
+  			padding-top: 10px;
+		    padding-left: 10px;
+		    width: 100%;
+		    height: 35px;
+  		}
+  		.pro_r_price{
+ 			width: 100%;
+		    height: 30px;
+		    float: right;
+		    color: #d80000;
+		    padding-right: 10px;
+		    text-align: right;
+  		}
+  		.price{
+  			font-size: 25px;
+  		}
+  		.buy_but{
+  			display: inline-block;
+		    width: 100%;
+		    height: 60px;
+		    background-image: url(/public/app/eshop/images/back-red.png);
+		    background-position: center;
+		    background-repeat: no-repeat;
+		    background-size: auto 100%;
+		    text-align: center;
+		    color: white;
+		    line-height: 50px;
+		    font-size: 15px;
+		    margin-top: 7px;
+  		}
+  		.product{
+  			width: 100%;
+		    height: 300px;
+		    padding: 10px;
+		    padding-top:9px;
+		    background-image: url(/public/app/eshop/images/spbj.png);
+		    background-position:center;
+		    background-repeat:no-repeat;
+		    background-size:100% 100%;
+		    margin-bottom: 10px;
+			padding-left: 10px;
+   			padding-right: 9px;
+		    max-width: 400px;
+		    margin: 20px auto;
+  		}
+  		.barrage {
+			cursor: pointer;
+	        position: fixed;
+	        display: block;
+	        right: 10px;
+	        bottom: 60px;
+	        border-radius: 50%;
+	        filter:alpha(Opacity=80);
+	        -moz-opacity:0.8;
+	        opacity: 0.8;
+	    }
+	    #barrage{
+	     	background-color: #ffffff00;
+	    }
+	    .barrage_name {
+	        width: 60px;
+	        height: 60px;
+	        background-image: url(/public/app/eshop/images/dd.png);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 100%  100%;
+	        border-radius: 50%;
+	   	}
+  	</style>
+</head>
+<body>
+
+	<div class="container">
+		<div class="head_div" id="tit"><!-- 顶部两个DIV -->
+			<div class="left_box" @click="href('EShopSharePage.html')"></div>
+			<!-- <div class="right_box" @click="href('EShopOrderList.html')"></div> --><!-- 不可点击 -->
+			<div class="right_box"></div>
+		</div>
+		<div class="pro_div col-xs-12 col-md-4 col-md-offset-4"><!-- 商品的DIV列表 -->
+			<ul>
+			 <!-- :style="{'backgroundImage':'url('+item.bigimgurl+')'}" -->
+		    	<li v-for="(item,index) in sortItems">
+		      		<div class="product">
+						<div class="pro_img" :style="{'background-image':'url('+item.bigimgurl+')'}"><!-- 商品上半部分 -->
+						</div>
+						<div class="pro_l_title"><!-- 左边商品标题 -->
+							<span>
+								{{item.title | titleFilter}}
+							</span>
+							<!-- <p style="color:#c1c1c1;">
+								<small>{{item.subtitle | subtFilter}}</small>
+							</p> -->
+						</div>
+						<div class="pro_r_price"><!-- 右边商品价格 -->
+							<p>
+								<span style="color:#c1c1c1;float: left; margin-left: 10px; margin-top: 5px;">
+									<small>{{item.subtitle | subtFilter}}</small>
+								</span>
+								<span style="display: block;line-height: 20px;">
+									<span style="color:#d80000;">￥</span><span class="price">{{item.vipprice}}</span>
+								</span>
+							</p>
+						</div>
+						<!-- <div class="pro_r_price" v-if="vip">右边商品价格
+							<span style="color:#d80000;">￥</span><span class="price">{{item.vipprice}}</span>
+						</div>
+						<div class="pro_r_price" v-else>右边商品价格
+							<span style="color:#d80000;">￥</span><span class="price">{{item.saleprice}}</span>
+						</div> -->
+						<!-- this.$router.push({ name: '/public/app/eshop/EShopProduceDetail.html', params: { idd: this.item.idd }}) -->
+						<div class="buy_but" @click="routerTo(item.idd)">购买</div><!-- 商品点击购买的按钮 -->
+					</div>
+		    	</li>
+		    </ul>
+		</div>
+	</div>
+	<div class="barrage" id="barrage">
+        <div class="barrage_name" id="barrage_name" @click="href('EShopOrderList.html')">
+        </div>
+    </div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		var order = new Vue({
+			el: '#barrage',
+			data: {
+				
+			},
+			methods:{
+				href(url){
+					window.location.href="/public/app/eshop/"+url;
+				}
+			}
+		})
+		var t = new Vue({
+			el: '#tit',
+			data: {},
+			methods:{
+				href(url){
+					window.location.href="/public/app/eshop/"+url+"?token="+GetRequest()['token'];
+				}
+			}
+		})
+		var prol = new Vue({
+			el: '.pro_div',
+			data: {
+				items:[],
+				vip: false,
+				tester: false
+			},
+			methods: {
+				routerTo(idd){
+					window.location.href="/public/app/eshop/EShopProductDetail.html?idd="+idd;
+				}
+			},
+			computed:{
+				sortItems: function(){
+					if(this.tester){//是测试人员
+						return sortByKey(this.items,'orders').filter(p => (p.status===0||p.status===1))
+					}else{//不是测试人员
+						return sortByKey(this.items,'orders').filter(p => (p.status===0))
+					}
+				}
+			},
+			filters:{
+				titleFilter: function(val){
+					if(val.length > 16){
+						return val.substr(0,16)+"...";
+					}
+					return val;
+				},
+				subtFilter: function(val){
+					if(val.length > 13){
+						return val.substr(0,13)+"...";
+					}
+					return val;
+				}
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+		function sortByKey(array,key){//排序
+		    return array.sort(function(a,b){
+		        var x = a[key];
+		        var y = b[key];
+		        return((x>y)?-1:((x<y)?1:0));//降序
+		    })
+		}
+  		window.onload=function(){
+			if(typeof(GetRequest()['source']) != "undefined"){
+				$.post("/v1/saveShareSource",{'source':GetRequest()['source']},function(data){
+					/* if(data.code==202){
+  						window.location.href="/public/app/eshop/EShopLogin.html";
+  					} */
+				},'json')
+			}
+  			$.ajax({
+  				url: '/v1/index',
+  				data: {},
+  				type: 'GET',
+  				dateType: 'json',
+  				success: function(data){
+  					var pros = JSON.parse(data)['data'];
+					prol.items = pros;
+  				},
+  				error: function(error){
+  					console.log(error)
+  				}
+  			})
+  			
+  			/* 判断用户是否是会员 */
+	  		$.ajax({
+  				url: '/v1/checkVip',
+  				data: {},
+  				type: 'GET',
+  				dataType: 'json',
+  				async: false,
+  				success: function(data){
+  					if(data.data==1){
+  						prol.vip=true
+  					}
+  				},
+  				error: function(err){
+  					console.log("ajax-err:"+err)
+  				}
+  			})
+  			/* 判断用户是否是测试人员 */
+	  		$.ajax({
+  				url: '/v1/checkTester',
+  				data: {},
+  				type: 'GET',
+  				dataType: 'json',
+  				async: false,
+  				success: function(data){
+  					if(data.data==1){
+  						prol.tester=true
+  					}
+  				},
+  				error: function(err){
+  					console.log("ajax-err:"+err)
+  				}
+  			})
+  		}
+  	</script>
+  	
+</body>
+</html>

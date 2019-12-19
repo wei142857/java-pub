@@ -1,0 +1,419 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>智家保</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0, user-scalable=no">
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.12/clipboard.min.js"></script>
+	<style type="text/css">
+		body{
+			background-color: #f9f9f9;
+		}
+		.container{
+			padding: 0px;
+		}
+		.top_pro{
+			width: 100%;
+			height: 135px;
+			background-color: white;
+			background-repeat: no-repeat;
+			background-position-x: right;
+   			background-position-y: bottom;
+			background-size: auto 60%;
+		}
+		.pro_img{
+			display: inline-block;
+		    width: 115px;
+    		height: 120px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: auto 80%;
+		}
+		.pro_info{
+			display: inline-flex;
+			width: calc(100% - 115px);
+			height: 100%;
+			float: right;
+			align-items: center;
+		}
+		.userInfo{
+			height: 392px;
+			width: 100%;
+			background-color: white;
+			margin-top: 14px;
+		}
+		.userInfo ul{
+			height: 392px;
+			width: 100%;
+			padding-left: 0px;
+		}
+		.userInfo li{
+			list-style: none;
+			width: 100%;
+			height: 56px;
+			padding-left: 10px;
+			border-top: 1px solid #eee;
+		}
+		.userInfo li p{
+			margin: 0px;
+		    margin-top: 19px;
+		}
+		.bot_box_1{
+		    height: 170px;
+			width: 100%;
+			background-color: white;
+			margin-top: 14px;
+		}
+		.bot_box_1 ul{
+			height: 170px;
+			width: 100%;
+			padding-left: 0px;
+		}
+		.bot_box_1 li{
+			list-style: none;
+			width: 100%;
+			height: 56px;
+			padding-left: 10px;
+			border-top: 1px solid #eee;
+		}
+		.bot_box_1 li p{
+			margin: 0px;
+			margin-top: 19px;
+		}
+		.bot_box_2{
+			height: 60px;
+			width: 100%;
+			background-color: white;
+			margin-top: 14px;
+		}
+		.bot_box_2 ul{
+			height: 60px;
+			width: 100%;
+			padding-left: 0px;
+		}
+		.bot_box_2 li{
+			list-style: none;
+			width: 100%;
+			height: 56px;
+			padding-left: 10px;
+			border-top: 1px solid #eee;
+		}
+		.bot_box_2 li p{
+			margin: 0px;
+			margin-top: 19px;
+		}
+		.info{
+			display: inline-block;
+			float: right;
+			margin-right: 15px;
+		}
+		.arrow{
+			width: 24px;
+		    height: 18px;
+		    display: inline-block;
+   		    background-image: url(./images/y_icon.png);
+		    background-position: center;
+		    background-repeat: no-repeat;
+		    background-size: 100%;
+		    vertical-align: middle;
+		    float: right;
+		    margin-right: 10px;
+		}
+		.copy{
+			width: 75px;
+		    height: 18px;
+		    color: #538eff;
+		    cursor: pointer;
+		    display: inline-block;
+		    vertical-align: middle;
+		    float: right;
+		    margin-right: 10px;
+		    text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" id="insInfo">
+		<div class="top_pro" :style="{'background-image':'url('+statImg+')'}">
+			<div class="pro_img" :style="{'background-image':'url('+lock.image+')'}">
+				
+			</div>
+			<div class="pro_info">
+				<div>
+					<h5>智家保</h5>
+					<p><span style="white-space: nowrap;">保单号:{{ins.policyno}}</span></p>
+					<p>由泰康在线财产保险股份有限公司承保</p>
+				</div>
+			</div>
+		</div>
+		<div class="userInfo">
+			<ul>
+				<li style="border-top: 0px;">
+					<h4 style="padding-top: 15px;">被保人信息</h4>
+				</li>
+				<li>
+					<p>
+						<span>被保人姓名</span>
+						<span class="info">{{ins.name}}</span>
+					</p>
+				</li>
+				<li>
+					<p>
+						<span>证件类型</span>
+						<span class="info">{{ins.cardtype | cardtypeFilter}}</span>
+					</p>
+				</li>
+				<li>
+					<p>
+						<span>证件号</span>
+						<span class="info">{{ins.cardnum | cardmumFilter}}</span>
+					</p>
+				</li>
+				<li>
+					<p>
+						<span>手机号</span>
+						<span class="info">{{ins.phone.substr(0, 3)+'****'+ins.phone.substr(7)}}</span>
+					</p>
+				</li>
+				<li>
+					<p>
+						<span>保额</span>
+						<span class="info">{{ins.coverage}}元</span>
+					</p>
+				</li>
+				<li>
+					<p>
+						<span>保障期限</span>
+						<span class="info">{{ins.begintime | formatDate}}到{{ins.overtime | formatAfterDate}}</span>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="bot_box_1">
+			<ul>
+				<li style="border-top: 0px;">
+					<h4 style="padding-top: 15px;">协议内容</h4>
+				</li>
+				<li style="cursor: pointer;" @click="href('InsuranceInFormation.html')">
+					<p>
+						<span>投保须知及声明</span>
+						<span class="arrow"></span>
+					</p>
+				</li>
+			<!--<li style="cursor: pointer;" @click="href('ComprehensiveInsuranceClause.html')">
+					<p>
+						<span>
+				      		家庭财产综合险条款
+				      	</span>
+						<span class="arrow"></span>
+					</p>
+				</li>
+				<li style="cursor: pointer;" @click="href('BurglaryInsuranceTerms(A).html')">
+					<p>
+						<span>
+				      		家庭财产综合险附加室内盗抢险（A款）条款
+				      	</span>
+						<span class="arrow"></span>
+					</p>
+				</li>
+				<li style="cursor: pointer;" @click="href('BurglaryInsuranceTerms.html')">
+					<p>
+						<span>
+				      		家庭财产综合险附加现金、首饰盗抢险保险条款
+				      	</span>
+						<span class="arrow"></span>
+					</p>
+				</li> -->
+				<li style="cursor: pointer;" @click="href('ClaimProcess.html')">
+					<p>
+						<span>理赔流程</span>
+						<span class="arrow"></span>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div class="bot_box_2">
+			<ul>
+				<li style="border-top: 1px solid white;cursor: pointer;" @click="seeInsInfoPage(ins.warrantyurl)">
+					<p>
+						<span>查看电子保单</span>
+						<span class="arrow"></span>
+					</p>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="bot_box_2">
+			<ul>
+				<li style="border-top: 1px solid white;cursor: pointer;">
+					<p>
+						<span>浏览器中下载电子保单</span>
+						<span class="copy btn2" data-clipboard-target="#foo1">复制链接</span>
+					</p>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="bot_box_2">
+			<ul>
+				<li style="border-top: 1px solid white;">
+					<p>申请理赔电话:95522-3</p>
+				</li>
+			</ul>
+		</div>
+		<input type="text" v-model="copyText" id="foo1" style="opacity: 0;cursor: none;">
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#insInfo',
+			data: {
+				ins: null,
+				statusImg: './images/yshix@2x.png',
+				lock:null,
+				copyText: ''
+			},
+			methods:{
+				copy(){
+				    var oInput = document.createElement("input");
+				    oInput.value = this.ins.warrantyurl;
+				    document.body.appendChild(oInput);
+				    oInput.select(); // 选择对象
+				    document.execCommand("Copy"); // 执行浏览器复制命令
+				    oInput.className = "oInput";
+				    oInput.style.display = "none";
+				    $(".copy").html("已复制")
+				},
+				href(url){
+					window.location.href="/public/app/op/03/"+url;
+				},
+				seeInsInfoPage(url){
+					window.location.href=url;
+				}
+			},
+			computed:{
+				statImg: function(){
+					if(this.ins!=null){
+						if( (new Date().getTime()>this.ins.begintime) && (new Date().getTime()<this.ins.overtime)){
+							return './images/ysx@2x.png';
+						}else if(new Date().getTime()>this.ins.overtime){
+							return './images/yshix@2x.png';
+						}else if(new Date().getTime()<this.ins.begintime){
+							return './images/dsx@2x.png';
+						}
+					}else{
+						return "./images/dsx@2x.png";
+					}
+				}
+			},
+			filters:{
+				formatDate: function(timestamp){
+					let date = new Date(timestamp);
+			        let y = date.getFullYear();
+			        let MM = date.getMonth() + 1;
+			        MM = MM < 10 ? ('0' + MM) : MM;
+			        let d = date.getDate();
+			        d = d < 10 ? ('0' + d) : d;
+			        let h = date.getHours();
+			        h = h < 10 ? ('0' + h) : h;
+			        let m = date.getMinutes();
+			        m = m < 10 ? ('0' + m) : m;
+			        let s = date.getSeconds();
+			        s = s < 10 ? ('0' + s) : s;
+			        /* return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s; */
+					return y + '-' + MM + '-' + d;
+				},
+				formatAfterDate: function(timestamp){
+					let date = new Date(timestamp);
+			        let y = date.getFullYear();
+			        let MM = date.getMonth() + 1;
+			        MM = MM < 10 ? ('0' + MM) : MM;
+			        let d = date.getDate();
+			        d = d < 10 ? ('0' + (d+1)) : (d+1);
+			        let h = date.getHours();
+			        h = h < 10 ? ('0' + h) : h;
+			        let m = date.getMinutes();
+			        m = m < 10 ? ('0' + m) : m;
+			        let s = date.getSeconds();
+			        s = s < 10 ? ('0' + s) : s;
+			        /* return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s; */
+					return y + '-' + MM + '-' + d;
+				},
+				cardmumFilter: function(str){
+					return str.substr(0,1)+"***************"+str.substr(str.length-1);
+				},
+				//01-身份证，02-护照;03-军官证，04-驾驶证;05-港澳同胞证，07-中国护照，08-外国人永久居留证，1-组织机构代码证，2-税务登记证，3-营业执照，99-其他
+				cardtypeFilter: function(num){
+					if(num=="1"){
+						return "身份证";
+					}else if(num=="3"){
+						return "军官证";
+					}else if(num=="5"){
+						return "港澳同胞证";
+					}else if(num=="7"){
+						return "中国护照";
+					}else{
+						return "其他";
+					}
+				},
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+		window.onload = function(){
+			var clipboard = new Clipboard('.btn2');
+		       //优雅降级:safari 版本号>=10,提示复制成功;否则提示需在文字选中后，手动选择“拷贝”进行复制
+	        clipboard.on('success', function(e) {
+	            alert('复制成功!')
+	            console.log($(this))
+	            e.clearSelection();
+	        });
+	        clipboard.on('error', function(e) {
+	            alert('请选择“拷贝”进行复制!')
+	        });
+			var request = GetRequest();
+			$.ajax({
+				url: '/v1/findInsInfo',
+				data: {deviceid:request['deviceid']},
+				type: 'POST',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					vm.ins = data;
+					vm.copyText = vm.ins.warrantyurl;
+					console.log(data)
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+			$.ajax({
+				url: '/v1/findLockInfo',
+				data: {deviceid:request['deviceid']},
+				type: 'POST',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					vm.lock = data;
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+		}
+	</script>
+</body>
+</html>

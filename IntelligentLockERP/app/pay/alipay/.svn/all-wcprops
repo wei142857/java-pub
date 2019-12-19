@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/xuanwenchao.intelligentLockERP/!svn/ver/1120/trunk/IntelligentLockERP/app/pay/alipay
+END
+AliPayApi.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/xuanwenchao.intelligentLockERP/!svn/ver/1120/trunk/IntelligentLockERP/app/pay/alipay/AliPayApi.java
+END
+AlipayCore.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/xuanwenchao.intelligentLockERP/!svn/ver/440/trunk/IntelligentLockERP/app/pay/alipay/AlipayCore.java
+END
+AliPayApiConfigKit.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xuanwenchao.intelligentLockERP/!svn/ver/462/trunk/IntelligentLockERP/app/pay/alipay/AliPayApiConfigKit.java
+END
+AliPayApiConfig.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xuanwenchao.intelligentLockERP/!svn/ver/462/trunk/IntelligentLockERP/app/pay/alipay/AliPayApiConfig.java
+END

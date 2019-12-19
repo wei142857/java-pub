@@ -1,0 +1,109 @@
+@(form: Form[controllers.LoginForm])(errMsg:String) @htmlheadLogin("流量银行用户登录"){
+   
+    <script type="text/javascript">
+        $(document).ready(function() {
+        var remote=
+            $('#form1').validate({
+                rules : {
+                    userCode : {
+                        required : true                     
+                    },
+                    userPassword : {
+                        required : true
+                    },
+                    validateCode : {
+                    	required : true
+                    }
+                },
+                messages : {
+                    userCode : {
+                        required : '登录帐号必须输入'
+                    },
+                    userPassword : {
+                        required : '密码必须输入'
+                    },
+                    validateCode : {
+                        required : '验证码必须输入'
+                    }
+                },
+                errorPlacement : function(error, element) { 
+                    if(error.html()){
+	                    $(element).parents().map(function(){
+	                        if(this.tagName.toLowerCase()=='td'){
+	                            var attentionElement = $(this).next().children().eq(0);
+	                            attentionElement.css('display','block');
+	    	                    attentionElement.next().html(error);
+	                        }
+	                    });
+                    }
+    	        },
+    	        showErrors: function(errorMap, errorList) {
+                    if(errorList && errorList.length > 0){
+                        $.each(errorList,function(index,obj){
+                            var msg = this.message;
+                            $(obj.element).parents().map(function(){
+    	                        if(this.tagName.toLowerCase()=='td'){
+    	                            var attentionElement = $(this).next().children().eq(0);
+    	                            attentionElement.show();
+    	    	                    attentionElement.next().html(msg);
+    	                        }
+    	                    });
+ 	                   });
+                    }else{
+                        $(this.currentElements).parents().map(function(){
+	                        if(this.tagName.toLowerCase()=='td'){
+	                            $(this).next().children().eq(0).hide();
+	                        }
+	                    });
+                    }
+                    this.defaultShowErrors();
+                }
+            });
+            $("#submit").omButton();
+            $('.errorImg').bind('mouseover',function(){
+                $(this).next().css('display','block');
+            }).bind('mouseout',function(){
+                $(this).next().css('display','none');
+            });
+            });
+        
+        function SubmitForm()
+        {
+        	 document.getElementById("userPassword").value = hex_md5(document.getElementById("userPassword").value);
+        	 document.form1.submit();
+        }
+              
+    </script>
+    
+	<div class="wrap">
+        <h2 class="tit">管理员登录</h2>
+        <div class="main">
+            <form  id="form1" name="form1" hxtype="Form" action="/auth" msgtarget="under" standardsubmit="false" method="post">
+                    <div id="">
+                        <ul>
+                            <li>
+                                <span>账&#12288;号：</span>
+                                <input id=""userCode"" class="input" type="text" value="" name="userCode"/>
+                                
+                            </li>
+                            <li>
+                                <span>密&#12288;码：</span>
+                                <input id="userPassword" class="input" type="password" name="userPassword"/>
+                                
+                            </li>
+                            <li>
+                                <span>验证码：</span>
+                                <input id="validateCode" class="input" type="text" value="" name="validateCode"/>
+                                <img border="0" alt="点击图片可刷新" class="veri" src="/validateImage" onclick="javascript:this.src='/validateImage?temp='+ (new Date().getTime().toString(36));" />
+
+                            </li>
+                            <li>
+                                <input class="btn_cancel" type="submit" value=""/>
+                                <input class="btn_login" type="submit" value="" onclick="SubmitForm();"/>
+                            </li>
+                        </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+}

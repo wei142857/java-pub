@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>智能门锁保险</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0, user-scalable=no">
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		.container{
+            width: 100%;
+           	height:370px;
+           	font-size:15px;
+            margin: 10px auto;
+            padding: 0px;
+        }
+        h3.title {
+            text-align: center;
+            line-height: 1.1;
+        }
+        h3.title span {
+            display: block;     /*设置为块级元素会独占一行形成上下居中的效果*/
+            position: relative;   /*定位横线（当横线的父元素）*/ 
+        }
+        h3.title span:before, h3.title span:after {
+            content: '';                 /*CSS伪类用法*/
+            position: absolute;         /*定位背景横线的位置*/
+            top: 52%;
+            background: #4949491c;       /*宽和高做出来的背景横线*/
+            width: 30%;
+            height: 1px;
+        }
+        h3.title span:before{
+            left: 0%;        /*调整背景横线的左右距离*/
+        }
+        h3.title span:after {
+            right: 0%;
+        } 
+		#button{
+			width: 100%;
+		    height: 50px;
+		    border: 0px;
+		    color: white;
+		    font-size: 20px;
+		    display: block;
+		    background: gray;
+		    margin: 0 auto;
+		}
+		#but_div{
+			width: 100%;
+			border: 0px;
+			text-align: center;
+			position: fixed;
+			bottom: 0px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="col-xs-12 col-md-6 col-md-offset-3" style="margin-bottom: 60px;">
+			<div id="banner">
+				<img alt="banner" src="./images/banner.jpg" style="width:100%">
+			</div>
+			<h3 class="title"><span>保险详情</span></h3>
+			<div>
+				<h3>房屋附属设备火灾爆炸</h3>
+				<p>承保房屋火灾、爆炸原因引起的房屋附属设备的（固定装置的水暖、气暖、卫生、供水、管道煤气及供电设备等，包括智能锁）的直接损失</p>
+				<h3>房屋附属设备的盗抢</h3>
+				<p>承保房屋盗窃、抢劫原因引起的房屋附属设备的（固定装置的水暖、气暖、卫生、供水、管道煤气及供电设备等，包括智能锁）的直接损失</p>
+				<h3>现金、首饰盗抢</h3>
+				<p>承保入室盗抢、抢劫引起的现金及首饰的损失</p>
+			</div>
+		</div>
+		<div id="but_div">
+			<button id="button">即将上线</button>
+		</div>
+	</div>
+</body>
+</html>

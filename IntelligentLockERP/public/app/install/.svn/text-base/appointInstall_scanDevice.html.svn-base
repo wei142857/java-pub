@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>司铠智能</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script type="text/javascript" src="/public/app/js/weixin-1.4.0.js"></script>
+	<style type="text/css">
+        .row_top{
+			margin-bottom: 80px;
+		}
+		.measure_fanhui{
+			position: absolute;
+			font-size: 16px;
+			font-weight: bold;
+			background-color: #f8f8f8;
+			width: 100%;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+			left: 0px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.div_unify_style{
+			width: 100%;
+			height: auto;
+		}
+		.row_remark{
+			padding-bottom: 1%;
+		}
+		#submitBut{
+	        background-color:#ff6052;
+	        width: 100%;
+	        border: 0px;
+	        text-align: center;
+	        height: 50px;
+	        color: white;
+	        font-size: 16px;
+	        border-radius:5px;
+	        padding: 0px;
+	        margin: 40px 0px;
+        }
+	</style>
+	<script type="text/javascript">
+		window.onload=function(){
+			var getQuery = function(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null)
+					return (r[2]);
+				return null;
+			};
+			var state = getQuery("state");
+			$("#submitBut").click(function(){
+				WX.scanQRCode({
+					needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+					scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+					success: function (res) {
+						var deviceid = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+						$.ajax({
+							url : '/v1/appointScanDevice',
+							type : 'get',
+							data:{deviceid:deviceid,state:state},
+							dataType : 'json',
+							cache : false,
+							success : function(rsp) {
+								if(rsp){
+									if(rsp.code==0){
+										if(state=="102"){	/* 预约安装 填写信息页面 */
+			                				window.location.href="/public/app/install/appointInstall_inputInfo.html";
+			                			}else if(state=="103"){		/* 预约测量 填写信息页面 */
+			                				window.location.href="/public/app/install/appointMeasure_submit.html";
+			                    		}
+									}else if(rsp.code==1){
+										if(state=="102"){	/* 预约安装 订单页 */
+			                				window.location.href="/public/app/install/appointInstall_installOrder.html";
+			                			}else if(state=="103"){		/* 预约测量 订单页 */
+			                				window.location.href="/public/app/install/appointMeasure_measureOrder.html";
+			                    		}
+									}
+								}
+								
+							}
+						})
+					}
+				});
+			});
+		}
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<span>登录</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 row_remark">
+				<div class="form-group">
+                   	<span>请扫描智能锁的电池盒上的设备码</span>
+                   </div>
+			</div>
+			<div class="col-xs-12 col-md-12">
+				<img alt="logo" src="/public/app/install/images/sbm.png" class="div_unify_style">
+			</div>
+		</div>
+		<div class="row">
+            <div class="col-xs-12 col-md-12">
+            	<input type="submit" id="submitBut" value="立即扫码">
+            </div>
+        </div>
+	</div>
+</body>
+</html>

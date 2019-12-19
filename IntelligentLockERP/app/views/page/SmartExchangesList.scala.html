@@ -1,0 +1,816 @@
+@htmlhead("话费兑换记录 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+			height : 505,
+			dataType : "json",
+			dataSource : '/SmartExchanges/List',
+			showIndex : false,
+			limit : 13,									
+			errorMsg : "获取数据出错",
+			emptyMsg : "没有数据",
+			//Grid的header配置   ！！！！
+			colModel : [
+				{
+					header : 'idd',
+					name : 'idd',
+						width : 40,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '用户ID',
+					name : 'userid',
+						width : 60,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '充值账户',
+					name : 'account',
+						width : 100,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '产品ID',
+					name : 'pid',
+						width : 40,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '奖励金',
+					name : 'bvalue',
+						width : 60,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '充值时间',
+					name : 'addtime',
+						width : 150,
+					align : 'center',
+					sort:'clientSide',
+					renderer : function(colValue) {   
+						if(colValue=="" || typeof(abc) == 'underfined'){
+							return "";
+						}else{
+							return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+						}
+               		}
+				},
+				{
+					header : '完成时间',
+					name : 'acttime',
+						width : 150,
+					align : 'center',
+					sort:'clientSide',
+					renderer : function(colValue) {   
+						if(colValue=="" || typeof(abc) == 'underfined'){
+							return "";
+						}else{
+							return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+						}
+               		}
+				},
+				{
+					header : '状态',
+					name : 'status',
+						width : 100,
+					align : 'center',
+					sort:'clientSide',
+					renderer : function(colValue) {   
+                  		return colValue=="1"?"<span style='color: green;'>"+'充值成功'+"</span>":colValue=="2"?"<span style='color: red;'>"+'充值失败'+"</span>":"<span style='color: #FF7F00;'>"+'充值中'+"</span>";
+               		}
+				},
+				{
+					header : '接口返回信息',
+					name : 'returninfo',
+						width : 160,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '错误原因',
+					name : 'means',
+						width : 160,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '真实错误原因',
+					name : 'realmeans',
+						width : 160,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '订单号',
+					name : 'retid',
+						width : 100,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : 'ip',
+					name : 'ip',
+						width : 100,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '省份',
+					name : 'area',
+						width : 80,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '渠道',
+					name : 'channel',
+						width : 60,
+					align : 'center',
+					sort:'clientSide'
+				}
+				/* ,{header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+		     		 renderer:function(colValue, rowData, rowIndex){
+	     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+	     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div><div class='delete'>删除</div></div>";
+	     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+	     			 return menu + btn;
+			         }
+				}  */
+			],
+		         
+			onRefresh: function(nowPage, pageRecords,event){
+          		var $grid = $('#mygrid'); 
+          	    $grid.find("a.op-btn").each(function(){
+          			var $btn = $(this); 
+	          		// 初始化表格里面的操作按钮 
+	          		$btn.omButton({
+	          			icons : {left : '/public/images/op-btn-icon.png'},
+	          			width : 75,
+	          			onClick : function(event){                				
+	          				var v = $grid.find("div.op-menu:visible");
+	          				var $opMenu = $(event.currentTarget.previousSibling);
+	          				// 重新计算菜单的位置
+	          				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+	          				if($opMenu.css("display") == "none"){
+	          					$opMenu.show().css({left:left});
+	          				} else{
+	          					$opMenu.hide();
+	          				}
+	          				v.hide();
+	          				event.stopPropagation();
+	          				return false;
+          				}
+          			});
+          		});
+
+               	// 绑定表格操作按钮菜单的事件 ！！！！
+               	/*$grid.find("div.op-menu").each(function(){
+               		var $menu = $(this);
+               		var rowindex=$menu.id;
+               		$menu.hide();
+               		$menu.find(".edit").click(function(){
+						isAdd = false;
+						var index = $(this).parent().attr('id');
+		                showDialog('修改',index);//显示dialog
+					});
+               		
+               		$menu.find(".delete").click(function(){
+						var index = $(this).parent().attr('id');
+						doAsk('确定删除吗？' , delit , index );
+					});
+               	 });*/ 			
+             }
+		});
+		
+		//[新增/修改]dialog初始化
+		/* var dialog = $("#dialog-form").omDialog({
+			width : 460,
+			autoOpen : false,
+			modal : true,
+			resizable : false,
+			buttons : {
+				"提交" : function() {
+					submitDialog();
+					return false; //阻止form的默认提交动作
+				},
+				"取消" : function() {
+					$("#dialog-form").omDialog("close");//关闭dialog
+				}
+			}
+		});
+		
+		$('#add').bind('click', function() {
+	        isAdd = true;
+	        showDialog('新增',null);//显示dialog
+        });
+		
+		//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+		var showDialog = function(title, idd) {
+			validator.resetForm();
+			if(idd!=null){
+				//edit info;
+				var uri = "/SmartExchanges/Get/"+idd;
+				$.get(uri,function(response){
+		            if(response!=null){
+						$("input[name='idd']", dialog).val(response.idd);
+						
+						$("input[name='userid']", dialog).val(response.userid);
+					
+						$("input[name='account']", dialog).val(response.account);
+					
+						$("input[name='pid']", dialog).val(response.pid);
+					
+						$("input[name='bvalue']", dialog).val(response.bvalue);
+					
+						$("input[name='addtime']", dialog).val(response.addtime);
+						
+						$("input[name='addtime']", dialog).val(fmtDate(new Date(response.addtime),"yyyy-MM-dd"));
+						
+						$("input[name='acttime']", dialog).val(response.acttime);
+						
+						$("input[name='acttime']", dialog).val(fmtDate(new Date(response.acttime),"yyyy-MM-dd"));
+					
+						$("input[name='status']", dialog).val(response.status);
+					
+						$("input[name='returninfo']", dialog).val(response.returninfo);
+					
+						$("input[name='means']", dialog).val(response.means);
+					
+						$("input[name='realmeans']", dialog).val(response.realmeans);
+					
+						$("input[name='retid']", dialog).val(response.retid);
+						
+						$("input[name='ip']", dialog).val(response.ip);
+						
+						$("input[name='area']", dialog).val(response.area);
+					
+						$("input[name='channel']", dialog).val(response.channel);
+		         	}
+				});
+			}
+			dialog.omDialog("option", "title", title);
+			dialog.omDialog("open");//显示dialog 
+		};
+		
+		//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+		var submitDialog = function() {
+			if (validator.form()) {
+				var submitData = {
+					operation : isAdd ? 'add' : 'modify',
+					idd : $("input[name='idd']",dialog).val()
+				
+					,userid : $("input[name='userid']", dialog).val()
+				
+					,account : $("input[name='account']", dialog).val()
+				
+					,pid : $("input[name='pid']", dialog).val()
+				
+					,bvalue : $("input[name='bvalue']", dialog).val()
+					
+					,addtime : $("input[name='addtime']", dialog).val()
+				
+					,status : $("input[name='status']", dialog).val()
+				
+					,returninfo : $("input[name='returninfo']", dialog).val()
+					
+					,means : $("input[name='means']", dialog).val()
+				
+					,realmeans : $("input[name='realmeans']", dialog).val()
+					
+					,retid : $("input[name='retid']", dialog).val()
+				
+					,ip : $("input[name='ip']", dialog).val()
+				
+					,area : $("input[name='area']", dialog).val()
+				
+					,channel : $("input[name='channel']", dialog).val()
+					
+				};
+
+				$.post('/SmartExchanges/Modify', submitData, function() {
+					if (isAdd) {
+						$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+						$.omMessageTip.show({
+							title : "操作成功",
+							content : "添加数据成功",
+							timeout : 1500
+						});
+					} else {
+						$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+						$.omMessageTip.show({
+							title : "操作成功",
+							content : "修改数据成功",
+							timeout : 1500
+						});
+					}
+					$("#dialog-form").omDialog("close"); //关闭dialog
+				});
+			}
+		};
+
+		// 对增加/修改表单的校验设置 ！！！！
+		var validator = $('#ipForm').validate({
+			rules : {
+				userid : {
+					required : true,
+                    maxlength : 100
+				},
+				account : {
+					required : true,
+                   	maxlength : 100
+				},
+				pid : {
+					required : true,
+                   	maxlength : 100
+				},
+				bvalue : {
+					required : true,
+                    maxlength : 100
+				},
+				status : {
+					required : true,
+                   	maxlength : 100
+				},
+				retid : {
+					required : true,
+                    maxlength : 100
+				},
+				ip : {
+					required : true,
+                    maxlength : 100
+				},
+				area : {
+					required : true,
+                    maxlength : 100
+				},
+				channel : {
+					required : true,
+                    maxlength : 100
+				}
+			},
+			messages : {
+				userid : {
+					required : "用户ID不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				account : {
+					required : "充值账户不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				pid : {
+					required : "产品ID不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				bvalue : {
+					required : "奖励金不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				status : {
+					required : "状态不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				retid : {
+					required : "订单号不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				ip : {
+					required : "ip不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				area : {
+					required : "省份不能为空",
+					maxlength : '长度不能超过100个字符'
+				},
+				channel : {
+					required : "渠道不能为空",
+					maxlength : '长度不能超过100个字符'
+				}
+			}
+		}); */
+		
+		//其他iframe 对话框 初始化-->
+		$( "#dialog-modal").omDialog({
+            autoOpen: false,
+            width:535,
+            height: 465,
+            modal: true
+        });
+		
+        $( "#user_auth_form").omDialog({
+            autoOpen: false,
+            width:535,
+            height: 465,
+            modal: true
+        });
+        
+        /* $("#user_add_form").omDialog({
+        	autoOpen: false,
+            width:535,
+            height: 465,
+            modal: true
+		});	
+        
+        var uploadDialog = $("#upload-form").omDialog({
+			width : 500,
+			autoOpen : false,
+			modal : true,
+			resizable : false,
+			buttons : {
+				"提交" : function() {
+					submitUploadDialog();
+					return false; //阻止form的默认提交动作
+				},
+				"关闭" : function() {
+					$("#upload-form").omDialog("close");//关闭dialog
+				}
+			}
+		});
+		
+		var submitUploadDialog = function(){
+			$("#upload-form").omDialog("close");
+			//var uploadidd = $("input[name='uploadidd']").val();
+			var uploadidd = '';
+			var url = "/SmartExchanges/Upload";
+	        $.ajaxFileUpload({  
+	            url:url,  
+	            secureuri:false,  
+	            fileElementId:'file_excel',//file标签的id  
+	            dataType: 'json',//返回数据的类型  
+	            data:{uploadidd:uploadidd},//一同上传的数据  
+	            success: function (data, status) { 
+	            	console.log(data);
+	            	$.omMessageTip.show({
+						title : "操作成功",
+						content : "成功导入"+data+"条",
+						timeout : 1500
+					}); 
+	            },  
+	            error: function (data, status, e) {  
+	                alert(e);  
+	            }  
+	        });  
+		};
+		
+		$('#import').bind('click', function() {
+			$("#uploadForm")[0].reset();
+       			对应于指定目标的上传
+      				var index = $(this).parent().attr('id');
+       			$("input[name='uploadidd']").val(index); 
+       			
+       			uploadDialog.omDialog("option", "title", "导入（excel）");
+       			uploadDialog.omDialog("open");
+           }); */
+		
+		//搜索按钮加图片
+		var searchPanel = $("#search-panel").omPanel({
+            	title : "工具栏",collapsible:true
+            });
+		 $('span#button-search').omButton({
+         	    icons : {left : '/public/images/search.png'},width : 70
+      	 	    });
+		 $('span#button-noSearch').omButton({
+          	    icons : {left : '/public/images/searchNo.png'},width : 70
+       	 	});
+		 /* $('span#add').omButton({
+          	    icons : {},width : 70
+       	 	});
+		 $('span#import').omButton({
+          	    icons : {},width : 110
+       	 	}); */
+		 $('span#button-export').omButton({
+          	   	width : 90
+       	 });
+		 
+		//下载Excel格式
+       	$('span#button-export').bind('click', function(e){
+       		var searchStr='';
+               
+				searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+			
+				searchStr += 'userid='+encodeURI($("input[name='userid']", searchPanel).val())+"&";
+			
+				searchStr += 'account='+encodeURI($("input[name='account']", searchPanel).val())+"&";
+			
+				searchStr += 'pid='+encodeURI($("input[name='pid']", searchPanel).val())+"&";
+			
+				searchStr += 'bvalue='+encodeURI($("input[name='bvalue']", searchPanel).val())+"&";
+			
+				searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+			
+				searchStr += 'acttime='+encodeURI($("input[name='acttime']", searchPanel).val())+"&";
+			
+				searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+			
+				searchStr += 'returninfo='+encodeURI($("input[name='returninfo']", searchPanel).val())+"&";
+			
+				searchStr += 'means='+encodeURI($("input[name='means']", searchPanel).val())+"&";
+			
+				searchStr += 'realmeans='+encodeURI($("input[name='realmeans']", searchPanel).val())+"&";
+			
+				searchStr += 'retid='+encodeURI($("input[name='retid']", searchPanel).val())+"&";
+			
+				searchStr += 'ip='+encodeURI($("input[name='ip']", searchPanel).val())+"&";
+			
+				searchStr += 'area='+encodeURI($("input[name='area']", searchPanel).val())+"&";
+			
+				searchStr += 'channel='+encodeURI($("input[name='channel']", searchPanel).val())+"&";
+			
+               var url = '/SmartExchanges/List?export=1&'+searchStr;
+               window.location.href = url;
+        });	
+		
+		//搜索绑定 =》grid ！！！！
+      	 	$('span#button-search').bind('click', function(e) {
+               var searchStr='';
+               
+				//searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+			
+				searchStr += 'userid='+encodeURI($("input[name='userid']", searchPanel).val())+"&";
+			
+				searchStr += 'account='+encodeURI($("input[name='account']", searchPanel).val())+"&";
+			
+				searchStr += 'pid='+encodeURI($("input[name='pid']", searchPanel).val())+"&";
+			
+				searchStr += 'bvalue='+encodeURI($("input[name='bvalue']", searchPanel).val())+"&";
+			
+				//searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+			
+				//searchStr += 'acttime='+encodeURI($("input[name='acttime']", searchPanel).val())+"&";
+			
+				searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+			
+				//searchStr += 'returninfo='+encodeURI($("input[name='returninfo']", searchPanel).val())+"&";
+			
+				//searchStr += 'means='+encodeURI($("input[name='means']", searchPanel).val())+"&";
+			
+				//searchStr += 'realmeans='+encodeURI($("input[name='realmeans']", searchPanel).val())+"&";
+			
+				searchStr += 'retid='+encodeURI($("input[name='retid']", searchPanel).val())+"&";
+			
+				//searchStr += 'ip='+encodeURI($("input[name='ip']", searchPanel).val())+"&";
+			
+				searchStr += 'area='+encodeURI($("input[name='area']", searchPanel).val())+"&";
+			
+				//searchStr += 'channel='+encodeURI($("input[name='channel']", searchPanel).val())+"&";
+			
+               $('#mygrid').omGrid("setData", '/SmartExchanges/List?'+searchStr );
+            });
+			
+      	 	/*$("input[name='idd']", searchPanel).omCombo({
+            	 dataSource : '/SmartExchanges/All',
+	                optionField : function(data, index) {
+	                    return data.idd;
+	                },
+	                valueField : 'idd',
+	                inputField : 'idd'
+            });*/
+			
+			/* $("input[name='addtime']", searchPanel).omCalendar({
+                dateFormat : "yy-mm-dd"
+            });
+			$("input[name='addtime']", dialog).omCalendar({
+                dateFormat : "yy-mm-dd"
+            });
+		
+			$("input[name='acttime']", searchPanel).omCalendar({
+                dateFormat : "yy-mm-dd"
+            });
+			$("input[name='acttime']", dialog).omCalendar({
+                dateFormat : "yy-mm-dd"
+            }); */
+            
+			//不搜索 =》grid
+      	 	$('span#button-noSearch').bind('click', function(e) {
+            	$('#mygrid').omGrid("setData", '/SmartExchanges/List?key=');
+           	});	
+            // 点击页面其他地方的时候隐藏表格里面的菜单
+           	$("body").click(function(){
+				$("#mygrid").find("div.op-menu:visible").hide();
+           	});		
+		});	
+	
+       //删除 -- ajax提交
+       /* function delit( val ) {
+    	    var uri = "/SmartExchanges/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   } */
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+		<span class="label">用户ID：</span> 
+		<input name="userid" id="userid" />
+		
+		<span class="label">奖励金：</span> 
+		<input name="bvalue" id="bvalue" />
+		
+		<span class="label">省份：</span> 
+		<input name="area" id="area" />
+		
+		<span class="label">充值账户：</span> 
+		<input name="account" id="account" /><br>
+		
+		<span class="label">产品ID：</span> 
+		<input name="pid" id="pid" />
+		
+		<span class="label">订单号：</span> 
+		<input name="retid" id="retid" />
+		
+		<span class="label">状态：</span> 
+		<!-- <input name="status" id="status" /> -->
+		<select name=status>
+			<option value="0">显示全部</option>
+			<option value="1">充值成功</option>
+			<option value="2">充值失败</option>
+			<option value="3">充值中</option>
+		</select>
+		
+		<!-- <span class="label">渠道：</span> -->
+		<input name="channel" id="channel" style="display:none" />
+		
+		<!-- <span class="label">ip：</span> -->
+		<input name="ip" id="ip" style="display:none" />
+		
+		<!-- <span class="label">充值时间：</span> -->
+		<input name="addtime" id="addtime" style="display:none" /> 
+		
+		<!-- <span class="label">完成时间：</span> -->
+		<input name="acttime" id="acttime" style="display:none" />
+		
+		<!-- <span class="label">错误原因：</span> -->
+		<input name="means" id="means" style="display:none" />
+		
+		<!-- <span class="label">真实错误原因：</span> -->
+		<input name="realmeans" id="realmeans" style="display:none" />
+		
+		<!-- <span class="label">接口返回信息：</span> -->
+		<input name="returninfo" id="returninfo" style="display:none" />
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<!-- <span id="add">新增</span>
+		<span id="import">导入（Excel97）</span> -->
+		<span id="button-export">下载Excel格式</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+<!-- <div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+		<table>
+			<tr>
+				<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+			</tr>
+		</table>
+	</form>
+</div> -->
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<!-- <div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户ID：</td>
+				<td><input name="userid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值账户：</td>
+				<td><input name="account" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产品ID：</td>
+				<td><input name="pid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奖励金：</td>
+				<td><input name="bvalue" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;充值时间：</td>
+				<td><input name="addtime" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完成时间：</td>
+				<td><input name="acttime" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态:</td>
+				<td><input name="status" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;接口返回信息：</td>
+				<td><input name="returninfo" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;错误原因：</td>
+				<td><input name="means" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;真实错误原因：</td>
+				<td><input name="realmeans" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单号：</td>
+				<td><input name="retid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip：</td>
+				<td><input name="ip" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;省份：</td>
+				<td><input name="area" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;渠道：</td>
+				<td><input name="channel" /></td>
+			</tr>
+		</table>
+	</form>
+</div> -->
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<!-- <div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div> -->
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

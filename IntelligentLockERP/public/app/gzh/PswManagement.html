@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.12/clipboard.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		#no_psw p{
+  			margin-top: 50%;
+  			width:100%;
+  			height: calc(100% - 40px);
+  			text-align: center;
+  			color: gray;
+  		}
+  		#btn_box{
+  			width:100%;
+  			height: 40px;
+  			position: fixed;
+    		bottom: 0px;
+  		}
+  		#btn_box button{
+  			position: fixed;
+  			width:100%;
+  			height: 40px;
+  			bottom: 0px;
+  			left: 0px;
+  			background-color: #da4242;
+  			border: 1px solid #da4242;
+  			color: white; 
+  			cursor: pointer;
+  		}
+  		.pwd{/* 一张pwd */
+  			height: 48px;
+  			background-color: white;
+  			padding: 0px 10px 0px 10px;
+  			margin: 0px;
+  			margin-bottom: 7px;
+  			width: 100%;
+  			border-top: 1px solid #eee;
+  		}
+  		.pwd_info{/* pwdNameDiv */
+  			display: inline-block;
+  			height: 48px;
+  			padding-top: 13px;
+  		}
+  		.pwd_info p{/* pwdNameDiv */
+  			margin-bottom: 0px;
+  			line-height: 20px;
+  		}
+  		.pwd_buttons{/* 重命名＋删除按钮div */
+  			display: inline-block;
+  			float: right; 
+  			height: 48px;
+    		padding-top: 11px;
+  		}
+  		.validity_period{
+  			font-size: 12px;
+  			color: gray;
+  		}
+  		.copy_password{
+  			color: #da4242;
+  			line-height: 26px;
+  			margin-right: 10px;
+  			display: inline-block;
+  			cursor: pointer;
+  		}
+  		.rename_btn{/* 重命名按钮 */
+  			border: 1px solid #da4242;
+  			color: #da4242;
+  			background-color: white;
+  			width: 60px;
+  			height: 26px;
+  			padding: 1px 6px 1px 6px;
+  			margin-right: 10px;
+  		}
+  		.delete_btn{/* 删除按钮 */
+  			border: 1px solid #da4242;
+  			color: white;
+  			background-color: #da4242;
+  			width: 60px;
+  			height: 26px;
+  			padding: 1px 6px 1px 6px;
+  		}
+  		.delete_btn2{/* 不可点按钮 */
+  			border: 1px solid #ff7878;
+  			color: #ffcfcf;
+  			background-color: #ff7878;
+  			width: 60px;
+  			height: 26px;
+  			padding: 1px 6px 1px 6px;
+  		}
+  		.pwd_info_toprow{
+  			width: 100%;
+  			height: 30px;
+  			background-color: white;
+  			padding-left: 10px;
+  			color: gray;
+  			font-size: 12px;
+  		}
+  		.pwd_info_toprow p{
+  			margin: 0px;
+  			line-height: 30px;
+  		}
+  		.pwdrow{
+  			width: 100%;
+  			height: 80px;
+  			margin-bottom: 7px;
+  		}
+  		#friendly_reminder{
+  			position: fixed;
+			width: 100%;
+			z-index: 1000;
+			top: 30px;
+			height: 30px;
+			background-color: #DA4225;
+			padding-left: 10px;
+  		}
+  		#friendly_reminder p{
+  			line-height: 30px;
+  			color: white;
+  			margin: 0px;
+  		}
+  	</style>
+	<title>密码管理</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>密码管理</p>
+		</div>
+	</div>
+	<div id="friendly_reminder"><!-- 友情提示 -->
+		<p>添加或删除密码，需要唤醒门锁后生效</p>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-top: 69px;padding-bottom: 40px;">
+		<div id="no_psw" v-if="items==null"><p>未添加密码</p></div>
+		<template v-else v-for="item in items">
+			<div class="pwdrow"><!-- 单个密码信息行 -->
+				<div class="pwd_info_toprow">
+					<p v-if="item.pswvalidity=='-1'">有效期：<span>永久有效</span></p>
+					<p v-else>有效期：<span>{{item.pswbegintime}}&nbsp;至&nbsp;{{item.pswvalidity}}</span></p>
+				</div>
+				<div class="row pwd"><!-- 一个pwd卡 -->
+					<div class="pwd_info">
+						<p>{{item.pswname}}</p>
+					</div>
+					<div class="pwd_buttons">
+						<p class="copy_password btn2" v-if="item.pswvalidity!=-1" :data-clipboard-text="item.pswcode">复制</p>
+						<button class="rename_btn" @click="alertRePswName(item.pswid)">重命名</button>
+						
+						<button class="delete_btn" @click="delPsw(item.pswid)" v-if="item.pswstatu==0">删除</button>
+						<button class="delete_btn2" v-else>{{item.pswstatu | delStatFilter}}</button>
+					</div>
+				</div>
+			</div>
+		</template>
+		<div id="btn_box"><!-- 绑定设备 -->
+			<button>添加密码</button>
+		</div>
+	</div>
+	<!-- 三种弹出框 -->
+	<!-- 弹出框1 重命名 -->
+	<div id="rename_alert" class="alert_div"><!-- 引入tools.css -->
+		<div class="alert_box">
+			<div class="alert_title">
+				<p>重命名</p>
+			</div>
+			<div class="alert_text_center_input">
+				<input type="text" name="rename" v-model="newPswName" placeholder="请输入名称" @blur="blur()">
+			</div>
+			<div class="alert_bottom_a_or_b">
+				<div class="alert_bottom_d">
+					<button @click="close()">取消</button>
+				</div>
+				<div class="alert_bottom_c">
+					<button @click="define()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 弹出框2 删除 -->
+	<div id="delete_alert" class="alert_div"><!-- 引入tools.css -->
+		<div class="alert_box">
+			<div class="alert_title_alone">
+				<p>确定删除吗？</p>
+			</div>
+			<div class="alert_bottom_a_or_b">
+				<div class="alert_bottom_d">
+					<button @click="close()">再想想</button>
+				</div>
+				<div class="alert_bottom_del">
+					<button @click="deletePsw()">删除</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 添加的密码类型 永久密码和失效密码 -->
+	<div id="pwd_type" class="alert_div"><!-- 引入tools.css -->
+		<div class="alert_types_rows alert_types_items">
+			<div class="circle_box">
+				<div class="types_item" @click="addPsw(1)">
+					<p>永久密码</p>
+				</div>
+				<div class="types_item itemtopb" @click="addPsw(2)">
+					<p>时效密码</p>
+				</div>
+			</div>
+		</div>
+		<div class="alert_types_rows alert_types_cancel">
+			<div class="circle_box">
+				<div class="types_item" @click="close()"><!-- 取消 -->
+					<p>取消</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			toptitle()//头部标题
+			var clipboard = new Clipboard('.btn2');
+		       //优雅降级:safari 版本号>=10,提示复制成功;否则提示需在文字选中后，手动选择“拷贝”进行复制
+	        clipboard.on('success', function(e) {
+	            alert('复制成功!')
+	            console.log($(this))
+	            e.clearSelection();
+	        });
+	        clipboard.on('error', function(e) {
+	            alert('请选择“拷贝”进行复制!')
+	        });
+			var lockid = GetRequest()['lockid']
+			$("#btn_box button").click(function(){
+				$("#pwd_type").css({'visibility': 'visible'})
+			})
+			$.ajax({
+  				url: "/gzh/v1/getLockDevicePswList",
+  				data:{
+  					lockid:lockid,
+  				},
+  				type:"GET",
+  				dataType:"json",
+  				async: false,
+  				success: function(res){
+  					if(res.code==202){//首先判断用户是否登陆
+						window.location.href = "/public/app/gzh/devicelogin.html";
+					}
+  					if(res.code==0){
+  						if(res.data.items.length>0){
+	  						psw.items = res.data.items
+  						}
+  						console.log(res)
+  					}else{
+  						console.log(res.message)
+  					}
+  				},
+  				error: function(err){
+  					alert("失败的请求！")
+  				}
+  			})
+		}
+		var psw = new Vue({
+			el:'.container',
+			data:{
+				items:null,
+				pswname:"",
+				pswid:""
+			},
+			methods:{
+				alertRePswName(pswid){
+					this.pswid = pswid
+					$("#rename_alert").css({'visibility': 'visible'})//显示
+				},
+				delPsw(pswid){
+					this.pswid = pswid
+					$("#delete_alert").css({'visibility': 'visible'})//显示
+				},
+				putValue(copyPassword){
+					$("#foo1").val(copyPassword)
+				}
+			},
+			filters:{
+				delStatFilter: function(stat){
+					if(stat=="0"){
+						return "删除";
+					}else if(stat=="1"){
+						return "添加中";
+					}else if(stat=="2"){
+						return "删除中";
+					}
+				}
+			}
+		})
+		var rename = new Vue({
+			el:'#rename_alert',
+			data:{
+				newPswName : ""
+			},
+			methods:{
+				close(){
+					$("#rename_alert").css({'visibility': 'hidden'});
+					psw.pswid=""
+					this.newPswName=""
+				},
+				define(){
+					$("#rename_alert").css({'visibility': 'hidden'});
+					if(psw.pswid!=""){
+						if(this.newPswName.trim()==""){
+							alert("新名称不能为空")
+						}else if(this.newPswName.trim().length>15){
+							alert("新名称不能超过15字")
+							this.newPswName=""
+						}else{
+							var lockid = GetRequest()['lockid']
+							$.ajax({
+				  				url: "/gzh/v1/setLockDevicePsw",
+				  				data:{
+				  					lockid:lockid,
+				  					pswid:psw.pswid,
+				  					pswname:this.newPswName
+				  				},
+				  				type:"GET",
+				  				dataType:"json",
+				  				async: false,
+				  				success: function(res){
+				  					if(res.code==202){//首先判断用户是否登陆
+										window.location.href = "/public/app/gzh/devicelogin.html";
+									}
+				  					if(res.code==0){
+				  						 window.location.reload();
+				  					}
+				  				},
+				  				error: function(err){
+				  					alert("失败的请求！")
+				  				}
+				  			})
+							$("#rename_alert").css({'visibility': 'hidden'})
+							this.newPswName=""
+							psw.pswid!=""
+						}
+					}
+				},
+				blur() {
+		     		setTimeout(function () {//防止输入框失去焦点时 Iphone的页面背景卡住
+						var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+						window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+					}, 100)
+		    	}
+			}
+		})
+		var delpsw = new Vue({
+			el:'#delete_alert',
+			data:{},
+			methods:{
+				close(){
+					$("#delete_alert").css({'visibility': 'hidden'})
+					psw.pswid!=""
+				},
+				deletePsw(){
+					var lockid = GetRequest()['lockid']
+					$.ajax({
+		  				url: "/gzh/v1/delLockDevicePsw",
+		  				data:{
+		  					lockid:lockid,
+		  					pswid:psw.pswid
+		  				},
+		  				type:"GET",
+		  				dataType:"json",
+		  				async: false,
+		  				success: function(res){
+		  					if(res.code==202){//首先判断用户是否登陆
+								window.location.href = "/public/app/gzh/devicelogin.html";
+							}
+		  					if(res.code==0){
+		  						 window.location.reload();
+		  					}else{
+		  						alert(res.message)
+		  					}
+		  				},
+		  				error: function(err){
+		  					alert("失败的请求！")
+		  				}
+		  			})
+					$("#delete_alert").css({'visibility': 'hidden'})
+					psw.pswid!=""
+				}
+			}
+		})
+		var addPsw = new Vue({
+			el:'#pwd_type',
+			data:{},
+			methods:{
+				close(){
+					$("#pwd_type").css({'visibility': 'hidden'})
+				},
+				addPsw(type){
+					$("#pwd_type").css({'visibility': 'hidden'})
+					var lockid = GetRequest()['lockid']
+					if(type=="1"){//永久
+						window.location.href = "/public/app/gzh/AddPermanentPassword.html?lockid="+lockid;
+					}else if(type=="2"){//时效
+						window.location.href = "/public/app/gzh/AddPassword.html?lockid="+lockid;
+					}
+				}
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+	</script>
+</body>
+</html>

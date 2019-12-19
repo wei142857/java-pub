@@ -1,0 +1,445 @@
+ @htmlhead("SysFunction 列表"){
+<script type="text/javascript">
+	var isAdd = true;
+	var currentNode;
+	$(document).ready(
+			function() {
+				//tree 初始化
+				$("#mytree").omTree({
+					dataSource : '/SysFunction/TreeData',
+					simpleDataModel : true,
+					onClick : function(nodeData,event) {
+						setNode(nodeData)
+						$("#menu").omMenu("hide");
+					},
+					onRightClick : function(nodedata, e) {
+						//通过节点的text属性来判断是否响应右键菜单，也可以自行添加特殊属性来判断
+						//右键选中并显示菜单
+						currentNode = nodedata;
+						$("#mytree").omTree("select", nodedata);
+						$('#menu').omMenu('show', e);
+						e.preventDefault();
+					}
+				});
+				//左键点击页面隐藏菜单
+				$("body").bind("click", function() {
+					$("#menu").omMenu("hide");
+				});
+				var setNode = function(nodeData){
+					$("input[name=oIcon]").val(nodeData.icon);
+					$("input[name=jnUrl]").val(nodeData.url);
+					$("input[name=mName]").val(nodeData.text);
+					$("input[name=jnCode]").val(nodeData.fcode);
+					if(nodeData.state==0){
+						$("#unUsestateo").attr("checked","true");
+					}else if(nodeData.state==1)
+						$("#usestateo").attr("checked","true");
+					else
+						$("input[name=stateo]").removeAttr("checked"); 
+					
+					if(nodeData.isMenu==1){
+						$("#updkbio").attr("checked","true");
+					}else if(nodeData.isMenu==0)
+						$("#updkbuo").attr("checked","true");
+					else
+						$("input[name=isMenuo]").removeAttr("checked"); 
+				}
+				var addCount = 1;
+				$('#menu').omMenu({
+					contextMenu : true,
+					dataSource : [ {
+						id : '001',
+						label : '增加功能',
+						icon : '/public/images/add.png'
+					}, {
+						id : '002',
+						label : '删除功能',
+						icon : '/public/images/delete.png'
+					}, {
+						id : '003',
+						label : '修改',
+						icon : '/public/images/uncheck.png'
+					} ],
+					onSelect : function(item) {
+						var node = $("#mytree").omTree("getSelected");
+						$("#menu").omMenu("hide");
+						if (item.id == "001") {
+							isAdd = true;
+							$("#drag").hide();
+							showDialog('新增', null);//显示dialog
+						} else if (item.id === "002") {
+							if( node.id == 1 || node.pid == null ){
+								showMessage("根节点功能不能删除！");
+								return ;
+							}
+							doAsk("删除本功能？", delit, node.id) ;
+						} else if (item.id === "003") {
+							isAdd = false;
+							$("#drag").show();
+							showDialog('编辑', node.id);//显示dialog
+						}
+					}
+				});
+				//[新增/修改]dialog初始化
+				var dialog = $("#dialog-form").omDialog({
+					width : 400,
+					autoOpen : false,
+					modal : true,
+					resizable : false,
+					buttons : {
+						"提交" : function() {
+							submitDialog();
+							return false; //阻止form的默认提交动作
+						},
+						"取消" : function() {
+							$("#dialog-form").omDialog("close");//关闭dialog
+						}
+					}
+				});
+				$('#add').bind('click', function() {
+					isAdd = true;
+					showDialog('新增', null);//显示dialog
+				});
+				//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+				var showDialog = function(title, idd) {
+					validator.resetForm();
+					$("input[name='isMenu']").removeAttr("checked");
+					$("input[name='state']").removeAttr("checked");
+					if (idd != null) {
+						//edit info;
+						var uri = "/SysFunction/Get/" + idd;
+						$.get(uri, function(response) {
+							if (response != null) {
+								$("input[name='idx']", dialog)
+										.val(response.idx);
+								$("input[name='name']", dialog).val(
+										response.name);
+								$("input[name='ext']", dialog)
+										.val(response.ext);
+								$("input[name='fcode']", dialog)
+								.val(response.fcode);
+								
+								if(response.isMenu==0)
+									$("#updkbu").attr("checked","true");
+								else if(response.isMenu==1)
+									$("#updkbi").attr("checked","true");
+								else
+									$("input[name='isMenu']").removeAttr("checked");
+								
+								if(response.state==0)
+									$("#unUsestate").attr("checked","true");
+								else if(response.state==1)
+									$("#usestate").attr("checked","true");
+								else
+									$("input[name='state']").removeAttr("checked");
+								$("input[name='icon']", dialog).val(
+										response.icon);
+								$("input[name='addtime']", dialog).val(
+										response.addtime);
+								$("input[name='url']", dialog)
+										.val(response.url);
+							}
+						});
+					}
+					dialog.omDialog("option", "title", title);
+					dialog.omDialog("open");//显示dialog 
+				};
+				
+				//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+				var submitDialog = function() {
+					if (validator.form()) {
+						var parentId;
+						if (isAdd)
+							parentId = currentNode.id 
+						else
+							parentId = $("input[name=drag]",dialog).val();
+						var submitData = {
+							operation : isAdd ? 'add' : 'modify',
+							parent : parentId,
+							idx : $("input[name='idx']", dialog).val(),
+							name : $("input[name='name']", dialog).val(),
+							ext : $("input[name='ext']", dialog).val(),
+							isMenu : $("input[name='isMenu']:checked", dialog).val(),
+							state : $("input[name='state']:checked", dialog).val(),
+							icon : $("input[name='icon']", dialog).val(),
+							addtime : $("input[name='addtime']", dialog).val(),
+							url : $("input[name='url']", dialog).val(),
+							fcode : $("input[name='fcode']", dialog).val(),
+						};
+						$.post('/SysFunction/Modify', submitData, function(response) {
+							var InsertNode = {
+		          					   "id"  : response.idx,
+		          	                   "pid" : response.parent,
+		          	                   "text" : response.name,
+		          	                   "url" : response.url,
+		          	                   "state" : response.state,
+		          	                   "isMenu" : response.isMenu,
+		          	                   "icon":response.icon,
+		          	                   "fcode":response.fcode,
+		          	                   "expanded":true
+		          			    };
+							if (isAdd) {
+								$("#mytree").omTree("insert", InsertNode, currentNode); 
+								$.omMessageTip.show({
+									title : "操作成功",
+									content : "添加数据成功",
+									timeout : 1500
+								});
+							} else {
+								if(parentId)
+									$("#mytree").omTree("refresh");
+								else	
+								    $("#mytree").omTree("modifyNew", currentNode , InsertNode);
+								setNode(InsertNode);
+								$.omMessageTip.show({
+									title : "操作成功",
+									content : "修改数据成功",
+									timeout : 1500
+								});
+							}
+							$("#dialog-form").omDialog("close"); //关闭dialog
+						});
+					}
+				};
+				$("input[name='drag']", dialog).omCombo({
+	            	 	dataSource :"/SysFunction/CanDragNode",
+					    editable : false,
+		                valueField : 'idx',
+		                inputField : 'name',
+		                optionField:'name',
+		                onSuccess:function(data, textStatus, event){
+		                	var ext = {"name":"请选择:","idx":""};
+		                	data.unshift(ext);
+	                    }
+	            });
+
+				// 对增加/修改表单的校验设置 ！！！！
+				var validator = $('#ipForm').validate({
+					rules : {
+						name : {
+							required : true,
+							maxlength : 50
+						},
+						ext : {
+							maxlength : 200
+						},
+						icon : {
+							maxlength : 200
+						},
+						fcode : {
+							required : true,
+							maxlength : 200
+						},
+						state : {
+							required : true
+						},
+						isMenu : {
+							required : true
+						}
+					},
+					messages : {
+						fcode : {
+							required : "功能编码 不能为空",
+							maxlength : '长度不能超过200个字符'
+						},
+						name : {
+							required : "名称 不能为空",
+							maxlength : '长度不能超过50个字符'
+						},
+						ext : {
+							maxlength : '长度不能超过200个字符'
+						},
+						icon : {
+							maxlength : '长度不能超过200个字符'
+						},
+						state : {
+							required : "显示菜单 不能为空"
+						},
+						isMenu : {
+							required : "状态 不能为空"
+						}
+					},
+					errorPlacement : function(error, element) { 
+	                    if(error.html()){
+		                    $(element).parents().map(function(){
+		                        if(this.tagName.toLowerCase()=='td'){
+		                            var attentionElement = $(this).next().children().eq(0);
+		                            attentionElement.css('display','block');
+		    	                    attentionElement.html(error);
+		                        }
+		                    });
+	                    }
+	    	        },
+	    	        showErrors: function(errorMap, errorList) {
+	                    if(errorList && errorList.length > 0){
+	                        $.each(errorList,function(index,obj){
+	                            var msg = this.message;
+	                            $(obj.element).parents().map(function(){
+	    	                        if(this.tagName.toLowerCase()=='td'){
+	    	                            var attentionElement = $(this).next().children().eq(0);
+	    	                            attentionElement.show();
+	    	    	                    attentionElement.html(msg);
+	    	                        }
+	    	                    });
+	 	                   });
+	                    }else{
+	                        $(this.currentElements).parents().map(function(){
+		                        if(this.tagName.toLowerCase()=='td'){
+		                            $(this).next().children().eq(0).hide();
+		                        }
+		                    });
+	                    }
+	                    this.defaultShowErrors();
+	                }
+				});
+				//其他iframe 对话框 初始化-->
+				$("#dialog-modal").omDialog({
+					autoOpen : false,
+					width : 535,
+					height : 465,
+					modal : true
+				});
+			});
+	//删除 -- ajax提交
+	function delit(val) {
+		var uri = "/SysFunction/Delete/" + val;
+		$.get(uri, function(responseText) {
+			if (responseText == "操作成功") {
+				$("#mytree").omTree("remove", currentNode);
+				
+				$.omMessageTip.show({
+					title : "操作成功",
+					content : "删除数据成功",
+					timeout : 1500
+				});
+			} else
+				alert(responseText);
+		});
+		return false;//返回false,阻止浏览器默认行为
+	}
+	//通用对话框 -- 提问是否 
+	function doAsk(title, function_call, data) {
+		$.omMessageBox.confirm({
+			title : '提问',
+			content : title,
+			onClose : function(v) {
+				if (v)
+					function_call(data);
+			}
+		});
+	}
+	//通用对话框 -- 警告提示 
+	function showMessage(title) {
+		$.omMessageBox.alert({
+			content : title
+		});
+	}
+	//通用对话框  -- 获取输入提示 
+	function doPrompt(title, function_call, data) {
+		$.omMessageBox.prompt({
+			title : '输入',
+			content : title,
+			onClose : function(v) {
+				if (v === false) {
+					return;
+				}
+				if (v == '') {
+					alert('输入不能为空！');
+					return false;
+				}
+				function_call(v, data);
+			}
+		});
+	}
+</script>
+
+<div id="content" class="content" style="float:left">
+<br>
+	<table id="body-table">
+		<tr>
+			<td valign="top" >
+				<div class="body-box" id="ext-gen10"
+					style="width: 298px; height: 505px; overflow: auto;">
+					<ul id="mytree">
+					</ul>
+				</div>
+			</td>
+			<td valign="top" >
+				<div style="float: right;"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div style="float:left;height:400px;width:400px">
+	<table style="width:230px">
+		<tr><td>模块名称</td><td><input type="text" value="" name="mName" readOnly/></td></tr>
+		<tr><td>功能链接</td><td><input type="text" value="" name="jnUrl" readOnly/></td></tr>
+		<tr><td>功能编码</td><td><input type="text" value="" name="jnCode" readOnly/></td></tr>
+		<tr><td>图标</td><td><input type="text" value="" name="oIcon" readOnly/></td></tr>
+		<tr><td>显示菜单</td><td><input type="radio" id="updkbio" value="1" name="isMenuo"/>是<input type="radio" id="updkbuo" value="0" name="isMenuo"/>否</td></tr>
+		<tr><td>状态</td><td><input type="radio" id="usestateo" value="1" name="stateo"/>使用中<input type="radio" id="unUsestateo" value="0" name="stateo"/>禁用</td></tr>
+	</table>
+</div>
+
+<div id="menu"></div>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+ <div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idx" value="" />
+		<table style="width:300px">
+			<tr>
+				<td>功能名称：</td>
+				<td><input name="name" /></td>
+				<td><span></span></td>
+			</tr>
+			<tr>
+				<td>功能编码：</td>
+				<td><input name="fcode" /></td>
+				<td><span></span></td>
+			</tr>
+			<tr>
+				<td>功能链接：</td>
+				<td><input name="url" /></td>
+				<td><span></span></td>
+			</tr>
+			<tr>
+				<td>显示菜单：</td>
+				<td><input type="radio" name="isMenu" value="1" id="updkbi" />是&nbsp;&nbsp;
+					<input type="radio" name="isMenu" value="0" id="updkbu"
+					 />否</td>
+				 <td><span></span></td>
+			</tr>
+			<tr>
+				<td>状态：</td>
+				<td><input type="radio" name="state" value="1" id="usestate" />使用中&nbsp;&nbsp;
+					<input type="radio" name="state" value="0" id="unUsestate"
+					 />禁用</td>
+				<td><span></span></td>	 
+			</tr>
+			<tr>
+				<td>图标：</td>
+				<td><input name="icon" /></td>
+				<td><span></span></td>
+			</tr>
+			<tr>
+				<td>说明：</td>
+				<td><input name="ext" /></td>
+				<td><span></span></td>
+			</tr>
+			<tr id="drag">
+				<td>移动节点至：</td>
+				<td><input name="drag" /></td>
+				<td><span></span></td>
+			</tr>
+		</table>
+	</form>
+</div> 
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+
+}

@@ -1,0 +1,8 @@
+@(entity:util.classEntity.Entity)
+GET   /@entity.name/View        controllers.@(entity.name)Action.view()
+GET   /@entity.name/List        controllers.@(entity.name)Action.list()
+GET   /@entity.name/All        controllers.@(entity.name)Action.listAll()
+GET   /@entity.name/Delete/:id  controllers.@(entity.name)Action.delete(id:Int)
+GET   /@entity.name/Get/:id     controllers.@(entity.name)Action.get(id:Int)
+POST  /@entity.name/Modify      controllers.@(entity.name)Action.modify()
+POST  /@entity.name/Upload      controllers.@(entity.name)Action.upload()

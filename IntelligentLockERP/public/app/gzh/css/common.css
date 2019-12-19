@@ -1,0 +1,29 @@
+@charset "UTF-8";
+#return_title{/* 顶部返回 共用头部 */
+	background-color: #f1f1f1;
+	font-size: 17px;
+	font-weight: 600;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+}
+#return_left_img{/* 返回<图标 */
+	display: inline-block;
+	cursor: pointer;
+}
+#return_left_img img{/* 返回<图标图片 */
+	width: 30px;
+	height: 30px;
+	margin-left: 20px;
+}
+#return_center_title{/* 返回标题 */
+	display: inline-block;
+	width: calc(99% - 100px);
+	text-align: center;
+	float: right;
+	line-height: 30px;
+	margin-right: 52px;
+}
+#return_center_title p{/* 返回标题文字 */
+	margin: 0px;
+}

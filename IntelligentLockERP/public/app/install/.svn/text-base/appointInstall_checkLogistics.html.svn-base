@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>司铠智能</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		 .row_top{
+			margin-bottom: 48px;
+		}
+		.measure_fanhui{
+			border-bottom: 1px solid #ccc;
+			position: fixed;
+			font-size: 16px;
+			background-color: #f8f8f8;
+			width: 100%;
+			height: 48px;
+			left: 0px;
+			z-index: 1;
+		}
+		.fanhui_img{
+		    position: absolute;
+		    width:36px;
+		    height: 36px;
+		    left: 8px;
+		    top: 5px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.font_12{			/* 提示语 */
+			background-color: white;
+			border-bottom: 1px solid #d2cece;
+			position: fixed;
+			padding-left: 18px;
+			font-size:13px;
+			height: 48px;
+			line-height: 48px;
+			left: 0px;
+			z-index: 1;
+		}
+		.copy_img{			/* 上方浮动的 复制按钮(图片) */
+			height: 25px;
+		    width: auto;
+		    position: fixed;
+    		top: 59.5px;
+   		 	right: 18px;
+		}
+		.container_bot{		/* 下方的container */
+			margin-top: 75px;
+		}
+		.ul_style{				/* 无序列表的样式 */
+			padding-left: 15px;
+    		border-left: 1px dashed #ccc;
+    		margin-bottom: 0px;
+    		height: auto;
+    		width: 95%;
+    		color: #ccc;
+		}
+		.first_logo{				/* 第一个li 的红色圆点 */
+			position: absolute;
+	       	width: 21px;
+	        height: 21px;
+			left: -36px;
+			top: 20px;
+		}
+		.li_style{				/* ul下的 其余li 的复用样式 */
+			position: relative;
+			font-size: 40px;
+    		left: 10px;
+    		top: -24px;
+		}
+		.time_div{				/* ul下的 时间的DIV样式 */
+			color: #ccc;
+			font-size: 16px;
+			height: 50px;
+		}
+		.time_span{				/* ul下的 时间的SPAN样式 */	
+		    position: relative;
+		    top: -6px;
+		}
+		.txt_div_black{			/* ul下的 文本的样式(黑色字体) */
+			color: black; 
+			font-size: 13px;
+			padding-bottom: 15px;
+		}
+		.txt_div_ccc{				/* ul下的 文本的样式(灰色字体) */
+			font-size: 13px;
+			padding-bottom: 15px;
+		}
+	</style>
+</head>
+<body>
+	<div id="expressorderid_div">
+	<div class="container">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<img alt="logo" src="/public/app/install/images/fanhui.png" class="fanhui_img">
+				<span>查看物流</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 font_12">
+				<span>{{expressname}}：</span><span id="expressid_span">{{expressorderid}}</span>
+				<img alt="图片加载失败" src="/public/app/install/images/copy.jpg" class="copy_img">
+			</div>
+		</div>
+	</div>
+	<div class="container container_bot">
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<ul class="ul_style">
+					<li class="li_style" v-for="(site,index) in sites">
+						<div v-if="index=='0'">
+							<img src="/public/app/install/images/wc.png" class="first_logo" />
+						</div>
+						<div class="time_div">
+							<span class="time_span">{{site.scanDate}}</span>
+						</div>
+						<div class="txt_div_black" v-if="index=='0'">
+							<span>{{site.stateDescription}}</span>
+						</div>
+						<div class="txt_div_ccc" v-else>
+							<span>{{site.stateDescription}}</span>
+						</div>
+					</li>
+				</ul>
+								</div>
+		</div>
+	</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<script type="text/javascript">
+		//从url中获取参数
+	    var getQuery = function(name) {
+	    	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	    	var r = window.location.search.substr(1).match(reg);
+	    	if (r != null)
+	    		return (r[2]);
+	    	return null;
+	    };
+	    var vm=new Vue({
+		    el: "#expressorderid_div",
+		    data: {
+		    	expressname: "暂无订单信息",
+		    	expressorderid : "订单号",
+		    	sites: []
+		    },
+		    mounted:function(){
+		    	/* 查询该idd下 的物流订单号 */
+		        this.showData();
+		    },
+		    methods:{
+		    	showData:function () {
+		            jQuery.ajax({
+		                url: "/v1/appointSelInsOrderDetail",
+		                data: {oid: getQuery("idd")},
+		                type: 'get',
+		              	dataType:"json",
+		              	success: function (res){
+		              		console.log(res);
+		              		if(res.code=="0"&&res.data.expressorderid!=null&&res.data.expressorderid!=""){
+		              			vm.expressorderid = res.data.expressorderid;
+		              			vm.expressname = res.data.expressname;
+		              			jQuery.ajax({
+		    		                url: "/express/query",
+		    		                data: {billCode : vm.expressorderid},
+		    		                type: 'get',
+		    		              	dataType:"json",
+		    		              	success: function (e){
+		    		              		if(null != e.result){
+		    		              			for(var i = 0;i < e.result.logisticsRecord.length;i++){
+		    		              				for(var j = 0; j<e.result.logisticsRecord[i].length; j++){
+		    		              					vm.sites.push(e.result.logisticsRecord[i][j]);
+		    		              				}
+		    		              			}
+		    		              		}
+		    		                },
+		    		                error:function(error){
+		    		                	alert("加载失败,点击重试");
+		    		                	console.log(error);
+		    		                	location.reload(true);
+		    		                }
+		    		           })
+		              		}else if(res.code=="1"||res.code=="2"){
+		              			window.location.href="/public/app/install/appointInstall_login.html";
+		              		}
+		                }
+		           })
+		        }
+		    }
+	    })
+		window.onload=function(){
+			$(".fanhui_img").click(function(){
+				window.location.href="/public/app/install/appointInstall_installOrder.html";
+			});
+			$(".copy_img").click(function(){
+				const spanText = document.getElementById('expressid_span').innerText;
+			    const oInput = document.createElement('input');
+			    oInput.value = spanText;
+			    document.body.appendChild(oInput);
+			    oInput.select(); // 选择对象
+			    document.execCommand('Copy'); // 执行浏览器复制命令
+			    oInput.className = 'oInput';
+			    oInput.style.display = 'none';
+			    document.body.removeChild(oInput);
+			    alert("复制成功");
+			});
+		}
+	</script>
+</body>
+</html>

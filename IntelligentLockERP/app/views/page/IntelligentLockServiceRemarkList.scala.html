@@ -1,0 +1,2714 @@
+
+@htmlhead("服务备注表 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+											height : 505,
+											dataType : "json",
+											dataSource : '/IntelligentLockServiceRemark/List',
+											showIndex : false,
+											limit : 13,									
+											errorMsg : "获取数据出错",
+											emptyMsg : "没有数据",
+											
+											//Grid的header配置   ！！！！
+											colModel : [
+													
+													{
+														header : 'IDD',
+														name : 'idd',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '订单引流人',
+														name : 'promoter',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '订单号',
+														name : 'ordernumber',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '订单状态',
+														name : 'status',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '订单安装负责人',
+														name : 'installprincipal',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '锁下单时间',
+														name : 'ordertime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {
+																if(colValue == null || colValue == ""){
+																	return "";
+																}else{
+					                                    			return fmtDate(new Date(colValue),"yyyy年MM月dd日");
+																}
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '发货时间',
+														name : 'deliverytime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {
+																if(colValue == null || colValue == ""){
+																	return "";
+																}else{
+					                                    			return fmtDate(new Date(colValue),"yyyy年MM月dd日");
+																}
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '物流名称',
+														name : 'logistics',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '锁到货时间',
+														name : 'arrivaltime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+																if(colValue == null || colValue == ""){
+																	return "";
+																}else{
+					                                    			return fmtDate(new Date(colValue),"yyyy年MM月dd日");
+																}
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '导向片定制时间',
+														name : 'guidecustommadetime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+																if(colValue == null || colValue == ""){
+																	return "";
+																}else{
+					                                    			return fmtDate(new Date(colValue),"yyyy年MM月dd日");
+																}
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '导向片签收时间',
+														name : 'guidesigningtime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+																if(colValue == null || colValue == ""){
+																	return "";
+																}else{
+					                                    			return fmtDate(new Date(colValue),"yyyy年MM月dd日");
+																}
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '预约安装时间',
+														name : 'reservationtime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+																if(colValue == null || colValue == ""){
+																	return "";
+																}else{
+					                                    			return fmtDate(new Date(colValue),"yyyy年MM月dd日");
+																}
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '订单完成时间',
+														name : 'ordersuctime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+																if(colValue == null || colValue == ""){
+																	return "";
+																}else{
+					                                    			return fmtDate(new Date(colValue),"yyyy年MM月dd日");
+																}
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '用户联系人',
+														name : 'contact',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '用户联系电话',
+														name : 'phone',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装地址',
+														name : 'addr',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '渠道',
+														name : 'channel',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '需安装产品类型',
+														name : 'type',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '需安装产品型号',
+														name : 'model',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装产品规格',
+														name : 'spec',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装数量',
+														name : 'num',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '门材质',
+														name : 'material',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '门厚度',
+														name : 'thickness',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '开门方向',
+														name : 'opendirection',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '天地钩',
+														name : 'hook',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '是否定制导向片',
+														name : 'guidecustommade',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '导向片类型',
+														name : 'guidetype',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '导向片尺寸',
+														name : 'guidesize',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装费',
+														name : 'installationprice',
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '定制导向片费用',
+														name : 'guidecustommadeprice',
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '测量',
+														name : 'measureprice',
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '空跑费',
+														name : 'emptyrunprice',
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '总价',
+														name : 'totalprice',
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '备注',
+														name : 'remark',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '维修费用',
+														name : 'repair',
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '承担方',
+														name : 'bearer',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+											     		 renderer:function(colValue, rowData, rowIndex){
+											     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+											     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div><div class='delete'>删除</div></div>";
+											     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+											     			 return menu + btn;
+												         }} ],
+											         
+													onRefresh: function(nowPage, pageRecords,event){
+								                		var $grid = $('#mygrid'); 
+								                	    $grid.find("a.op-btn").each(function(){
+								                		var $btn = $(this); 
+								                		
+								                		// 初始化表格里面的操作按钮 
+								                		$btn.omButton({
+								                			icons : {left : '/public/images/op-btn-icon.png'},
+								                			width : 75,
+								                			onClick : function(event){                				
+								                				var v = $grid.find("div.op-menu:visible");
+								                				var $opMenu = $(event.currentTarget.previousSibling);
+								                				// 重新计算菜单的位置
+								                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+								                				if($opMenu.css("display") == "none"){
+								                					$opMenu.show().css({left:left});
+								                				} else{
+								                					$opMenu.hide();
+								                				}
+								                				v.hide();
+								                				event.stopPropagation();
+								                				return false;
+								                			}
+								                		});
+								                	});
+
+								                	// 绑定表格操作按钮菜单的事件 ！！！！
+								                	$grid.find("div.op-menu").each(function(){
+								                		var $menu = $(this);
+								                		var rowindex=$menu.id;
+								                		$menu.hide();
+								                		$menu.find(".edit").click(function(){
+															isAdd = false;
+															var index = $(this).parent().attr('id');
+											                showDialog('修改',index);//显示dialog
+														});
+								                		
+								                		$menu.find(".delete").click(function(){
+															var index = $(this).parent().attr('id');
+															doAsk('确定删除吗？' , delit , index );
+														});
+								                		
+								                	});				
+								               }
+										});
+		
+						//[新增/修改]dialog初始化
+						var dialog = $("#dialog-form").omDialog({
+							width : 460,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"取消" : function() {
+									$("#dialog-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						//新增按钮
+						$('#add').bind('click', function() {
+			                isAdd = true;
+			                showDialog('新增',null);//显示dialog
+			            });
+						
+						//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+						var showDialog = function(title, idd) {
+							validator.resetForm();//显示表单
+							if(idd!=null){
+								//edit info;
+								var uri = "/IntelligentLockServiceRemark/Get/"+idd;
+								$.get(uri,function(response){
+						            if(response!=null){
+										$("input[name='idd']", dialog).val(response.idd);
+										
+											$("input[name='idd']", dialog).val(response.idd);
+											$("input[name='promoter']", dialog).val(response.promoter);
+											$("input[name='ordernumber']", dialog).val(response.ordernumber);
+											$("select[name='status']", dialog).val(response.status);
+											$("select[name='installprincipal']", dialog).val(response.installprincipal);
+											$("input[name='ordertime']", dialog).val(response.ordertime);
+												$("input[name='ordertime']", dialog).val(fmtDate(new Date(response.ordertime),"yyyy-MM-dd"));
+											$("input[name='deliverytime']", dialog).val(response.deliverytime);
+												$("input[name='deliverytime']", dialog).val(fmtDate(new Date(response.deliverytime),"yyyy-MM-dd"));
+											$("input[name='logistics']", dialog).val(response.logistics);
+											$("input[name='arrivaltime']", dialog).val(response.arrivaltime);
+												$("input[name='arrivaltime']", dialog).val(fmtDate(new Date(response.arrivaltime),"yyyy-MM-dd"));
+											$("input[name='guidecustommadetime']", dialog).val(response.guidecustommadetime);
+												$("input[name='guidecustommadetime']", dialog).val(fmtDate(new Date(response.guidecustommadetime),"yyyy-MM-dd"));
+											$("input[name='guidesigningtime']", dialog).val(response.guidesigningtime);
+												$("input[name='guidesigningtime']", dialog).val(fmtDate(new Date(response.guidesigningtime),"yyyy-MM-dd"));
+											$("input[name='reservationtime']", dialog).val(response.reservationtime);
+												$("input[name='reservationtime']", dialog).val(fmtDate(new Date(response.reservationtime),"yyyy-MM-dd"));
+											$("input[name='ordersuctime']", dialog).val(response.ordersuctime);
+												$("input[name='ordersuctime']", dialog).val(fmtDate(new Date(response.ordersuctime),"yyyy-MM-dd"));
+											$("input[name='contact']", dialog).val(response.contact);
+											$("input[name='phone']", dialog).val(response.phone);
+											$("input[name='addr']", dialog).val(response.addr);
+											$("select[name='channel']", dialog).val(response.channel);
+											$("select[name='type']", dialog).val(response.type);
+											$("select[name='model']", dialog).val(response.model);
+											$("select[name='spec']", dialog).val(response.spec);
+											$("input[name='num']", dialog).val(response.num);
+											$("input[name='material']", dialog).val(response.material);
+											$("input[name='thickness']", dialog).val(response.thickness);
+											$("select[name='opendirection']", dialog).val(response.opendirection);
+											$("select[name='hook']", dialog).val(response.hook);
+											$("select[name='guidecustommade']", dialog).val(response.guidecustommade);
+											$("select[name='guidetype']", dialog).val(response.guidetype);
+											$("select[name='guidesize']", dialog).val(response.guidesize);
+											$("input[name='installationprice']", dialog).val(response.installationprice);
+											$("input[name='guidecustommadeprice']", dialog).val(response.guidecustommadeprice);
+											$("input[name='measureprice']", dialog).val(response.measureprice);
+											$("input[name='emptyrunprice']", dialog).val(response.emptyrunprice);
+											$("input[name='totalprice']", dialog).val(response.totalprice);
+											$("input[name='remark']", dialog).val(response.remark);
+											$("input[name='repair']", dialog).val(response.repair);
+											$("input[name='bearer']", dialog).val(response.bearer);
+						         }
+								});
+							}
+							dialog.omDialog("option", "title", title);
+							dialog.omDialog("open");//显示dialog 
+						};
+						
+						//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+						var submitDialog = function() {
+							if (validator.form()) {
+								var submitData = {
+									operation : isAdd ? 'add' : 'modify',
+									idd : $("input[name='idd']",dialog).val(),
+												idd : $("input[name='idd']", dialog).val()	
+												,promoter : $("input[name='promoter']", dialog).val()
+												,ordernumber : $("input[name='ordernumber']", dialog).val()
+												,status : $("select[name='status']", dialog).val()
+												,installprincipal : $("select[name='installprincipal']", dialog).val()
+												,ordertime : $("input[name='ordertime']", dialog).val()
+												,deliverytime : $("input[name='deliverytime']", dialog).val()
+												,logistics : $("input[name='logistics']", dialog).val()
+												,arrivaltime : $("input[name='arrivaltime']", dialog).val()
+												,guidecustommadetime : $("input[name='guidecustommadetime']", dialog).val()
+												,guidesigningtime : $("input[name='guidesigningtime']", dialog).val()
+												,reservationtime : $("input[name='reservationtime']", dialog).val()
+												,ordersuctime : $("input[name='ordersuctime']", dialog).val()
+												,contact : $("input[name='contact']", dialog).val()
+												,phone : $("input[name='phone']", dialog).val()
+												,addr : $("input[name='addr']", dialog).val()
+												,channel : $("select[name='channel']", dialog).val()
+												,type : $("select[name='type']", dialog).val()
+												,model : $("select[name='model']", dialog).val()
+												,spec : $("select[name='spec']", dialog).val()
+												,num : $("input[name='num']", dialog).val()
+												,material : $("input[name='material']", dialog).val()
+												,thickness : $("input[name='thickness']", dialog).val()
+												,opendirection : $("select[name='opendirection']", dialog).val()
+												,hook : $("select[name='hook']", dialog).val()
+												,guidecustommade : $("select[name='guidecustommade']", dialog).val()
+												,guidetype : $("select[name='guidetype']", dialog).val()
+												,guidesize : $("select[name='guidesize']", dialog).val()
+												,installationprice : $("input[name='installationprice']", dialog).val()
+												,guidecustommadeprice : $("input[name='guidecustommadeprice']", dialog).val()
+												,measureprice : $("input[name='measureprice']", dialog).val()
+												,emptyrunprice : $("input[name='emptyrunprice']", dialog).val()
+												,totalprice : $("input[name='totalprice']", dialog).val()
+												,remark : $("input[name='remark']", dialog).val()
+												,repair : $("input[name='repair']", dialog).val()
+												,bearer : $("input[name='bearer']", dialog).val()
+											
+										
+									
+								};
+								console.log(submitData)
+								$.post('/IntelligentLockServiceRemark/Modify', submitData, function() {
+									if (isAdd) {
+										$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "添加数据成功",
+											timeout : 1500
+										});
+									} else {
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "修改数据成功",
+											timeout : 1500
+										});
+									}
+									$("#dialog-form").omDialog("close"); //关闭dialog
+								});
+							}
+						};
+
+						// 对增加/修改表单的校验设置 ！！！！
+						var validator = $('#ipForm').validate({
+							rules : {
+								
+									
+									
+								
+									
+										promoter : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+									
+								
+									
+									
+										,
+										ordernumber : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										installprincipal : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										ordertime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										deliverytime : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										logistics : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										arrivaltime : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										guidecustommadetime : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										guidesigningtime : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										reservationtime : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										ordersuctime : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										contact : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										phone : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										addr : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										channel : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										type : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										model : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										spec : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										num : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										material : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										thickness : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										opendirection : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										hook : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										guidecustommade : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										guidetype : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										guidesize : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										installationprice : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										guidecustommadeprice : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										measureprice : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										emptyrunprice : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										totalprice : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										remark : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										repair : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										bearer : {
+											required : false,
+		                        			maxlength : 100
+										}
+									
+								
+							},
+							messages : {
+								
+									
+									
+								
+									
+										promoter : {
+											required : "订单引流人不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+									
+								
+									
+									
+										,
+										ordernumber : {
+											required : "订单号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : "订单状态不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										installprincipal : {
+											required : "订单安装负责人不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										ordertime : {
+											required : "锁下单时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										deliverytime : {
+											required : "发货时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										logistics : {
+											required : "物流名称不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										arrivaltime : {
+											required : "锁到货时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										guidecustommadetime : {
+											required : "导向片定制时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										guidesigningtime : {
+											required : "导向片签收时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										reservationtime : {
+											required : "预约安装时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										ordersuctime : {
+											required : "订单完成时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										contact : {
+											required : "用户联系人不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										phone : {
+											required : "用户联系电话不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										addr : {
+											required : "安装地址不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										channel : {
+											required : "渠道不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										type : {
+											required : "需安装产品类型不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										model : {
+											required : "需安装产品型号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										spec : {
+											required : "安装产品规格不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										num : {
+											required : "安装数量不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										material : {
+											required : "门材质不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										thickness : {
+											required : "门厚度不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										opendirection : {
+											required : "开门方向不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										hook : {
+											required : "天地钩不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										guidecustommade : {
+											required : "是否定制导向片不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										guidetype : {
+											required : "导向片类型不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										guidesize : {
+											required : "导向片尺寸不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										installationprice : {
+											required : "安装费不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										guidecustommadeprice : {
+											required : "定制导向片费用不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										measureprice : {
+											required : "测量不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										emptyrunprice : {
+											required : "空跑费不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										totalprice : {
+											required : "总价不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										remark : {
+											required : "备注不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										repair : {
+											required : "维修费用不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										bearer : {
+											required : "承担方不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+							}
+						});
+						
+						//其他iframe 对话框 初始化-->
+						$( "#dialog-modal").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+						
+				        $( "#user_auth_form").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+				        
+				        $("#user_add_form").omDialog({
+				        	autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+						});	
+				        
+				        var uploadDialog = $("#upload-form").omDialog({
+							width : 500,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitUploadDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"关闭" : function() {
+									$("#upload-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						var submitUploadDialog = function(){
+							$("#upload-form").omDialog("close");
+							//var uploadidd = $("input[name='uploadidd']").val();
+							var uploadidd = '';
+							var url = "/IntelligentLockServiceRemark/Upload";
+					        $.ajaxFileUpload({  
+					            url:url,  
+					            secureuri:false,  
+					            fileElementId:'file_excel',//file标签的id  
+					            dataType: 'json',//返回数据的类型  
+					            data:{uploadidd:uploadidd},//一同上传的数据  
+					            success: function (data, status) { 
+					            	$('#mygrid').omGrid('reload', 1);
+					            	$.omMessageTip.show({
+										title : "操作成功",
+										content : "成功导入"+data+"条",
+										timeout : 1500
+									}); 
+					            	
+					            },  
+					            error: function (data, status, e) {  
+					                alert(e);  
+					            }  
+					        });  
+						};
+						
+						$('#import').bind('click', function() {
+							$("#uploadForm")[0].reset();
+                			/*对应于指定目标的上传
+                			var index = $(this).parent().attr('id');
+                			$("input[name='uploadidd']").val(index); 
+                			*/
+                			uploadDialog.omDialog("option", "title", "导入（excel）");
+                			uploadDialog.omDialog("open");
+			            });
+						
+						//搜索按钮加图片
+						var searchPanel = $("#search-panel").omPanel({
+				            	title : "工具栏",collapsible:true
+				            });
+						 $('span#button-search').omButton({
+			          	    icons : {left : '/public/images/search.png'},width : 70
+			       	 	    });
+						 $('span#button-noSearch').omButton({
+				          	    icons : {left : '/public/images/searchNo.png'},width : 70
+				       	 	});
+						 $('span#add').omButton({
+				          	    icons : {},width : 70
+				       	 	});
+						 
+						 $('span#import').omButton({
+				          	    icons : {},width : 110
+				       	 	});
+						 
+						 $('span#button-export').omButton({
+				          	   	width : 90
+				       	 });
+						 
+						//下载Excel格式
+				       	$('span#button-export').bind('click', function(e){
+				       		var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'promoter='+encodeURI($("input[name='promoter']", searchPanel).val())+"&";
+							
+								searchStr += 'ordernumber='+encodeURI($("input[name='ordernumber']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'installprincipal='+encodeURI($("select[name='installprincipal']", searchPanel).val())+"&";
+							
+								searchStr += 'ordertime='+encodeURI($("input[name='ordertime']", searchPanel).val())+"&";
+							
+								searchStr += 'deliverytime='+encodeURI($("input[name='deliverytime']", searchPanel).val())+"&";
+							
+								searchStr += 'logistics='+encodeURI($("input[name='logistics']", searchPanel).val())+"&";
+							
+								searchStr += 'arrivaltime='+encodeURI($("input[name='arrivaltime']", searchPanel).val())+"&";
+							
+								searchStr += 'guidecustommadetime='+encodeURI($("input[name='guidecustommadetime']", searchPanel).val())+"&";
+							
+								searchStr += 'guidesigningtime='+encodeURI($("input[name='guidesigningtime']", searchPanel).val())+"&";
+							
+								searchStr += 'reservationtime='+encodeURI($("input[name='reservationtime']", searchPanel).val())+"&";
+							
+								searchStr += 'ordersuctime='+encodeURI($("input[name='ordersuctime']", searchPanel).val())+"&";
+							
+								searchStr += 'contact='+encodeURI($("input[name='contact']", searchPanel).val())+"&";
+							
+								searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+							
+								searchStr += 'addr='+encodeURI($("input[name='addr']", searchPanel).val())+"&";
+							
+								searchStr += 'channel='+encodeURI($("select[name='channel']", searchPanel).val())+"&";
+							
+								searchStr += 'type='+encodeURI($("select[name='type']", searchPanel).val())+"&";
+							
+								searchStr += 'model='+encodeURI($("select[name='model']", searchPanel).val())+"&";
+							
+								searchStr += 'spec='+encodeURI($("select[name='spec']", searchPanel).val())+"&";
+							
+								searchStr += 'num='+encodeURI($("input[name='num']", searchPanel).val())+"&";
+							
+								searchStr += 'material='+encodeURI($("input[name='material']", searchPanel).val())+"&";
+							
+								searchStr += 'thickness='+encodeURI($("input[name='thickness']", searchPanel).val())+"&";
+							
+								searchStr += 'opendirection='+encodeURI($("select[name='opendirection']", searchPanel).val())+"&";
+							
+								searchStr += 'hook='+encodeURI($("select[name='hook']", searchPanel).val())+"&";
+							
+								searchStr += 'guidecustommade='+encodeURI($("select[name='guidecustommade']", searchPanel).val())+"&";
+							
+								searchStr += 'guidetype='+encodeURI($("select[name='guidetype']", searchPanel).val())+"&";
+							
+								searchStr += 'guidesize='+encodeURI($("select[name='guidesize']", searchPanel).val())+"&";
+							
+								searchStr += 'installationprice='+encodeURI($("input[name='installationprice']", searchPanel).val())+"&";
+							
+								searchStr += 'guidecustommadeprice='+encodeURI($("input[name='guidecustommadeprice']", searchPanel).val())+"&";
+							
+								searchStr += 'measureprice='+encodeURI($("input[name='measureprice']", searchPanel).val())+"&";
+							
+								searchStr += 'emptyrunprice='+encodeURI($("input[name='emptyrunprice']", searchPanel).val())+"&";
+							
+								searchStr += 'totalprice='+encodeURI($("input[name='totalprice']", searchPanel).val())+"&";
+							
+								searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+							
+								searchStr += 'repair='+encodeURI($("input[name='repair']", searchPanel).val())+"&";
+							
+								searchStr += 'bearer='+encodeURI($("input[name='bearer']", searchPanel).val())+"&";
+							
+			                var url = '/IntelligentLockServiceRemark/List?export=1&'+searchStr;
+			                window.location.href = url;
+				        });	
+						
+						//搜索绑定 =》grid ！！！！
+			       	 	$('span#button-search').bind('click', function(e) {
+			                var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'promoter='+encodeURI($("input[name='promoter']", searchPanel).val())+"&";
+							
+								searchStr += 'ordernumber='+encodeURI($("input[name='ordernumber']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'installprincipal='+encodeURI($("select[name='installprincipal']", searchPanel).val())+"&";
+							
+								searchStr += 'ordertime='+encodeURI($("input[name='ordertime']", searchPanel).val())+"&";
+							
+								searchStr += 'deliverytime='+encodeURI($("input[name='deliverytime']", searchPanel).val())+"&";
+							
+								searchStr += 'logistics='+encodeURI($("input[name='logistics']", searchPanel).val())+"&";
+							
+								searchStr += 'arrivaltime='+encodeURI($("input[name='arrivaltime']", searchPanel).val())+"&";
+							
+								searchStr += 'guidecustommadetime='+encodeURI($("input[name='guidecustommadetime']", searchPanel).val())+"&";
+							
+								searchStr += 'guidesigningtime='+encodeURI($("input[name='guidesigningtime']", searchPanel).val())+"&";
+							
+								searchStr += 'reservationtime='+encodeURI($("input[name='reservationtime']", searchPanel).val())+"&";
+							
+								searchStr += 'ordersuctime='+encodeURI($("input[name='ordersuctime']", searchPanel).val())+"&";
+							
+								searchStr += 'contact='+encodeURI($("input[name='contact']", searchPanel).val())+"&";
+							
+								searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+							
+								searchStr += 'addr='+encodeURI($("input[name='addr']", searchPanel).val())+"&";
+							
+								searchStr += 'channel='+encodeURI($("select[name='channel']", searchPanel).val())+"&";
+							
+								searchStr += 'type='+encodeURI($("select[name='type']", searchPanel).val())+"&";
+							
+								searchStr += 'model='+encodeURI($("select[name='model']", searchPanel).val())+"&";
+							
+								searchStr += 'spec='+encodeURI($("select[name='spec']", searchPanel).val())+"&";
+							
+								searchStr += 'num='+encodeURI($("input[name='num']", searchPanel).val())+"&";
+							
+								searchStr += 'material='+encodeURI($("input[name='material']", searchPanel).val())+"&";
+							
+								searchStr += 'thickness='+encodeURI($("input[name='thickness']", searchPanel).val())+"&";
+							
+								searchStr += 'opendirection='+encodeURI($("select[name='opendirection']", searchPanel).val())+"&";
+							
+								searchStr += 'hook='+encodeURI($("select[name='hook']", searchPanel).val())+"&";
+							
+								searchStr += 'guidecustommade='+encodeURI($("select[name='guidecustommade']", searchPanel).val())+"&";
+							
+								searchStr += 'guidetype='+encodeURI($("select[name='guidetype']", searchPanel).val())+"&";
+							
+								searchStr += 'guidesize='+encodeURI($("select[name='guidesize']", searchPanel).val())+"&";
+							
+								searchStr += 'installationprice='+encodeURI($("input[name='installationprice']", searchPanel).val())+"&";
+							
+								searchStr += 'guidecustommadeprice='+encodeURI($("input[name='guidecustommadeprice']", searchPanel).val())+"&";
+							
+								searchStr += 'measureprice='+encodeURI($("input[name='measureprice']", searchPanel).val())+"&";
+							
+								searchStr += 'emptyrunprice='+encodeURI($("input[name='emptyrunprice']", searchPanel).val())+"&";
+							
+								searchStr += 'totalprice='+encodeURI($("input[name='totalprice']", searchPanel).val())+"&";
+							
+								searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+							
+								searchStr += 'repair='+encodeURI($("input[name='repair']", searchPanel).val())+"&";
+							
+								searchStr += 'bearer='+encodeURI($("input[name='bearer']", searchPanel).val())+"&";
+							
+			                $('#mygrid').omGrid("setData", '/IntelligentLockServiceRemark/List?'+searchStr );
+			            });
+			       	 
+						
+			 			
+			 				/*
+			 				$("input[name='idd']", searchPanel).omCombo({
+				            	 dataSource : '/IntelligentLockServiceRemark/All',
+					                optionField : function(data, index) {
+					                    return data.idd;
+					                },
+					                valueField : 'idd',
+					                inputField : 'idd'
+				            });
+			 				*/
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='ordertime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='ordertime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='deliverytime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='deliverytime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='arrivaltime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='arrivaltime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='guidecustommadetime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='guidecustommadetime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='guidesigningtime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='guidesigningtime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='reservationtime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='reservationtime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='ordersuctime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='ordersuctime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			       	    
+						//不搜索 =》grid
+			       	 	$('span#button-noSearch').bind('click', function(e) {
+		                    $('#mygrid').omGrid("setData", '/IntelligentLockServiceRemark/List?key=');
+			            });	
+			            
+			             // 点击页面其他地方的时候隐藏表格里面的菜单
+			            $("body").click(function(){
+							$("#mygrid").find("div.op-menu:visible").hide();
+			            });		
+	
+					});	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/IntelligentLockServiceRemark/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+
+		
+		
+		
+		
+		<span class="label">订单引流人：</span> 
+		<input name="promoter" id="promoter" />
+		
+		
+		
+		<span class="label">订单号：</span> 
+		<input name="ordernumber" id="ordernumber" />
+		
+		
+		
+		<span class="label">订单状态：</span> 
+		<input name="status" id="status" />
+		
+		
+		
+		<span class="label">订单安装负责人：</span> 
+		<input name="installprincipal" id="installprincipal" />
+		
+		
+		
+		<span class="label">锁下单时间：</span> 
+		<input name="ordertime" id="ordertime" />
+		
+		
+		
+		<span class="label">发货时间：</span> 
+		<input name="deliverytime" id="deliverytime" />
+		
+		
+		
+		<span class="label">物流名称：</span> 
+		<input name="logistics" id="logistics" />
+		
+		
+		
+		<span class="label">锁到货时间：</span> 
+		<input name="arrivaltime" id="arrivaltime" />
+		
+		
+		
+		<span class="label">导向片定制时间：</span> 
+		<input name="guidecustommadetime" id="guidecustommadetime" />
+		
+		
+		
+		<span class="label">导向片签收时间：</span> 
+		<input name="guidesigningtime" id="guidesigningtime" />
+		
+		
+		
+		<span class="label">预约安装时间：</span> 
+		<input name="reservationtime" id="reservationtime" />
+		
+		
+		
+		<span class="label">订单完成时间：</span> 
+		<input name="ordersuctime" id="ordersuctime" />
+		
+		
+		
+		<span class="label">用户联系人：</span> 
+		<input name="contact" id="contact" />
+		
+		
+		
+		<span class="label">用户联系电话：</span> 
+		<input name="phone" id="phone" />
+		
+		
+		
+		<span class="label">安装地址：</span> 
+		<input name="addr" id="addr" />
+		
+		
+		
+		<span class="label">渠道：</span> 
+		<input name="channel" id="channel" />
+		
+		
+		
+		<span class="label">需安装产品类型：</span> 
+		<input name="type" id="type" />
+		
+		
+		
+		<span class="label">需安装产品型号：</span> 
+		<input name="model" id="model" />
+		
+		
+		
+		<span class="label">安装产品规格：</span> 
+		<input name="spec" id="spec" />
+		
+		
+		
+		<span class="label">安装数量：</span> 
+		<input name="num" id="num" />
+		
+		
+		
+		<span class="label">门材质：</span> 
+		<input name="material" id="material" />
+		
+		
+		
+		<span class="label">门厚度：</span> 
+		<input name="thickness" id="thickness" />
+		
+		
+		
+		<span class="label">开门方向：</span> 
+		<input name="opendirection" id="opendirection" />
+		
+		
+		
+		<span class="label">天地钩：</span> 
+		<input name="hook" id="hook" />
+		
+		
+		
+		<span class="label">是否定制导向片：</span> 
+		<input name="guidecustommade" id="guidecustommade" />
+		
+		
+		
+		<span class="label">导向片类型：</span> 
+		<input name="guidetype" id="guidetype" />
+		
+		
+		
+		<span class="label">导向片尺寸：</span> 
+		<input name="guidesize" id="guidesize" />
+		
+		
+		
+		<span class="label">安装费：</span> 
+		<input name="installationprice" id="installationprice" />
+		
+		
+		
+		<span class="label">定制导向片费用：</span> 
+		<input name="guidecustommadeprice" id="guidecustommadeprice" />
+		
+		
+		
+		<span class="label">测量：</span> 
+		<input name="measureprice" id="measureprice" />
+		
+		
+		
+		<span class="label">空跑费：</span> 
+		<input name="emptyrunprice" id="emptyrunprice" />
+		
+		
+		
+		<span class="label">总价：</span> 
+		<input name="totalprice" id="totalprice" />
+		
+		
+		
+		<span class="label">备注：</span> 
+		<input name="remark" id="remark" />
+		
+		
+		
+		<span class="label">维修费用：</span> 
+		<input name="repair" id="repair" />
+		
+		
+		
+		<span class="label">承担方：</span> 
+		<input name="bearer" id="bearer" />
+		
+		
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<span id="add">新增</span>
+		<span id="import">导入（Excel97）</span>
+		<span id="button-export">下载Excel格式</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+	<table>
+		<tr>
+			<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+		</tr>
+		
+	</table>
+	</form>
+</div>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单引流人：</td>
+					<td><input name="promoter" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单号：</td>
+					<td><input name="ordernumber" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单状态：</td>
+					<!-- <td><input name="status" /></td> -->
+					<td>
+						<select name="status">
+						  <option value ="待安装">待安装</option>
+						  <option value ="待回访">待回访</option>
+						  <option value ="待审核">待审核</option>
+						  <option value ="待预约">待预约</option>
+						  <option value ="空跑单">空跑单</option>
+						  <option value ="已完成">已完成</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单安装负责人：</td>
+					<!-- <td><input name="installprincipal" /></td> -->
+					<td>
+						<select name="installprincipal">
+						  <option value ="张圆圆">张圆圆</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;锁下单时间：</td>
+					<td><input name="ordertime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发货时间：</td>
+					<td><input name="deliverytime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流名称：</td>
+					<td><input name="logistics" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;锁到货时间：</td>
+					<td><input name="arrivaltime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;导向片定制时间：</td>
+					<td><input name="guidecustommadetime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;导向片签收时间：</td>
+					<td><input name="guidesigningtime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;预约安装时间：</td>
+					<td><input name="reservationtime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单完成时间：</td>
+					<td><input name="ordersuctime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户联系人：</td>
+					<td><input name="contact" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户联系电话：</td>
+					<td><input name="phone" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安装地址：</td>
+					<td><input name="addr" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;渠道：</td>
+					<!-- <td><input name="channel" /></td> -->
+					<td>
+						<select name="channel">
+						  <option value ="天猫" selected="selected">天猫</option>
+						  <option value ="极果">极果</option>
+						  <option value ="京东">京东</option>
+						  <option value ="其他平台">其他平台</option>
+						  <option value ="沃钱包">沃钱包</option>
+						  <option value ="">空白</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;需安装产品类型：</td>
+					<!-- <td><input name="type" /></td> -->
+					<td>
+						<select name="type">
+						  <option value ="智能锁" selected="selected">智能锁</option>
+						  <option value ="">空白</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;需安装产品型号：</td>
+					<!-- <td><input name="model" /></td> -->
+					<td>
+						<select name="model">
+						  <option value ="M6"  selected="selected">M6</option>
+						  <option value ="A6">A6</option>
+						  <option value ="A7">A7</option>
+						  <option value ="N1">N1</option>
+						  <option value ="">空白</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安装产品规格：</td>
+					<!-- <td><input name="spec" /></td> -->
+					<td>
+						<select name="spec">
+						  <option value ="M6科技黑" selected="selected">M6科技黑</option>
+						  <!-- <option value ="A6香槟金">A6香槟金</option> -->
+						  <option value ="A7香槟金">A7香槟金</option>
+						  <option value ="N1钢琴黑">N1钢琴黑</option>
+						  <option value ="N1香槟金">N1香槟金</option>
+						  <option value ="">空白</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安装数量：</td>
+					<td><input name="num" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门材质：</td>
+					<td><input name="material" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门厚度：</td>
+					<td><input name="thickness" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开门方向：</td>
+					<!-- <td><input name="opendirection" /></td> -->
+					<td>
+						<select name="opendirection">
+						  <option value ="左外开"  selected="selected">左外开</option>
+						  <option value ="左内开" >左内开</option>
+						  <option value ="右外开" >右外开</option>
+						  <option value ="右内开" >右内开</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;天地钩：</td>
+					<!-- <td><input name="hook" /></td> -->
+					<td>
+						<select name="hook">
+						  <option value ="" selected="selected">空白</option>
+						  <option value ="有">有</option>
+						  <option value ="无">无</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否定制导向片：</td>
+					<!-- <td><input name="guidecustommade" /></td> -->
+					<td>
+						<select name="guidecustommade">
+						  <option value ="否" selected="selected">否</option>
+						  <option value ="是">是</option>
+						  <option value ="未给安装信息">未给安装信息</option>
+						  <option value ="">空白</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;导向片类型：</td>
+					<!-- <td><input name="guidetype" /></td> -->
+					<td>
+						<select name="guidetype">
+						  <option value ="直角双孔" selected="selected">直角双孔</option>
+						  <option value ="直角单孔">直角单孔</option>
+						  <option value ="圆角双孔">圆角双孔</option>
+						  <option value ="圆角单孔">圆角单孔</option>
+						  <option value ="">空白</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;导向片尺寸：</td>
+					<!-- <td><input name="guidesize" /></td> -->
+					<td>
+						<select name="guidesize">
+						  <option value ="240*24" selected="selected">240*24</option>
+						  <option value ="125*21">125*21</option>
+						  <option value ="235*24">235*24</option>
+						  <option value ="240*23">240*23</option>
+						  <option value ="240*25">240*25</option>
+						  <option value ="240*30">240*30</option>
+						  <option value ="241*30">241*30</option>
+						  <option value ="250*24">250*24</option>
+						  <option value ="260*24">260*24</option>
+						  <option value ="260*25">260*25</option>
+						  <option value ="260*29">260*29</option>
+						  <option value ="280*20">280*20</option>
+						  <option value ="280*24">280*24</option>
+						  <option value ="280*25">280*25</option>
+						  <option value ="280*26">280*26</option>
+						  <option value ="300*26">300*26</option>
+						  <option value ="300*30">300*30</option>
+						  <option value ="388*38">388*38</option>
+						  <option value ="388*40">388*40</option>
+						  <option value ="未给安装信息">未给安装信息</option>
+						  <option value ="">空白</option>
+						</select>
+					</td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安装费：</td>
+					<td><input name="installationprice" value="170"/></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定制导向片费用：</td>
+					<td><input name="guidecustommadeprice" value="30"/></td>
+					
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测量：</td>
+					<td><input name="measureprice" value="50"/></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;空跑费：</td>
+					<td><input name="emptyrunprice" value="50"/></td>
+				</tr>
+				
+			
+			
+			
+				
+				<!-- <tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总价：</td>
+					<td><input name="totalprice" /></td>
+				</tr> -->
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：</td>
+					<td><input name="remark" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;维修费用：</td>
+					<td><input name="repair" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;承担方：</td>
+					<td><input name="bearer" /></td>
+				</tr>
+				
+			
+			
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

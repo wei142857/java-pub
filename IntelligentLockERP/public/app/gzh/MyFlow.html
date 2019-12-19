@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		.rows{
+  			background-color: white;
+  			padding-left: 10px;
+  		}
+  		.rows div{
+  			display: inline-block;
+  			line-height: 48px;
+  		}
+  		.row_title{/* 一行的左侧标题 */
+  			
+  		}
+  		.row_right{
+  			float: right;
+  		}
+  		.row_info{/* 一行的右侧信息 */
+  			margin-right: 10px;
+  		}
+  		.special_row{
+  			border-top: 1px solid #eee;
+  		}
+  	</style>
+	<title>我的流量</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>我的流量</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-top: 30px;">
+		<div class="rows">
+			<div class="row_title">购买时间</div>
+			<div class="row_right">
+				<div class="row_info">{{buyTime | formatDate}}</div>
+			</div>
+		</div>
+		<div class="rows special_row">
+			<div class="row_title">可使用年限</div>
+			<div class="row_right">
+				<div class="row_info">10年</div>
+			</div>
+		</div>
+		<div class="rows special_row">
+			<div class="row_title">已使用</div>
+			<div class="row_right">
+				<div class="row_info">{{buyTime | usedTime}}天</div>
+			</div>
+		</div>
+		<div class="rows special_row">
+			<div class="row_title">剩余期限</div>
+			<div class="row_right">
+				<div class="row_info">{{buyTime | usedTime | surplus }}</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+  	<script type="text/javascript">
+  		window.onload = function(){
+			toptitle()//头部标题
+  			var deviceid = GetRequest()['deviceid']
+  			$.ajax({
+  				url: "/gzh/v1/getBuyTime",
+  				data:{
+  					deviceid:deviceid
+  				},
+  				type:"GET",
+  				dataType:"json",
+  				async: false,
+  				success: function(res){
+  					if(res.code=="0"){
+  						flow.buyTime = res.data;
+  					}
+  				},
+  				error: function(err){
+  					alert("失败的请求！")
+  				}
+  			})
+  		}
+  		var flow = new Vue({
+  			el: '.container',
+  			data:{
+  				buyTime:""
+  			},
+  			methods:{
+  				
+  			},
+			filters:{
+				formatDate: function(timestamp){
+					let date = new Date(timestamp);
+			        let y = date.getFullYear();
+			        let MM = date.getMonth() + 1;
+			        MM = MM < 10 ? ('0' + MM) : MM;
+			        let d = date.getDate();
+			        d = d < 10 ? ('0' + d) : d;
+			        let h = date.getHours();
+			        h = h < 10 ? ('0' + h) : h;
+			        let m = date.getMinutes();
+			        m = m < 10 ? ('0' + m) : m;
+			        let s = date.getSeconds();
+			        s = s < 10 ? ('0' + s) : s;
+			        return y + '-' + MM + '-' + d ;//+ ' ' + h + ':' + m + ':' + s;
+				},
+				usedTime: function(timestamp){
+					let nowTime = new Date().getTime();
+					let days = Math.ceil((nowTime - timestamp)/1000/60/60/24);
+					return days;
+				},
+				surplus: function(usedTime){
+					let lastTime = 3652-usedTime;
+					let year = 0;
+					let day = 0;
+					if((year = lastTime/365)<1){
+						year = ""
+					}else{
+						year = parseInt(year)+"年"
+					}
+					if((day = lastTime%365)<1){
+						day = ""
+					}else{
+						day = parseInt(day)+"天"
+					}
+					if(year<=0&day<=0){
+						return "已用完";
+					}
+					return year+day;
+				}
+			}
+  		})
+  		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+  	</script>
+</body>
+</html>

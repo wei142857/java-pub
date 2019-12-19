@@ -1,0 +1,1116 @@
+
+@htmlhead("注册用户信息 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+			
+			height : 505,
+			dataType : "json",
+			dataSource : '/SmartAppUser/List',
+			showIndex : false,
+			limit : 13,									
+			errorMsg : "获取数据出错",
+			emptyMsg : "没有数据",
+			//Grid的header配置   ！！！！
+			colModel : [
+					{
+						header : 'ID',
+						name : 'idd',
+							width : 40,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '登录名',
+						name : 'login',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '用户来源',
+						name : 'usertype',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '手机',
+						name : 'phone',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '注册时间',
+						name : 'addtime',
+							width : 180,
+						align : 'center',
+						sort:'clientSide',
+						renderer : function(colValue) {   
+                      		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+                   		}
+					},
+					{
+						header : 'APPID',
+						name : 'appid',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : 'IP',
+						name : 'ip',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '密码',
+						name : 'password',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '渠道',
+						name : 'channel',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : 'APP版本',
+						name : 'appversion',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '手机系统',
+						name : 'appos',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '机型',
+						name : 'phonetype',
+							width : 140,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '设备ID',
+						name : 'deviceid',
+							width : 140,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '苹果ID',
+						name : 'apptoken',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '广告ID',
+						name : 'idfa',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '头像',
+						name : 'logo',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '昵称',
+						name : 'nickname',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '上次登录时间',
+						name : 'lastlogintime',
+							width : 180,
+						align : 'center',
+						sort:'clientSide',
+						renderer : function(colValue) {   
+                      		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+                   		}
+					},
+					{
+						header : '状态',
+						name : 'status',
+							width : 60,
+						align : 'center',
+						sort:'clientSide',
+						renderer : function(colValue) {   
+							return colValue=="0"?"<span style='color: green;'>"+'正常'+"</span>":"<span style='color: red;'>"+'异常'+"</span>";
+                   		}
+					},
+					{
+						header : '省',
+						name : 'prov',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '市',
+						name : 'city',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '运营商',
+						name : 'yys',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '推送开关',
+						name : 'pushstate',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					
+					/* {header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+			     		 renderer:function(colValue, rowData, rowIndex){
+			     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+			     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div><div class='delete'>删除</div></div>";
+			     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+			     			 return menu + btn;
+				         }
+					}*/
+				],
+			         
+				onRefresh: function(nowPage, pageRecords,event){
+               		var $grid = $('#mygrid'); 
+               	    $grid.find("a.op-btn").each(function(){
+               			var $btn = $(this); 
+               		
+	               		// 初始化表格里面的操作按钮 
+	               		$btn.omButton({
+	               			icons : {left : '/public/images/op-btn-icon.png'},
+	               			width : 75,
+	               			onClick : function(event){                				
+	               				var v = $grid.find("div.op-menu:visible");
+	               				var $opMenu = $(event.currentTarget.previousSibling);
+	               				// 重新计算菜单的位置
+	               				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+	               				if($opMenu.css("display") == "none"){
+	               					$opMenu.show().css({left:left});
+	               				} else{
+	               					$opMenu.hide();
+	               				}
+	               				v.hide();
+	               				event.stopPropagation();
+	               				return false;
+	               			}
+	               		});
+               		});
+
+                	/* // 绑定表格操作按钮菜单的事件 ！！！！
+                	$grid.find("div.op-menu").each(function(){
+                		var $menu = $(this);
+                		var rowindex=$menu.id;
+                		$menu.hide();
+                		$menu.find(".edit").click(function(){
+							isAdd = false;
+							var index = $(this).parent().attr('id');
+			                showDialog('修改',index);//显示dialog
+						});
+                		
+                		$menu.find(".delete").click(function(){
+							var index = $(this).parent().attr('id');
+							doAsk('确定删除吗？' , delit , index );
+						});
+                		
+                	}); */
+              	}
+			});
+
+			//[新增/修改]dialog初始化
+			/* var dialog = $("#dialog-form").omDialog({
+				width : 460,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"取消" : function() {
+						$("#dialog-form").omDialog("close");//关闭dialog
+					}
+				}
+			});
+			
+			$('#add').bind('click', function() {
+                isAdd = true;
+                showDialog('新增',null);//显示dialog
+            });
+			
+			//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+			var showDialog = function(title, idd) {
+				validator.resetForm();
+				if(idd!=null){
+					//edit info;
+					var uri = "/SmartAppUser/Get/"+idd;
+					$.get(uri,function(response){
+			            if(response!=null){
+							$("input[name='idd']", dialog).val(response.idd);
+							$("input[name='login']", dialog).val(response.login);
+							$("input[name='usertype']", dialog).val(response.usertype);
+							$("input[name='phone']", dialog).val(response.phone);
+							$("input[name='addtime']", dialog).val(response.addtime);
+							$("input[name='addtime']", dialog).val(fmtDate(new Date(response.addtime),"yyyy-MM-dd"));
+							$("input[name='appid']", dialog).val(response.appid);
+							$("input[name='ip']", dialog).val(response.ip);
+							$("input[name='password']", dialog).val(response.password);
+							$("input[name='channel']", dialog).val(response.channel);
+							$("input[name='appversion']", dialog).val(response.appversion);
+							$("input[name='appos']", dialog).val(response.appos);
+							$("input[name='phonetype']", dialog).val(response.phonetype);
+							$("input[name='deviceid']", dialog).val(response.deviceid);
+							$("input[name='apptoken']", dialog).val(response.apptoken);
+							$("input[name='idfa']", dialog).val(response.idfa);
+							$("input[name='logo']", dialog).val(response.logo);
+							$("input[name='nickname']", dialog).val(response.nickname);
+							$("input[name='lastlogintime']", dialog).val(response.lastlogintime);
+							$("input[name='lastlogintime']", dialog).val(fmtDate(new Date(response.lastlogintime),"yyyy-MM-dd"));
+							$("input[name='status']", dialog).val(response.status);
+							$("input[name='prov']", dialog).val(response.prov);
+							$("input[name='city']", dialog).val(response.city);
+							$("input[name='yys']", dialog).val(response.yys);
+							$("input[name='pushstate']", dialog).val(response.pushstate);
+			         	}
+					});
+				}
+				dialog.omDialog("option", "title", title);
+				dialog.omDialog("open");//显示dialog 
+			};
+			
+			//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+			var submitDialog = function() {
+				if (validator.form()) {
+					var submitData = {
+						operation : isAdd ? 'add' : 'modify',
+						idd : $("input[name='idd']",dialog).val()
+					
+						,login : $("input[name='login']", dialog).val()
+					
+						,usertype : $("input[name='usertype']", dialog).val()
+					
+						,phone : $("input[name='phone']", dialog).val()
+					
+						,addtime : $("input[name='addtime']", dialog).val()
+					
+						,appid : $("input[name='appid']", dialog).val()
+					
+						,ip : $("input[name='ip']", dialog).val()
+					
+						,password : $("input[name='password']", dialog).val()
+					
+						,channel : $("input[name='channel']", dialog).val()
+					
+						,appversion : $("input[name='appversion']", dialog).val()
+					
+						,appos : $("input[name='appos']", dialog).val()
+					
+						,phonetype : $("input[name='phonetype']", dialog).val()
+					
+						,deviceid : $("input[name='deviceid']", dialog).val()
+					
+						,apptoken : $("input[name='apptoken']", dialog).val()
+					
+						,idfa : $("input[name='idfa']", dialog).val()
+					
+						,logo : $("input[name='logo']", dialog).val()
+					
+						,nickname : $("input[name='nickname']", dialog).val()
+					
+						,lastlogintime : $("input[name='lastlogintime']", dialog).val()
+					
+						,status : $("input[name='status']", dialog).val()
+					
+						,prov : $("input[name='prov']", dialog).val()
+					
+						,city : $("input[name='city']", dialog).val()
+					
+						,yys : $("input[name='yys']", dialog).val()
+					
+						,pushstate : $("input[name='pushstate']", dialog).val()
+					};
+
+					$.post('/SmartAppUser/Modify', submitData, function() {
+						if (isAdd) {
+							$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+							$.omMessageTip.show({
+								title : "操作成功",
+								content : "添加数据成功",
+								timeout : 1500
+							});
+						} else {
+							$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+							$.omMessageTip.show({
+								title : "操作成功",
+								content : "修改数据成功",
+								timeout : 1500
+							});
+						}
+						$("#dialog-form").omDialog("close"); //关闭dialog
+					});
+				}
+			};
+
+			// 对增加/修改表单的校验设置 ！！！！
+			var validator = $('#ipForm').validate({
+				rules : {
+					login : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					usertype : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					phone : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					addtime : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					appid : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					ip : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					password : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					channel : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					appversion : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					appos : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					phonetype : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					deviceid : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					apptoken : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					idfa : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					logo : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					nickname : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					lastlogintime : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					status : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					prov : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					city : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					yys : {
+						required : true,
+                     			maxlength : 100
+					}
+					,
+					pushstate : {
+						required : true,
+                     			maxlength : 100
+					}
+				},
+				messages : {
+					login : {
+						required : "登录名不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					usertype : {
+						required : "用户来源不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					phone : {
+						required : "手机不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					addtime : {
+						required : "注册时间不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					appid : {
+						required : "APPID不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					ip : {
+						required : "IP不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					password : {
+						required : "密码不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					channel : {
+						required : "渠道不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					appversion : {
+						required : "APP版本不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					appos : {
+						required : "手机系统不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					phonetype : {
+						required : "机型不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					deviceid : {
+						required : "设备ID不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					apptoken : {
+						required : "苹果ID不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					idfa : {
+						required : "广告ID不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					logo : {
+						required : "头像不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					nickname : {
+						required : "昵称不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					lastlogintime : {
+						required : "上次登录时间不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					status : {
+						required : "状态不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					prov : {
+						required : "省不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					city : {
+						required : "市不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					yys : {
+						required : "运营商不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					pushstate : {
+						required : "推送开关不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+				}
+			}); */
+			
+			//其他iframe 对话框 初始化-->
+			$( "#dialog-modal").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+			
+	        $( "#user_auth_form").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+	        
+	        /* $("#user_add_form").omDialog({
+	        	autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+			});	
+	        
+	        var uploadDialog = $("#upload-form").omDialog({
+				width : 500,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitUploadDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"关闭" : function() {
+						$("#upload-form").omDialog("close");//关闭dialog
+					}
+				}
+			});
+			
+			var submitUploadDialog = function(){
+				$("#upload-form").omDialog("close");
+				//var uploadidd = $("input[name='uploadidd']").val();
+				var uploadidd = '';
+				var url = "/SmartAppUser/Upload";
+		        $.ajaxFileUpload({  
+		            url:url,  
+		            secureuri:false,  
+		            fileElementId:'file_excel',//file标签的id  
+		            dataType: 'json',//返回数据的类型  
+		            data:{uploadidd:uploadidd},//一同上传的数据  
+		            success: function (data, status) { 
+		            	console.log(data);
+		            	$.omMessageTip.show({
+							title : "操作成功",
+							content : "成功导入"+data+"条",
+							timeout : 1500
+						}); 
+		            },  
+		            error: function (data, status, e) {  
+		                alert(e);  
+		            }  
+		        });  
+			};
+			
+			$('#import').bind('click', function() {
+				$("#uploadForm")[0].reset();
+       			//对应于指定目标的上传
+       			//var index = $(this).parent().attr('id');
+       			//$("input[name='uploadidd']").val(index); 
+       			
+       			uploadDialog.omDialog("option", "title", "导入（excel）");
+       			uploadDialog.omDialog("open");
+            }); */
+			
+			//搜索按钮加图片
+			var searchPanel = $("#search-panel").omPanel({
+	            	title : "工具栏",collapsible:true
+	            });
+			 $('span#button-search').omButton({
+          	    icons : {left : '/public/images/search.png'},width : 70
+       	 	    });
+			 $('span#button-noSearch').omButton({
+	          	    icons : {left : '/public/images/searchNo.png'},width : 70
+	       	 	});
+			/*  $('span#add').omButton({
+	          	    icons : {},width : 70
+	       	 	});
+			 	$('span#import').omButton({
+	          	    icons : {},width : 110
+	       	 	}); */
+			 
+			 $('span#button-export').omButton({
+	          	   	width : 90
+	       	 });
+			 
+			//下载Excel格式
+	       	$('span#button-export').bind('click', function(e){
+	       		var searchStr='';
+                
+				searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+			
+				searchStr += 'login='+encodeURI($("input[name='login']", searchPanel).val())+"&";
+			
+				searchStr += 'usertype='+encodeURI($("input[name='usertype']", searchPanel).val())+"&";
+			
+				searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+			
+				searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+			
+				searchStr += 'appid='+encodeURI($("input[name='appid']", searchPanel).val())+"&";
+			
+				searchStr += 'ip='+encodeURI($("input[name='ip']", searchPanel).val())+"&";
+			
+				searchStr += 'password='+encodeURI($("input[name='password']", searchPanel).val())+"&";
+			
+				searchStr += 'channel='+encodeURI($("input[name='channel']", searchPanel).val())+"&";
+			
+				searchStr += 'appversion='+encodeURI($("input[name='appversion']", searchPanel).val())+"&";
+			
+				searchStr += 'appos='+encodeURI($("input[name='appos']", searchPanel).val())+"&";
+			
+				searchStr += 'phonetype='+encodeURI($("input[name='phonetype']", searchPanel).val())+"&";
+			
+				searchStr += 'deviceid='+encodeURI($("input[name='deviceid']", searchPanel).val())+"&";
+			
+				searchStr += 'apptoken='+encodeURI($("input[name='apptoken']", searchPanel).val())+"&";
+			
+				searchStr += 'idfa='+encodeURI($("input[name='idfa']", searchPanel).val())+"&";
+			
+				searchStr += 'logo='+encodeURI($("input[name='logo']", searchPanel).val())+"&";
+			
+				searchStr += 'nickname='+encodeURI($("input[name='nickname']", searchPanel).val())+"&";
+			
+				searchStr += 'lastlogintime='+encodeURI($("input[name='lastlogintime']", searchPanel).val())+"&";
+			
+				searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+			
+				searchStr += 'prov='+encodeURI($("input[name='prov']", searchPanel).val())+"&";
+			
+				searchStr += 'city='+encodeURI($("input[name='city']", searchPanel).val())+"&";
+			
+				searchStr += 'yys='+encodeURI($("input[name='yys']", searchPanel).val())+"&";
+			
+				searchStr += 'pushstate='+encodeURI($("input[name='pushstate']", searchPanel).val())+"&";
+			
+                var url = '/SmartAppUser/List?export=1&'+searchStr;
+                window.location.href = url;
+	        });	
+			
+			//搜索绑定 =》grid ！！！！
+       	 	$('span#button-search').bind('click', function(e) {
+                var searchStr='';
+                
+				//searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+			
+				searchStr += 'login='+encodeURI($("input[name='login']", searchPanel).val())+"&";
+			
+				searchStr += 'usertype='+encodeURI($("input[name='usertype']", searchPanel).val())+"&";
+			
+				searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+			
+				//searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+			
+				searchStr += 'appid='+encodeURI($("input[name='appid']", searchPanel).val())+"&";
+			
+				searchStr += 'ip='+encodeURI($("input[name='ip']", searchPanel).val())+"&";
+			
+				//searchStr += 'password='+encodeURI($("input[name='password']", searchPanel).val())+"&";
+			
+				searchStr += 'channel='+encodeURI($("input[name='channel']", searchPanel).val())+"&";
+			
+				searchStr += 'appversion='+encodeURI($("input[name='appversion']", searchPanel).val())+"&";
+			
+				searchStr += 'appos='+encodeURI($("input[name='appos']", searchPanel).val())+"&";
+			
+				searchStr += 'phonetype='+encodeURI($("input[name='phonetype']", searchPanel).val())+"&";
+			
+				searchStr += 'deviceid='+encodeURI($("input[name='deviceid']", searchPanel).val())+"&";
+			
+				searchStr += 'apptoken='+encodeURI($("input[name='apptoken']", searchPanel).val())+"&";
+			
+				searchStr += 'idfa='+encodeURI($("input[name='idfa']", searchPanel).val())+"&";
+			
+				searchStr += 'logo='+encodeURI($("input[name='logo']", searchPanel).val())+"&";
+			
+				searchStr += 'nickname='+encodeURI($("input[name='nickname']", searchPanel).val())+"&";
+			
+				//searchStr += 'lastlogintime='+encodeURI($("input[name='lastlogintime']", searchPanel).val())+"&";
+			
+				searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+			
+				searchStr += 'prov='+encodeURI($("input[name='prov']", searchPanel).val())+"&";
+			
+				searchStr += 'city='+encodeURI($("input[name='city']", searchPanel).val())+"&";
+			
+				searchStr += 'yys='+encodeURI($("input[name='yys']", searchPanel).val())+"&";
+			
+				searchStr += 'pushstate='+encodeURI($("input[name='pushstate']", searchPanel).val())+"&";
+			
+                $('#mygrid').omGrid("setData", '/SmartAppUser/List?'+searchStr );
+            });
+ 				
+       	 	/*$("input[name='idd']", searchPanel).omCombo({
+            	 dataSource : '/SmartAppUser/All',
+	                optionField : function(data, index) {
+	                    return data.idd;
+	                },
+	                valueField : 'idd',
+	                inputField : 'idd'
+	        });*/
+ 				
+			/* $("input[name='addtime']", searchPanel).omCalendar({
+                dateFormat : "yy-mm-dd"
+            });
+			$("input[name='addtime']", dialog).omCalendar({
+                dateFormat : "yy-mm-dd"
+            });
+ 			
+			$("input[name='lastlogintime']", searchPanel).omCalendar({
+                dateFormat : "yy-mm-dd"
+            });
+			$("input[name='lastlogintime']", dialog).omCalendar({
+                dateFormat : "yy-mm-dd"
+            }); */
+       	    
+			//不搜索 =》grid
+       	 	$('span#button-noSearch').bind('click', function(e) {
+                   $('#mygrid').omGrid("setData", '/SmartAppUser/List?key=');
+            });	
+            
+             // 点击页面其他地方的时候隐藏表格里面的菜单
+            $("body").click(function(){
+				$("#mygrid").find("div.op-menu:visible").hide();
+            });		
+
+		});	
+	
+       /* //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/SmartAppUser/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   } */
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+		<span class="label">登录名：</span> 
+		<input name="login" id="login" />
+		
+		<span class="label">昵称：</span> 
+		<input name="nickname" id="nickname" />
+		
+		<span class="label">手机：</span> 
+		<input name="phone" id="phone" />
+		
+		<span class="label">用户来源：</span> 
+		<input name="usertype" id="usertype" />
+		
+		<!-- <span class="label">注册时间：</span>  -->
+		<input name="addtime" id="addtime" style="display:none" />
+		
+		<span class="label">APPID：&nbsp;&nbsp;</span> 
+		<input name="appid" id="appid" /><br>
+		
+		<span class="label">运营商：</span> 
+		<input name="yys" id="yys" />
+		
+		<!-- <span class="label">密码：</span> -->
+		<input name="password" id="password" style="display:none" />
+		
+		<span class="label">机型：</span> 
+		<input name="phonetype" id="phonetype" />
+		
+		<span class="label">渠道：</span> 
+		<input name="channel" id="channel" />
+		
+		<span class="label">手机系统：</span> 
+		<input name="appos" id="appos" />
+		
+		<span class="label">APP版本：</span> 
+		<input name="appversion" id="appversion" style="width: 160px;"/><br>
+		
+		<span class="label">设备ID：</span> 
+		<input name="deviceid" id="deviceid" />
+		
+		<span class="label">苹果ID:</span> 
+		<input name="apptoken" id="apptoken" style="width: 150px;"/>
+		
+		<span class="label">广告ID：</span> 
+		<input name="idfa" id="idfa" style="width: 149px;"/>
+		
+		<span class="label">IP：&nbsp;&nbsp;</span> 
+		<input name="ip" id="ip" style="width: 180px;"/>
+		
+		<!-- <span class="label">头像：</span> -->
+		<input name="logo" id="logo" style="display:none" /> 
+		
+		<!-- <span class="label">上次登录时间：</span> -->
+		<input name="lastlogintime" id="lastlogintime" style="display:none" /> 
+		
+		<span class="label">推送开关：</span> 
+		<input name="pushstate" id="pushstate" /><br>
+		
+		<span class="label">状态：</span> 
+		<select name = "status">
+			<option value="1">全部</option>
+			<option value="0">正常</option>
+			<option value="-1">异常</option>
+		</select>
+		
+		<span class="label">省：</span> 
+		<input name="prov" id="prov" />
+		
+		<span class="label">市：</span> 
+		<input name="city" id="city" />
+		
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<!-- <span id="add">新增</span>
+		<span id="import">导入（Excel97）</span> -->
+		<span id="button-export">下载Excel格式</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<!-- <div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+	<table>
+		<tr>
+			<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+		</tr>
+		
+	</table>
+	</form>
+</div> -->
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<!-- <div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登录名：</td>
+				<td><input name="login" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户来源：</td>
+				<td><input name="usertype" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;手机：</td>
+				<td><input name="phone" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册时间：</td>
+				<td><input name="addtime" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;APPID：</td>
+				<td><input name="appid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP：</td>
+				<td><input name="ip" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;密码：</td>
+				<td><input name="password" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;渠道：</td>
+				<td><input name="channel" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;APP版本：</td>
+				<td><input name="appversion" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;手机系统：</td>
+				<td><input name="appos" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机型：</td>
+				<td><input name="phonetype" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;设备ID：</td>
+				<td><input name="deviceid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;苹果ID：</td>
+				<td><input name="apptoken" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;广告ID：</td>
+				<td><input name="idfa" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;头像：</td>
+				<td><input name="logo" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;昵称：</td>
+				<td><input name="nickname" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上次登录时间：</td>
+				<td><input name="lastlogintime" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态：</td>
+				<td><input name="status" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;省：</td>
+				<td><input name="prov" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市：</td>
+				<td><input name="city" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;运营商：</td>
+				<td><input name="yys" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;推送开关：</td>
+				<td><input name="pushstate" /></td>
+			</tr>
+		</table>
+	</form>
+	</div> -->
+	
+	<!-- 其他iframe 对话框 -->
+	<div id="dialog-modal" title="管理EC">
+		<iframe id="ec_dialog" frameborder="0"
+			style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+			marginwidth='0' marginheight='0'></iframe>
+	</div>
+	<!-- <div id="user_add_form" title="分配用户">
+		<iframe id="user_dialog" frameborder="0"
+			style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+			marginwidth='0' marginheight='0'></iframe>
+	</div> -->
+	<div id="user_auth_form" title="权限分配">
+		<iframe id="func_dialog" frameborder="0"
+			style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+			marginwidth='0' marginheight='0'></iframe>
+	</div>
+}

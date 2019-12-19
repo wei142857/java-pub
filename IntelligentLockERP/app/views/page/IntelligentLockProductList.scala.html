@@ -1,0 +1,1525 @@
+
+@htmlhead("产品表 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		$.ajax({
+   	      type: 'POST',
+   	      cache: false,
+   	  	  url: "/IntelligentLockProduct/ProductTypes",
+   	  	  //data :{"parentTagName":parentTagName},
+   	  	  traditional:true,
+   	  	  success: function(data) {
+   	  		  if (data != null) {
+   	  			  $("#producttype").empty();
+   	  			  $("#producttype").append("<option></option>");
+   	  			 //$("#producttype").append("<option value='add'>类型</option>");
+   	  			  for(var i = 0;i < data.length;i++){
+   	  				$("#producttype").append("<option value='" + data[i].title + "'>" + data[i].title + "</option>");
+   	  			  }
+   	  		  }
+   		  }
+   	  	});
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+											height : 505,
+											dataType : "json",
+											dataSource : '/IntelligentLockProduct/List',
+											showIndex : false,
+											limit : 13,									
+											errorMsg : "获取数据出错",
+											emptyMsg : "没有数据",
+											
+											//Grid的header配置   ！！！！
+											colModel : [
+													
+													{
+														header : '产品ID',
+														name : 'idd',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '产品图',
+														name : 'image',
+														
+														
+														
+															width : 110,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+																if(!colValue){
+																	return '';
+																}
+													    		return "<img src='"+colValue+"' width='100'>";
+													 		}
+														
+													},
+													
+													{
+														header : '产品名称',
+														name : 'title',
+														
+														
+														
+															width : 150,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '产品类型',
+														name : 'producttype',
+														
+														
+														
+															width : 70,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '型号',
+														name : 'model',
+														
+														
+														
+															width : 60,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '规格',
+														name : 'spec',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '添加人',
+														name : 'operator',
+														
+														
+														
+															width : 70,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '库存警告阈值',
+														name : 'threshold',
+														
+														
+															width : 110,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '状态',
+														name : 'status',
+
+
+															width : 60,
+
+
+
+														align : 'center',
+														sort:'clientSide'
+
+															,renderer : function(colValue) {   
+																return colValue=="0"?"<span style='color: green;'>正常</span>":"<span style='color: red;'>废弃</span>";
+																}
+
+														},
+													
+													{
+														header : '备注',
+														name : 'remark',
+														
+														
+														
+															width : 456,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													/* 
+													{
+														header : '附件链接地址',
+														name : 'filepart',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '是否叶子节点',
+														name : 'leaf',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '树结构级别',
+														name : 'level',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '父级ID',
+														name : 'parentid',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '平级节点排序',
+														name : 'displayorder',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													}, */
+													
+													/* {
+														header : '序列号',
+														name : 'subq',
+														
+														
+														
+															width : 110,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													}, */
+													
+													{
+														header : '添加时间',
+														name : 'addtime',
+														
+															width : 200,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+													    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+													 		}
+														
+														
+													},
+													{header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+											     		 renderer:function(colValue, rowData, rowIndex){
+											     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+											     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div><div class='uploadExcel' style='padding-left: 0px;'>存储Excel</div><div class='downloadExcel' style='padding-left: 0px;'>下载Excel</div></div>";
+											     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+											     			 return menu + btn;
+												         }} ],
+											         
+													onRefresh: function(nowPage, pageRecords,event){
+								                		var $grid = $('#mygrid'); 
+								                	    $grid.find("a.op-btn").each(function(){
+								                		var $btn = $(this); 
+								                		
+								                		// 初始化表格里面的操作按钮 
+								                		$btn.omButton({
+								                			icons : {left : '/public/images/op-btn-icon.png'},
+								                			width : 75,
+								                			onClick : function(event){                				
+								                				var v = $grid.find("div.op-menu:visible");
+								                				var $opMenu = $(event.currentTarget.previousSibling);
+								                				// 重新计算菜单的位置
+								                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+								                				if($opMenu.css("display") == "none"){
+								                					$opMenu.show().css({left:left});
+								                				} else{
+								                					$opMenu.hide();
+								                				}
+								                				v.hide();
+								                				event.stopPropagation();
+								                				return false;
+								                			}
+								                		});
+								                	});
+
+								                	// 绑定表格操作按钮菜单的事件 ！！！！
+								                	$grid.find("div.op-menu").each(function(){
+								                		var $menu = $(this);
+								                		var rowindex=$menu.id;
+								                		$menu.hide();
+								                		$menu.find(".edit").click(function(){
+															isAdd = false;
+															var index = $(this).parent().attr('id');
+											                showDialog('修改',index);//显示dialog
+											                $.ajax({
+												          	      type: 'POST',
+												          	  	  url: "/IntelligentLockProduct/ProductTypes",
+												          	  	  cache: false,
+												          	  	  //data :{"idd":index},
+												          	  	  traditional:true,
+												          	  	  success: function(data) {
+													          	  		  if (data != null) {
+												          	  			  $("#sel").empty();
+												          	  			  var producttype = "添加类型";
+												          	  			  var title = "";
+												          	  			  /* for(var i = 0;i < data.length;i++){
+												          	  				  if(data[i].idd==index){
+												          	  					  if(data[i].producttype!=""){
+														          	  				$("#sel").prepend("<option value='" + data[i].producttype + "'>" + data[i].producttype + "</option>");
+													          	  					producttype = data[i].producttype;
+													          	  				    title = data[i].title;
+												          	  					  }else{
+												          	  						$("#sel").prepend("<option value='add'>类型</option>"); 
+												          	  					    producttype = data[i].title;
+												          	  					    title = data[i].title;
+												          	  					  }
+												          	  				  }
+												          	  			  } */
+												          	  			  for(var i = 0;i < data.length;i++){
+												          	  				  if(data[i].idd==index){
+												          	  					  if(data[i].producttype!=""){
+														          	  				$("#sel").prepend("<option value='" + data[i].producttype + "'>" + data[i].producttype + "</option>");
+														          	  				producttype = data[i].producttype;
+													          	  				    title = data[i].title;
+															          	  			$("#sel").prepend("<option value='add'>变为类型</option>");
+												          	  					  }else{
+												          	  						//$("#sel").prepend("<option value='add'>产品类型</option>"); 
+												          	  					    producttype = data[i].title;
+												          	  					    title = data[i].title;
+												          	  					  }
+												          	  				  }
+												          	  			  }
+												          	  			  for(var i = 0;i < data.length;i++){
+												          	  				  if(producttype!=data[i].title & title!=data[i].title){
+														          	  			$("#sel").append("<option value='" + data[i].title + "'>" + data[i].title + "</option>");
+												          	  				  }
+												          	  			  }
+												          	  		  }
+												          		  }
+												          	  	})
+														});
+								                		
+								                		$menu.find(".uploadExcel").click(function(){
+								                			var index = $(this).parent().attr('id');
+								                			excelUploadMathod(index);
+														});
+								                		
+								                		$menu.find(".downloadExcel").click(function(){
+								                			var index = $(this).parent().attr('id');
+								                			$.ajax({
+								                				url:'/IntelligentLockProduct/HasFilePath/'+index,
+								                				type:'GET',
+								                				dataType:'json',
+								                				cache:false,
+								                				//data:{"idd":index},
+								                				success:function(data){
+								                					if(data.status==1){
+								                						$.omMessageTip.show({
+																			title : "操作失败",
+																			content : data.massage,
+																			timeout : 3000
+																		});
+								                					}else{
+														                window.location.href = '/IntelligentLockProduct/DownloadStorageExcel?idd='+index;
+								                					}
+								                				}
+								                			});
+														});
+								                		
+								                	});				
+								               }
+										});
+						
+						/* var excelDownloadMathod = function(index){
+							$.ajax({
+								url:'/IntelligentLockProduct/downloadStorageExcel?idd='+index,
+								type:'POST',
+								cache: false,
+								dataType:'json',
+								data:{"idd":index},
+								success:function(data){
+									
+								}
+							});
+						} */
+						
+						var indexNum = 0;
+						var excelUploadMathod = function(index){
+							indexNum = index;
+							$("#excelUploadFrame")[0].reset();
+							excelUploadDialog.omDialog("option", "title", "存储excel");
+							excelUploadDialog.omDialog("open");
+						}
+						
+						var excelUploadDialog = $("#excelUpload-Frame").omDialog({
+							width : 500,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									excelUploadFileDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"关闭" : function() {
+									$("#excelUpload-Frame").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						var excelUploadFileDialog = function(){
+							$("#excelUpload-Frame").omDialog("close");
+							var url = "/IntelligentLockProduct/StorageExcel?idd="+indexNum;
+							//var url = "/IntelligentLockProduct/StorageExcel";
+					        $.ajaxFileUpload({  
+					            url:url,  
+					            secureuri:false,  
+					            fileElementId:'excel_storage',//file标签的id  
+					            dataType: 'json',//返回数据的类型  
+					            data:{"idd":indexNum},//一同上传的数据  
+					            success: function (data, status) { 
+					            	if(data.status==1){
+					            		$.omMessageTip.show({
+											title : "操作失败",
+											content : data.massage,
+											timeout : 3000
+										});
+					            	}else{
+						            	$('#mygrid').omGrid('reload');//如果是添加则滚动到第一页并刷新
+						            	$.omMessageTip.show({
+											title : "操作成功",
+											content : data,
+											timeout : 1500
+										});
+					            	}
+					            },   
+					            error: function (data, status, e) {  
+					                alert(e);  
+					            }  
+					        });  
+						};
+						
+						//[新增/修改]dialog初始化
+						var dialog = $("#dialog-form").omDialog({
+							width : 460,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"取消" : function() {
+									$("#dialog-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						$('#add').bind('click', function() {
+			                isAdd = true;
+			                
+			                $("#tr1").removeAttr("style");
+							$("#tr2").removeAttr("style");
+							$("#tr3").removeAttr("style");
+							$("#tr4").css("display","none");
+							//$("input[name='title']").removeAttr("disabled");
+							$("#title2").removeAttr("disabled");
+							//$("input[name='model']").removeAttr("disabled");
+							$("#model2").removeAttr("disabled");
+							$("#sel").removeAttr("disabled");
+							//$("input[name='spec']").removeAttr("disabled");
+							$("#spec2").removeAttr("disabled");
+							//$("input[name='threshold']").removeAttr("disabled");
+							$("#threshold2").removeAttr("disabled");
+							$("#zc").removeAttr("disabled");
+							$("#zc").attr("checked","checked");
+							$("#fq").removeAttr("disabled");
+							$("#remark2").removeAttr("disabled");
+							
+			                showDialog('新增',null);//显示dialog
+			                $.ajax({
+			          	      type: 'POST',
+			          	      cache: false,
+			          	  	  url: "/IntelligentLockProduct/ProductTypes",
+			          	  	  //data :{"parentTagName":parentTagName},
+			          	  	  traditional:true,
+			          	  	  success: function(data) {
+			          	  		  if (data != null) {
+			          	  			  $("#sel").empty();
+			          	  			  //$("#sel").append("<option value='add'>添加类型</option>");
+			          	  			  for(var i = 0;i < data.length;i++){
+			          	  				$("#sel").append("<option value='" + data[i].title + "'>" + data[i].title + "</option>");
+			          	  			  }
+			          	  		  }
+			          		  }
+			          	  	})
+			            });
+						
+						//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+						var showDialog = function(title, idd) {
+							validator.resetForm();
+							if(idd!=null){
+								//edit info;
+								var uri = "/IntelligentLockProduct/Get/"+idd;
+								$.get(uri,function(response){
+						            if(response!=null){
+						            	
+											$("input[name='idd']", dialog).val(response.idd);
+											if(response.image!="图片未上传"){
+												$("input[name='image']", dialog).val(response.image);
+											}else{
+												$("input[name='image']", dialog).val("图片未上传");
+											}
+											if(response.status=="0"){//新增/修改(正常)可以修改图片
+												$("#tr1").removeAttr("style");
+												$("#tr2").removeAttr("style");
+												$("#tr3").removeAttr("style");
+											}else{//修改废弃不让修改图片
+												$("#tr1").css("display","none");
+												$("#tr2").css("display","none");
+												$("#tr3").css("display","none");
+											}
+											
+											//$("input[name='title']", dialog).val(response.title);
+											//$("input[name='title']").attr("disabled","disabled");
+											$("#title2", dialog).val(response.title);
+											$("#title2").attr("disabled","disabled");
+											
+											$("#sel").attr("disabled","disabled");
+										
+											//$("input[name='model']", dialog).val(response.model);
+											//$("input[name='model']").attr("disabled","disabled");
+											$("#model2", dialog).val(response.model);
+											$("#model2").attr("disabled","disabled");
+										
+											//$("input[name='spec']", dialog).val(response.spec);
+											//$("input[name='spec']").attr("disabled","disabled");
+											$("#spec2", dialog).val(response.spec);
+											$("#spec2").attr("disabled","disabled");
+											
+											//$("input[name='operator']", dialog).val(response.operator);
+											
+											//$("input[name='threshold']", dialog).val(response.threshold);
+											//$("input[name='threshold']").attr("disabled","disabled");
+											$("#threshold2", dialog).val(response.threshold);
+											$("#threshold2").attr("disabled","disabled");
+											
+											$("#tr4").removeAttr("style");
+											if(response.status=="0"){
+												$("#zc").attr("checked","checked");
+												$("#zc").removeAttr("disabled");
+												$("#fq").removeAttr("disabled");
+												$("#remark2").removeAttr("disabled");
+											}else if(response.status=="1"){
+												$("#fq").attr("checked","checked");
+												$("#zc").attr("disabled","disabled");
+												$("#fq").attr("disabled","disabled");
+												$("#remark2").attr("disabled","disabled");
+											}
+										
+											$("#remark2", dialog).val(response.remark);
+											
+											//$("input[name='filepart']", dialog).val(response.filepart);
+										
+											//$("input[name='leaf']", dialog).val(response.leaf);
+										
+											//$("input[name='level']", dialog).val(response.level);
+											
+											//$("input[name='parentid']", dialog).val(response.parentid);
+											
+											//$("input[name='displayorder']", dialog).val(response.displayorder);
+
+											//$("input[name='subq']", dialog).val(response.subq);
+											
+											//$("input[name='addtime']", dialog).val(response.addtime);
+											
+											//$("input[name='addtime']", dialog).val(fmtDate(new Date(response.addtime),"yyyy-MM-dd"));
+						         }
+								});
+							}
+							dialog.omDialog("option", "title", title);
+							dialog.omDialog("open");//显示dialog 
+						};
+						$('#advertisingImg1_upload').omFileUpload({
+							action :　'/IntelligentLockProduct/UploadImg',
+							swf : '/public/javascripts/operamasks-ui-1.2/swf/om-fileupload.swf',
+							method:"post",
+							fileExt : '*.jpg;*.png;*.gif',
+							fileDesc : 'Image Files',
+							onComplete : function(ID,fileObj,response,data,event){
+								if(response!=null&&response.length>0){
+									$('#advertisingImg1').val(response);
+								}
+							}
+						});
+						//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+						var submitDialog = function() {
+							if (validator.form()) {
+								var submitData = {
+									operation : isAdd ? 'add' : 'modify',
+												idd : $("input[name='idd']",dialog).val()
+												,image : $("input[name='image']", dialog).val()
+												,title : $("input[name='title']", dialog).val()
+												//,producttype : $("input[name='producttype']", dialog).val()
+												,producttype : $("#sel", dialog).val()
+												,model : $("input[name='model']", dialog).val()
+												,spec : $("input[name='spec']", dialog).val()
+												,operator : $("input[name='operator']", dialog).val()
+												,threshold : $("input[name='threshold']", dialog).val()
+												,status : $("input[name='status']:checked").val()
+												,remark : $("input[name='remark']", dialog).val()
+												//,filepart : $("input[name='filepart']", dialog).val()
+												//,leaf : $("input[name='leaf']", dialog).val()
+												//,level : $("input[name='level']", dialog).val()
+												//,parentid : $("input[name='parentid']", dialog).val()
+												//,displayorder : $("input[name='displayorder']", dialog).val()
+												//,subq : $("input[name='subq']", dialog).val()
+												//,addtime : $("input[name='addtime']", dialog).val()
+								};
+
+								$.post('/IntelligentLockProduct/Modify', submitData, function(data) {
+									if(data.status==1){
+					            		$.omMessageTip.show({
+											title : "操作失败",
+											content : data.massage,
+											timeout : 3000
+										});
+					            	}else if (isAdd) {
+										$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "添加数据成功",
+											timeout : 1500
+										});
+									} else {
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "修改数据成功",
+											timeout : 1500
+										});
+									}
+									$("#dialog-form").omDialog("close"); //关闭dialog
+								});
+							}
+						};
+
+						// 对增加/修改表单的校验设置 ！！！！
+						var validator = $('#ipForm').validate({
+							rules : {
+								
+									
+									
+								
+									/* 
+										image : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+									
+								
+									
+									
+										, */
+										title : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										/* ,
+										producttype : {
+											required : true,
+		                        			maxlength : 100
+										}
+									 */
+								
+									
+									
+										/* ,
+										model : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										spec : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										operator : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										threshold : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										remark : {
+											required : true,
+		                        			maxlength : 100
+										} */
+									
+								
+									
+									
+										/* ,
+										filepart : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										leaf : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										level : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										parentid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										displayorder : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										subq : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : true,
+		                        			maxlength : 100
+										} */
+									
+								
+							},
+							messages : {
+								
+									
+									
+								
+									
+										image : {
+											required : "产品图不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+									
+								
+									
+									
+										,
+										title : {
+											required : "产品名称不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										/* ,
+										producttype : {
+											required : "产品类型不能为空",
+											maxlength : '长度不能超过100个字符'
+										} */
+									
+								
+									
+									
+										,
+										model : {
+											required : "型号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										spec : {
+											required : "规格不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										operator : {
+											required : "操作人不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										threshold : {
+											required : "库存警告阈值不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : "状态不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										remark : {
+											required : "备注不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										/* ,
+										filepart : {
+											required : "附件链接地址不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										leaf : {
+											required : "是否叶子节点不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										level : {
+											required : "树结构级别不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										parentid : {
+											required : "父级ID不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										displayorder : {
+											required : "平级节点排序不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										subq : {
+											required : "序列号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : "添加时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										} */
+									
+								
+							}
+						});
+						
+						//其他iframe 对话框 初始化-->
+						$( "#dialog-modal").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+						
+				        $( "#user_auth_form").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+				        
+				        $("#user_add_form").omDialog({
+				        	autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+						});	
+				        
+				        var uploadDialog = $("#upload-form").omDialog({
+							width : 500,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitUploadDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"关闭" : function() {
+									$("#upload-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						var submitUploadDialog = function(){
+							$("#upload-form").omDialog("close");
+							//var uploadidd = $("input[name='uploadidd']").val();
+							var uploadidd = '';
+							var url = "/IntelligentLockProduct/Upload";
+					        $.ajaxFileUpload({  
+					            url:url,  
+					            secureuri:false,  
+					            fileElementId:'file_excel',//file标签的id  
+					            dataType: 'json',//返回数据的类型  
+					            data:{uploadidd:uploadidd},//一同上传的数据  
+					            success: function (data, status) { 
+					            	//console.log(data);
+					            	$('#mygrid').omGrid('reload');
+					            	$.omMessageTip.show({
+										title : "操作成功",
+										content : "成功导入"+data+"条",
+										timeout : 1500
+									}); 
+					            },  
+					            error: function (data, status, e) {  
+					                alert(e);  
+					            }  
+					        });  
+						};
+						
+						$('#import').bind('click', function() {
+							$("#uploadForm")[0].reset();
+                			/*对应于指定目标的上传
+                			var index = $(this).parent().attr('id');
+                			$("input[name='uploadidd']").val(index); 
+                			*/
+                			uploadDialog.omDialog("option", "title", "导入（excel）");
+                			uploadDialog.omDialog("open");
+			            });
+						
+						//搜索按钮加图片
+						var searchPanel = $("#search-panel").omPanel({
+				            	title : "工具栏",collapsible:true
+				            });
+						 $('span#button-search').omButton({
+			          	    icons : {left : '/public/images/search.png'},width : 70
+			       	 	    });
+						 $('span#button-noSearch').omButton({
+				          	    icons : {left : '/public/images/searchNo.png'},width : 70
+				       	 	});
+						 $('span#add').omButton({
+				          	    icons : {},width : 70
+				       	 	});
+						 
+						 $('span#import').omButton({
+				          	    icons : {},width : 110
+				       	 	});
+						 
+						 $('span#button-export').omButton({
+				          	   	width : 90
+				       	 });
+						 
+						//下载Excel格式
+				       	$('span#button-export').bind('click', function(e){
+				       		var searchStr='';
+			                	
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'image='+encodeURI($("input[name='image']", searchPanel).val())+"&";
+							
+								searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+							
+								searchStr += 'producttype='+encodeURI($("input[name='producttype']", searchPanel).val())+"&";
+							
+								searchStr += 'model='+encodeURI($("input[name='model']", searchPanel).val())+"&";
+							
+								searchStr += 'spec='+encodeURI($("input[name='spec']", searchPanel).val())+"&";
+							
+								searchStr += 'operator='+encodeURI($("input[name='operator']", searchPanel).val())+"&";
+							
+								searchStr += 'threshold='+encodeURI($("input[name='threshold']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("input[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+							
+								searchStr += 'filepart='+encodeURI($("input[name='filepart']", searchPanel).val())+"&";
+							
+								//searchStr += 'leaf='+encodeURI($("input[name='leaf']", searchPanel).val())+"&";
+							
+								//searchStr += 'level='+encodeURI($("input[name='level']", searchPanel).val())+"&";
+							
+								//searchStr += 'parentid='+encodeURI($("input[name='parentid']", searchPanel).val())+"&";
+							
+								//searchStr += 'displayorder='+encodeURI($("input[name='displayorder']", searchPanel).val())+"&";
+							
+								searchStr += 'subq='+encodeURI($("input[name='subq']", searchPanel).val())+"&";
+							
+								searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+			                var url = '/IntelligentLockProduct/List?export=1&'+searchStr;
+			                window.location.href = url;
+				        });	
+						
+						//搜索绑定 =》grid ！！！！
+			       	 	$('span#button-search').bind('click', function(e) {
+			                var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								//searchStr += 'image='+encodeURI($("input[name='image']", searchPanel).val())+"&";
+							
+								searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+								
+								searchStr += 'producttype='+$("#producttype").val()+"&";
+							
+								searchStr += 'model='+encodeURI($("input[name='model']", searchPanel).val())+"&";
+							
+								searchStr += 'spec='+encodeURI($("input[name='spec']", searchPanel).val())+"&";
+							
+								searchStr += 'operator='+encodeURI($("input[name='operator']", searchPanel).val())+"&";
+							
+								searchStr += 'threshold='+encodeURI($("input[name='threshold']", searchPanel).val())+"&";
+
+								searchStr += 'status='+$("#status").val()+"&";
+							
+								searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+							
+								searchStr += 'filepart='+encodeURI($("input[name='filepart']", searchPanel).val())+"&";
+							
+								//searchStr += 'leaf='+encodeURI($("input[name='leaf']", searchPanel).val())+"&";
+							
+								//searchStr += 'level='+encodeURI($("input[name='level']", searchPanel).val())+"&";
+							
+								//searchStr += 'parentid='+encodeURI($("input[name='parentid']", searchPanel).val())+"&";
+							
+								//searchStr += 'displayorder='+encodeURI($("input[name='displayorder']", searchPanel).val())+"&";
+							
+								searchStr += 'subq='+encodeURI($("input[name='subq']", searchPanel).val())+"&";
+							
+								//searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+			                $('#mygrid').omGrid("setData", '/IntelligentLockProduct/List?'+searchStr );
+			            });
+			       	 
+						
+			 			
+			 				/*
+			 				$("input[name='idd']", searchPanel).omCombo({
+				            	 dataSource : '/IntelligentLockProduct/All',
+					                optionField : function(data, index) {
+					                    return data.idd;
+					                },
+					                valueField : 'idd',
+					                inputField : 'idd'
+				            });
+			 				*/
+			 			
+			 			
+			 			
+			 				/* $("input[name='addtime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='addtime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            }); */
+			 			
+			 			
+						
+			       	    
+						//不搜索 =》grid
+			       	 	$('span#button-noSearch').bind('click', function(e) {
+		                    $('#mygrid').omGrid("setData", '/IntelligentLockProduct/List?key=');
+			            });	
+			            
+			             // 点击页面其他地方的时候隐藏表格里面的菜单
+			            $("body").click(function(){
+							$("#mygrid").find("div.op-menu:visible").hide();
+			            });		
+	
+					});	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/IntelligentLockProduct/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+
+		<!-- 
+		<span class="label">产品图：</span> 
+		<input name="image" id="image" /> -->
+		
+		
+		
+		<span class="label">产品名称：</span> 
+		<input name="title" id="title" />
+		
+		
+		
+		<span class="label">产品类型：</span> 
+		<!-- <input name="producttype" id="producttype" /> -->
+		<select id="producttype" name="producttype" style="width: 175px;">
+		  <option></option>
+		  <option value="0">种类</option>
+		</select>
+		
+		
+		
+		<span class="label">型号：</span> 
+		<input name="model" id="model" />
+		
+		
+		
+		<span class="label">规格：</span> 
+		<input name="spec" id="spec" />
+		
+		
+		
+		<span class="label">操作人：</span> 
+		<input name="operator" id="operator" />
+		
+		
+		
+		<span class="label">库存警告阈值：</span> 
+		<input name="threshold" id="threshold" />
+		
+		
+		
+		<span class="label">状态：</span> 
+		<!-- <input name="status" id="status" /> -->
+		<select id="status" name="status" style="width: 175px;">
+		  <option></option>
+		  <option value="0">正常</option>
+		  <option value="1">废弃</option>
+		</select>
+		
+		
+		
+		<span class="label">备注：</span> 
+		<input name="remark" id="remark" />
+		
+		
+		
+		<!-- <span class="label">附件链接地址：</span> 
+		<input name="filepart" id="filepart" />
+		
+		
+		
+		<span class="label">是否叶子节点：</span> 
+		<input name="leaf" id="leaf" />
+		
+		
+		
+		<span class="label">树结构级别：</span> 
+		<input name="level" id="level" />
+		
+		
+		
+		<span class="label">父级ID：</span> 
+		<input name="parentid" id="parentid" />
+		
+		
+		
+		<span class="label">平级节点排序：</span> 
+		<input name="displayorder" id="displayorder" /> -->
+		
+		
+		
+		<!-- <span class="label">序列号：</span> 
+		<input name="subq" id="subq" /> -->
+		
+		
+		<!-- 
+		<span class="label">添加时间：</span> 
+		<input name="addtime" id="addtime" />
+		 -->
+		
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<span id="add">新增</span>
+		<!-- <span id="import">导入（Excel97）</span> -->
+		<span id="button-export">下载页面数据</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+	<table>
+		<tr>
+			<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+		</tr>
+		
+	</table>
+	</form>
+</div>
+
+<div id="excelUpload-Frame" style="display: none;">
+	<form id="excelUploadFrame">
+		<input type="hidden" name="uploadidd" value="" />
+		<table>
+			<tr>
+				<td>
+					<input type="file" name="excel_storage" id="excel_storage"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  />
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+		<!-- <table> -->
+				<tr id="tr1">
+					<td style="text-align: right;">图片路径：</td>
+					<td><input id="advertisingImg1" name="image" value="未上传" onfocus="if(value==defaultValue){value='图片未上传';this.style.color='#999'}" style="color:#999999;background-color: #e4eaf2;border: none;width: 300px;" readonly="readonly"/></td>
+					<td><span></span></td>
+				</tr>
+				<tr id="tr2">
+					<td style="text-align: right;">选择上传文件：</td>
+					<td ><input id="advertisingImg1_upload" name="advertisingImg1_upload" type="file" ></input></td>
+					<td><span></span></td>
+				</tr>
+				<tr id="tr3">
+					<td>
+					</td>
+					<td ><input id="addButton" type="button" value="点击添加" onclick="$('#advertisingImg1_upload').omFileUpload('upload');">
+					</td>
+					<td><span></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">产品名称：</td>
+					<td><input name="title" id="title2"/></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">产品类型：</td>
+					<!-- <td><input id="productTypeInput" name="producttype" style="display:none"/></td> -->
+					<td>
+						<select id="sel" name="producttypeCODE">
+						  <option value="add">-请选择-</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">型号：</td>
+					<td><input name="model" id="model2"/></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">规格：</td>
+					<td><input name="spec" id="spec2"/></td>
+				</tr>
+				<!-- <tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作人：</td>
+					<td><input name="operator" /></td>
+				</tr> -->
+				<tr>
+					<td style="text-align: right;">库存警告阈值：</td>
+					<td><input name="threshold" id="threshold2"/></td>
+				</tr>
+				<tr id="tr4">
+					<td style="text-align: right;">状态：</td>
+					<td>
+						<label><input id="zc" type="radio" name="status" value="0" onclick="get()" checked="checked"/>正常</label>
+						&nbsp;&nbsp;
+						<label><input id="fq" type="radio" name="status" value="1" onclick="get()"/>废弃</label>
+					</td>	
+				</tr>
+				<tr>
+					<td style="text-align: right;">备注：</td>
+					<td><input name="remark" id="remark2"/></td>
+				</tr>
+				<!-- <tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;附件链接地址：</td>
+					<td><input name="filepart" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否叶子节点：</td>
+					<td><input name="leaf" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;树结构级别：</td>
+					<td><input name="level" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;父级ID：</td>
+					<td><input name="parentid" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平级节点排序：</td>
+					<td><input name="displayorder" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序列号：</td>
+					<td><input name="subq" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加时间：</td>
+					<td><input name="addtime" /></td>
+				</tr> -->
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

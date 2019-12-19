@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script type="text/javascript" src="./js/weixin-1.4.0.js"></script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		#description{
+  			width: 90%;
+  			margin: 0 auto;
+  			margin-top: 15px;
+  			font-size: 18px;
+  		}
+  		#prompt_img{
+  			width: 100%;
+  			margin-top: 15px;
+  		}
+  		#prompt_img img{
+  			display: block;
+  			width: 70%;
+  			margin: 0 auto;
+  		}
+  		#immediately_scan{
+  			margin-top: 30px;
+  			width: 100%;
+  			height: 34px;
+  		}
+  		#immediately_scan button{
+  			display: block;
+  			margin: 0 auto;
+  			max-width: 540px;
+  			width: 80%;
+  			height: 44px;
+  			border: 1px solid #da4242;
+	    	color: white;
+	    	background: #da4242;
+  		}
+  		#loading{
+			display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    position: fixed;
+		    bottom: 0px;
+		    left: 0px;
+		    background-color: white;
+		    width: 100%;
+		    height: 100%;
+		}
+  		#loading img{
+			width: 120px;
+			height: 20px;
+		}
+  	</style>
+	<title>绑定设备</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>绑定设备</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-top: 30px;">
+		<div id="description">
+			<p>请扫描您的智能锁背面的设备码（如下图展示的位置）绑定智能锁。绑定设备后即可成为司铠会员，并管理设备</p>
+		</div>
+		<div id="prompt_img">
+			<img alt="提示" src="./images/scants.png">
+		</div>
+		<div id="immediately_scan">
+			<button @click="scanNow()">立即扫描</button>
+		</div>
+	</div>
+	<div id="loading" style="visibility: hidden;z-index: 999;">
+		<img alt="" src="">
+		<div style="position: absolute;margin-top: 35px;">
+			<p>设备连接中...</p>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+	  	window.onload=function(){
+			toptitle()//头部标题
+		}
+	  	function unload(){
+			$("#loading").css({'visibility':'hidden'})
+		}
+		function doLoad(deviceid){
+			 $("#loading").css({'visibility':'visible'})
+			 var i = 0;//图片名数字
+			 var status = 1;//订单的状态
+			 var timing = setInterval(function(){    
+				 $("#loading img").attr({
+		        	 'src':'./images/loading_'+((i++%4)+1)+'.png'
+		         })
+		         if(status==0){//1 成功 2失败 3待生效 一分钟时间如果连接不上则跳转失败
+	        		unload()
+	        		timing = window.clearInterval(timing)//停止加载
+	        		window.location.href = "/public/app/gzh/MyDevices.html";//跳转
+		         }else{
+		        	 status = findDeviceInfo(deviceid);
+		         }
+		     },300);
+		}
+		function findDeviceInfo(deviceid){
+			var status = 1;
+			$.ajax({
+				url: '/gzh/v1/addLockDevice',
+				data: 
+				{
+					lockcode:deviceid
+				},
+				type: 'GET',
+				dataType: 'json',
+				cache:false,
+				async: false,
+				success: function(res){
+					if(res.code==202){
+						alert("登陆超时,请重新登陆")
+						window.location.href = "/public/app/gzh/devicelogin.html";
+					}else{//成功
+						status = res.code
+					}
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+			return status;
+		}
+		var scan = new Vue({
+			el:'#immediately_scan',
+			data:{},
+			methods:{
+				scanNow(){
+					WX.scanQRCode({
+						needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+						scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+						success: function (res) {
+							var deviceid = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+							$.ajax({
+								url: '/gzh/v1/addLockDevice',
+								data: 
+								{
+									lockcode:deviceid
+								},
+								type: 'GET',
+								dataType: 'json',
+								cache:false,
+								async: false,
+								success: function(res){
+									if(res.code==202){
+										alert("登陆超时,请重新登陆")
+										window.location.href = "/public/app/gzh/devicelogin.html";
+									}else{//成功
+										if(res.code==0){//直接成功说明是不需要连接的锁
+											window.location.href = "/public/app/gzh/MyDevices.html";//跳转
+										}else if(res.code==2){
+											alert(res.message)
+										}else if(res.code==3){
+											alert(res.message)
+										}else {//这把锁需要先连接
+											window.location.href = "/public/app/gzh/AddDevice.html?deviceid="+deviceid;
+										} 
+									}
+								},
+								error: function(err){
+									console.log(err)
+								}
+							})
+						}
+					});
+				}
+			}
+		})
+	</script>
+</body>
+</html>

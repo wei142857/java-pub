@@ -1,0 +1,1079 @@
+
+@htmlhead("APP商城商品 列表"){
+<script type="text/javascript" src="/public/commonJs/nicEdit.js"></script>
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	$(document).ready(	function() {
+		
+		bkLib.onDomLoaded(function() { 
+			 nicEditors.allTextAreas({
+				 uploadURI:"/EShopProduct/UploadImg",
+				 iconsPath:"/public/images/nicEditorIcons.gif",
+				 fullPanel : true
+		 }) });
+		
+		//枚举初始化
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+			height : 505,
+			dataType : "json",
+			dataSource : '/EShopProduct/List',
+			showIndex : false,
+			limit : 13,			
+			errorMsg : "获取数据出错",
+			emptyMsg : "没有数据",
+			
+			//Grid的header配置   ！！！！
+			colModel : [
+					{
+						header : '序号',
+						name : 'idd',
+							width : 40,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '商品名称',
+						name : 'title',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '副标题',
+						name : 'subtitle',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					/* {
+						header : '商品描述',
+						name : 'description',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					}, */
+					{
+						header : '备注',
+						name : 'remark',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '添加时间',
+						name : 'addtime',
+							width : 150,
+						align : 'center',
+						sort:'clientSide',
+						renderer : function(colValue) {   
+                      		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+                   		}
+					},
+					{
+						header : '大图',
+						name : 'bigimgurl',
+							width : 100,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(!colValue)
+								return '';
+	                   		return "<img src="+colValue+" width='100''>";
+						}
+					},
+					{
+						header : '小图',
+						name : 'smallimgurl',
+							width : 100,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(!colValue)
+								return '';
+	                   		return "<img src="+colValue+" width='100''>";
+						}
+					},
+					{
+						header : '状态',
+						name : 'status',
+							width : 60,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(colValue=="0"){
+								return "<span style='color:green'>"+'上线'+"</span>";
+							}else if(colValue=="1"){
+								return "<span style='color:orange'>"+'测试'+"</span>";
+							}else{
+								return "<span style='color:red'>"+'下线'+"</span>";
+							}
+						}
+					},
+					{
+						header : '分享标题',
+						name : 'sharetitle',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '分享描述',
+						name : 'sharedesc',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '分享图标',
+						name : 'shareicon',
+							width : 100,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(!colValue)
+								return '';
+	                   		return "<img src="+colValue+" width='100''>";
+						}
+					},
+					{
+						header : '分享链接',
+						name : 'sharelink',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '售价',
+						name : 'saleprice',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '会员价',
+						name : 'vipprice',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '成本价',
+						name : 'pcsaleprice',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '库存',
+						name : 'stock',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '排序值',
+						name : 'orders',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '操作', 
+						name : 'operation',
+							width:'autoExpand', 
+						align:'center', 
+			     		renderer:function(colValue, rowData, rowIndex){
+		     				// 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+		     				var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div><div class='delete'>删除</div></div>";
+		     				var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+		     				return menu + btn;
+			         	}
+					} 
+				],
+				onRefresh: function(nowPage, pageRecords,event){
+               		var $grid = $('#mygrid'); 
+               	    $grid.find("a.op-btn").each(function(){
+               			var $btn = $(this); 
+                		// 初始化表格里面的操作按钮 
+                		$btn.omButton({
+                			icons : {left : '/public/images/op-btn-icon.png'},
+                			width : 75,
+                			onClick : function(event){                				
+                				var v = $grid.find("div.op-menu:visible");
+                				var $opMenu = $(event.currentTarget.previousSibling);
+                				// 重新计算菜单的位置
+                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+                				if($opMenu.css("display") == "none"){
+                					$opMenu.show().css({left:left});
+                				} else{
+                					$opMenu.hide();
+                				}
+                				v.hide();
+                				event.stopPropagation();
+                				return false;
+                			}
+                		});
+                	});
+                	// 绑定表格操作按钮菜单的事件 ！！！！
+                	$grid.find("div.op-menu").each(function(){
+                		var $menu = $(this);
+                		var rowindex=$menu.id;
+                		$menu.hide();
+                		$menu.find(".edit").click(function(){
+							isAdd = false;
+							var index = $(this).parent().attr('id');
+			                showDialog('修改',index);//显示dialog
+						});
+                		
+                		$menu.find(".delete").click(function(){
+							var index = $(this).parent().attr('id');
+							doAsk('确定删除吗？' , delit , index );
+						});
+                		
+                	});
+                }
+			});
+		
+			//[新增/修改]dialog初始化
+			var dialog = $("#dialog-form").omDialog({
+				width : 460,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"取消" : function() {
+						$("#dialog-form").omDialog("close");//关闭dialog
+					}
+				}
+			});
+						
+			$('#add').bind('click', function() {
+                isAdd = true;
+                showDialog('新增',null);//显示dialog
+            });
+						
+			//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+			var showDialog = function(title, idd) {
+				validator.resetForm();
+				if(idd!=null){
+					//edit info;
+					var uri = "/EShopProduct/Get/"+idd;
+					$.get(uri,function(response){
+			            if(response!=null){
+							$("input[name='idd']", dialog).val(response.idd);
+							
+							$("input[name='title']", dialog).val(response.title);
+										
+							$("input[name='subtitle']", dialog).val(response.subtitle);
+						
+							//$("input[name='description']", dialog).val(response.description);
+							nicEditors.findEditor('description').setContent(response.description);
+						
+							$("input[name='remark']", dialog).val(response.remark);
+						
+							$("input[name='upload_bigimg_url']", dialog).val(response.bigimgurl);
+						
+							$("input[name='upload_smallimg_url']", dialog).val(response.smallimgurl);
+						
+							if(response.status=="0"){
+								$("input[id='sx']", dialog).attr("checked","checked");
+							}else if(response.status=="1"){
+								$("input[id='cs']", dialog).attr("checked","checked");
+							}else{
+								$("input[id='xx']", dialog).attr("checked","checked");
+							}
+						
+							$("input[name='sharetitle']", dialog).val(response.sharetitle);
+						
+							$("input[name='sharedesc']", dialog).val(response.sharedesc);
+							
+							$("input[name='upload_shareicon_url']", dialog).val(response.shareicon);
+						
+							$("input[name='sharelink']", dialog).val(response.sharelink);
+						
+							$("input[name='saleprice']", dialog).val(response.saleprice);
+							
+							$("input[name='vipprice']", dialog).val(response.vipprice);
+						
+							$("input[name='pcsaleprice']", dialog).val(response.pcsaleprice);
+						
+							$("input[name='stock']", dialog).val(response.stock);
+						
+							$("input[name='orders']", dialog).val(response.orders);
+				        }
+					});
+				}else{
+					$("input[id='sx']", dialog).attr("checked","checked");
+				}
+				dialog.omDialog("option", "title", title);
+				dialog.omDialog("open");//显示dialog 
+			};
+						
+			//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+			var submitDialog = function() {
+				if (validator.form()) {
+					var submitData = {
+						operation : isAdd ? 'add' : 'modify',
+						idd : $("input[name='idd']",dialog).val()
+								
+						,title : $("input[name='title']", dialog).val()
+					
+						,subtitle : $("input[name='subtitle']", dialog).val()
+					
+						//,description : $("input[name='description']", dialog).val()
+						,description : nicEditors.findEditor('description').getContent()
+					
+						,remark : $("input[name='remark']", dialog).val()
+					
+						,bigimgurl : $("input[name='upload_bigimg_url']", dialog).val()
+					
+						,smallimgurl : $("input[name='upload_smallimg_url']", dialog).val()
+					
+						,status : $("input[name='status']:checked").val()
+					
+						,sharetitle : $("input[name='sharetitle']", dialog).val()
+					
+						,sharedesc : $("input[name='sharedesc']", dialog).val()
+					
+						,shareicon : $("input[name='upload_shareicon_url']", dialog).val()
+					
+						,sharelink : $("input[name='sharelink']", dialog).val()
+					
+						,saleprice : $("input[name='saleprice']", dialog).val()
+					
+						,vipprice : $("input[name='vipprice']", dialog).val()
+					
+						,pcsaleprice : $("input[name='pcsaleprice']", dialog).val()
+					
+						,stock : $("input[name='stock']", dialog).val()
+					
+						,orders : $("input[name='orders']", dialog).val()
+					};
+					var url = "/EShopProduct/Modify";
+					$.ajax({
+						url:url,
+						secureuri:false,
+						data: submitData,
+						type: 'post',
+						dataType: 'json',
+						success: function (returnMessage) {
+			            	if(returnMessage.code!=0){
+			            		$.omMessageTip.show({
+				            		type : "error",
+									title : "操作失败",
+									content : returnMessage.message,
+									timeout : 8000
+								}); 
+			            	}else {
+			            		if (isAdd) {
+									$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+									$.omMessageTip.show({
+										title : "操作成功",
+										content : "添加数据成功",
+										timeout : 1500
+									});
+								} else {
+									$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+									$.omMessageTip.show({
+										title : "操作成功",
+										content : "修改数据成功",
+										timeout : 1500
+									});
+								}
+			            	}
+			            	$("#dialog-form").omDialog("close"); //关闭dialog
+			            }
+					});
+				}
+			};
+			
+			/* 直接上传文件,并判断大小和类型 */
+			/* 上传大图 */
+			$('#upload_bigimg').omFileUpload({
+				action:'/EShopProduct/UploadIcon',	//文件上传与后台交互
+				swf : '/public/javascripts/operamasks-ui-1.2/swf/om-fileupload.swf',	//文件上传的位置
+				fileExt:'*.jpg;*.png;*.jpeg',
+				fileDesc:'Resource Files',
+				method: 'POST',
+				sizeLimit : 1024*1024,
+				onComplete:function(ID,fileObj,response,data,event){
+					if(response!=null&&response.length>0){
+						$('#upload_bigimg_url').val(response);
+					}
+				}
+			});
+			
+			/* 直接上传文件,并判断大小和类型 */
+			/* 上传小图 */
+			$('#upload_smallimg').omFileUpload({
+				action:'/EShopProduct/UploadIcon',	//文件上传与后台交互
+				swf : '/public/javascripts/operamasks-ui-1.2/swf/om-fileupload.swf',	//文件上传的位置
+				fileExt:'*.jpg;*.png;*.jpeg',
+				fileDesc:'Resource Files',
+				method: 'POST',
+				sizeLimit : 1024*1024,
+				onComplete:function(ID,fileObj,response,data,event){
+					if(response!=null&&response.length>0){
+						$('#upload_smallimg_url').val(response);
+					}
+				}
+			});
+			
+			/* 直接上传文件,并判断大小和类型 */
+			/* 上传分享图标 */
+			$('#upload_shareicon').omFileUpload({
+				action:'/EShopProduct/UploadIcon',	//文件上传与后台交互
+				swf : '/public/javascripts/operamasks-ui-1.2/swf/om-fileupload.swf',	//文件上传的位置
+				fileExt:'*.jpg;*.png;*.jpeg',
+				fileDesc:'Resource Files',
+				method: 'POST',
+				sizeLimit : 1024*1024,
+				onComplete:function(ID,fileObj,response,data,event){
+					if(response!=null&&response.length>0){
+						$('#upload_shareicon_url').val(response);
+					}
+				}
+			});
+			
+			// 对增加/修改表单的校验设,title : $("inpu置 ！！！！
+			var validator = $('#ipForm').validate({
+				rules : {
+					title : {
+						required : true,
+                     	maxlength : 100
+					},
+					subtitle : {
+						required : true,
+                     	maxlength : 100
+					},
+					/* description : {
+						required : true,
+                     	maxlength : 100
+					}, */
+					/* remark : {
+						required : true,
+                     	maxlength : 100
+					}, */
+					/* bigimgurl : {
+						required : true,
+                     	maxlength : 100
+					}, */
+					/* smallimgurl : {
+						required : true,
+                     	maxlength : 100
+					}, */
+					/* status : {
+						required : true,
+                     	maxlength : 100
+					} */
+					/* sharetitle : {
+						required : true,
+                     	maxlength : 100
+					} */
+					/* sharedesc : {
+						required : true,
+                     	maxlength : 100
+					}, */
+					/* shareicon : {
+						required : true,
+                     	maxlength : 100
+					}, */
+					/* sharelink : {
+						required : true,
+                     	maxlength : 100
+					}, */
+					saleprice : {
+						required : true,
+                     	maxlength : 100
+					},
+					vipprice : {
+						required : true,
+                     	maxlength : 100
+					},
+					pcsaleprice : {
+						required : true,
+                     	maxlength : 100
+					},
+					stock : {
+						required : true,
+                     	maxlength : 100
+					},
+					orders : {
+						required : true,
+                     	maxlength : 100
+					}
+				},
+				messages : {
+					title : {
+						required : "商品名称不能为空",
+						maxlength : '长度不能超过100个字符'
+					},
+					subtitle : {
+						required : "副标题不能为空",
+						maxlength : '长度不能超过100个字符'
+					},
+					/* description : {
+						required : "商品描述不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* remark : {
+						required : "备注不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* bigimgurl : {
+						required : "大图不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* smallimgurl : {
+						required : "小图不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* status : {
+						required : "状态不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* sharetitle : {
+						required : "分享标题不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* sharedesc : {
+						required : "分享描述不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* shareicon : {
+						required : "分享图标不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					/* sharelink : {
+						required : "分享链接不能为空",
+						maxlength : '长度不能超过100个字符'
+					}, */
+					saleprice : {
+						required : "售价不能为空",
+						maxlength : '长度不能超过100个字符'
+					},
+					vipprice : {
+						required : "会员价不能为空",
+						maxlength : '长度不能超过100个字符'
+					},
+					pcsaleprice : {
+						required : "成本价不能为空",
+						maxlength : '长度不能超过100个字符'
+					},
+					stock : {
+						required : "库存不能为空",
+						maxlength : '长度不能超过100个字符'
+					},
+					orders : {
+						required : "排序值不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+				}
+			});
+						
+			//其他iframe 对话框 初始化-->
+			$( "#dialog-modal").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+			
+	        $( "#user_auth_form").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+	        
+	        $("#user_add_form").omDialog({
+	        	autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+			});	
+				        
+	        var uploadDialog = $("#upload-form").omDialog({
+				width : 500,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitUploadDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"关闭" : function() {
+						$("#upload-form").omDialog("close");//关闭dialog
+					}
+				}
+			});
+						
+			var submitUploadDialog = function(){
+				$("#upload-form").omDialog("close");
+				//var uploadidd = $("input[name='uploadidd']").val();
+				var uploadidd = '';
+				var url = "/EShopProduct/Upload";
+		        $.ajaxFileUpload({  
+		            url:url,  
+		            secureuri:false,  
+		            fileElementId:'file_excel',//file标签的id  
+		            dataType: 'json',//返回数据的类型  
+		            data:{uploadidd:uploadidd},//一同上传的数据  
+	            	success: function (returnMessage) {
+			           if(returnMessage.code!=0){
+			            	$.omMessageTip.show({
+				            	type : "error",
+								title : "操作失败",
+								content : returnMessage.message,
+								timeout : 8000
+							}); 
+			            }else {
+			            	$('#mygrid').omGrid('reload', 1);//操作成功后,刷新表格并跳转到第一页
+			            	$.omMessageTip.show({
+				            	type : "success",
+								title : "操作成功",
+								content : "成功导入"+returnMessage.message+"条",
+								timeout : 1500
+							});
+			            }
+			        },  
+			        error: function (data, status, e) {
+			        	$.omMessageTip.show({
+			        		type:"error",
+			            	content:data,
+			            	timeout : 1500
+			        	});
+			        	alert(e);
+			        }  
+		        });  
+			};
+						
+			$('#import').bind('click', function() {
+				$("#uploadForm")[0].reset();
+             			/*对应于指定目标的上传
+             			var index = $(this).parent().attr('id');
+             			$("input[name='uploadidd']").val(index); 
+             			*/
+             			uploadDialog.omDialog("option", "title", "导入（excel）");
+             			uploadDialog.omDialog("open");
+            });
+			
+			//给下载Excel样板按钮添加点击事件
+       	 	$('span#button-excel-sample').bind('click', function(e){
+       	 		var url = "/EShopProduct/DownSample";
+       	 		window.location.href = url;
+       			//window.open(url); //在另一个页面打开下载框
+       	 	});
+						
+			//搜索按钮加图片
+			var searchPanel = $("#search-panel").omPanel({
+	            	title : "工具栏",collapsible:true
+	            });
+			 $('span#button-search').omButton({
+          	    icons : {left : '/public/images/search.png'},width : 70
+       	 	    });
+			 $('span#button-noSearch').omButton({
+	          	    icons : {left : '/public/images/searchNo.png'},width : 70
+	       	 	});
+			 $('span#add').omButton({
+	          	    icons : {},width : 70
+	       	 	});
+			 $('span#button-excel-sample').omButton({
+				 	icons : {},width : 180
+			 	});
+			 $('span#import').omButton({
+	          	    icons : {},width : 140
+	       	 	});
+			 $('span#button-export').omButton({
+	          	   	width : 120
+	       	 });
+						 
+			//下载Excel格式
+	       	$('span#button-export').bind('click', function(e){
+	       		var searchStr='';
+                
+					searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+				
+					searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+				
+					searchStr += 'subtitle='+encodeURI($("input[name='subtitle']", searchPanel).val())+"&";
+				
+					searchStr += 'description='+encodeURI($("textarea[name='description']", searchPanel).val())+"&";
+				
+					searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+				
+					searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+				
+					searchStr += 'bigimgurl='+encodeURI($("input[name='bigimgurl']", searchPanel).val())+"&";
+				
+					searchStr += 'smallimgurl='+encodeURI($("input[name='smallimgurl']", searchPanel).val())+"&";
+				
+					searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+				
+					searchStr += 'sharetitle='+encodeURI($("input[name='sharetitle']", searchPanel).val())+"&";
+				
+					searchStr += 'sharedesc='+encodeURI($("input[name='sharedesc']", searchPanel).val())+"&";
+				
+					searchStr += 'shareicon='+encodeURI($("input[name='shareicon']", searchPanel).val())+"&";
+				
+					searchStr += 'sharelink='+encodeURI($("input[name='sharelink']", searchPanel).val())+"&";
+				
+					searchStr += 'saleprice='+encodeURI($("input[name='saleprice']", searchPanel).val())+"&";
+				
+					searchStr += 'vipprice='+encodeURI($("input[name='vipprice']", searchPanel).val())+"&";
+				
+					searchStr += 'pcsaleprice='+encodeURI($("input[name='pcsaleprice']", searchPanel).val())+"&";
+				
+					searchStr += 'stock='+encodeURI($("input[name='stock']", searchPanel).val())+"&";
+				
+					searchStr += 'orders='+encodeURI($("input[name='orders']", searchPanel).val())+"&";
+				
+                var url = '/EShopProduct/List?export=1&'+searchStr;
+                window.location.href = url;
+	        });	
+						
+			//搜索绑定 =》grid ！！！！
+       	 	$('span#button-search').bind('click', function(e) {
+                var searchStr='';
+                
+					searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+				
+					searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+				
+					searchStr += 'subtitle='+encodeURI($("input[name='subtitle']", searchPanel).val())+"&";
+				
+					searchStr += 'description='+encodeURI($("textarea[name='description']", searchPanel).val())+"&";
+				
+					searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+				
+					searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+				
+					searchStr += 'bigimgurl='+encodeURI($("input[name='bigimgurl']", searchPanel).val())+"&";
+				
+					searchStr += 'smallimgurl='+encodeURI($("input[name='smallimgurl']", searchPanel).val())+"&";
+				
+					searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+				
+					searchStr += 'sharetitle='+encodeURI($("input[name='sharetitle']", searchPanel).val())+"&";
+				
+					searchStr += 'sharedesc='+encodeURI($("input[name='sharedesc']", searchPanel).val())+"&";
+				
+					searchStr += 'shareicon='+encodeURI($("input[name='shareicon']", searchPanel).val())+"&";
+				
+					searchStr += 'sharelink='+encodeURI($("input[name='sharelink']", searchPanel).val())+"&";
+				
+					searchStr += 'saleprice='+encodeURI($("input[name='saleprice']", searchPanel).val())+"&";
+				
+					searchStr += 'vipprice='+encodeURI($("input[name='vipprice']", searchPanel).val())+"&";
+				
+					searchStr += 'pcsaleprice='+encodeURI($("input[name='pcsaleprice']", searchPanel).val())+"&";
+				
+					searchStr += 'stock='+encodeURI($("input[name='stock']", searchPanel).val())+"&";
+				
+					searchStr += 'orders='+encodeURI($("input[name='orders']", searchPanel).val())+"&";
+				
+                $('#mygrid').omGrid("setData", '/EShopProduct/List?'+searchStr );
+            });
+			 				
+       	 	/*$("input[name='idd']", searchPanel).omCombo({
+          	 	dataSource : '/EShopProduct/All',
+               	optionField : function(data, index) {
+                   	return data.idd;
+               	},
+               	valueField : 'idd',
+               	inputField : 'idd'
+         	});*/
+         	
+			//不搜索 =》grid
+       	 	$('span#button-noSearch').bind('click', function(e) {
+                   $('#mygrid').omGrid("setData", '/EShopProduct/List?key=');
+            });	
+            
+             // 点击页面其他地方的时候隐藏表格里面的菜单
+            $("body").click(function(){
+				$("#mygrid").find("div.op-menu:visible").hide();
+            });
+	   });	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/EShopProduct/Delete/"+val;
+			$.get(uri,function(responseText){
+            	if(responseText=="操作成功"){
+            		$('#mygrid').omGrid('reload');
+            		$.omMessageTip.show({
+						title : "操作成功",
+						content : "删除数据成功",
+						timeout : 1500
+					});
+            	}
+            	else
+            		alert(responseText);
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+
+		<span class="label">商品名称：</span> 
+		<input name="title" id="title" />
+		
+		<span class="label">副标题：</span> 
+		<input name="subtitle" id="subtitle" />
+		
+		<span class="label">售价：</span> 
+		<input name="saleprice" id="saleprice" />
+		
+		<span class="label">会员价：</span> 
+		<input name="vipprice" id="vipprice" /><br>
+		
+		<span class="label">成本价：</span> 
+		<input name="pcsaleprice" id="pcsaleprice" />
+		
+		<span class="label">库存：</span> 
+		<input name="stock" id="stock" />
+		
+		<span class="label">状态：</span> 
+		<select name="status" id="status" >
+			<option value="-2">全部</option>
+			<option value="0">上线</option>
+			<option value="1">测试</option>
+			<option value="-1">下线</option>
+		</select><br>
+		
+		<!-- <span class="label">商品描述：</span> -->
+		<!-- <textarea name="description" id="description" style="display:none"></textarea> -->
+		
+		<!-- <span class="label">备注：</span>  -->
+		<input name="remark" id="remark" style="display:none" />
+		
+		<!-- <span class="label">添加时间：</span> -->
+		<input name="addtime" id="addtime" style="display:none" /> 
+		
+		<!-- <span class="label">大图：</span> -->
+		<input name="bigimgurl" id="bigimgurl" style="display:none" /> 
+		
+		<!-- <span class="label">小图：</span> -->
+		<input name="smallimgurl" id="smallimgurl" style="display:none" /> 
+		
+		<!-- <span class="label">分享标题：</span> -->
+		<input name="sharetitle" id="sharetitle" style="display:none" /> 
+		
+		<!-- <span class="label">分享描述：</span> -->
+		<input name="sharedesc" id="sharedesc" style="display:none" /> 
+		
+		<!-- <span class="label">分享图标：</span> -->
+		<input name="shareicon" id="shareicon" style="display:none" /> 
+		
+		<!-- <span class="label">分享链接：</span> -->
+		<input name="sharelink" id="sharelink" style="display:none" /> 
+		
+		<!-- <span class="label">排序值：</span> -->
+		<input name="orders" id="orders" style="display:none" /> 
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<span id="add">新增</span>
+		<span id="import">批量导入商城商品信息</span>
+		<span id="button-export">下载商城商品信息</span>
+		<span id="button-excel-sample">下载商城商品信息样板表</span>
+	</div>
+</div>
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+<div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+		<table>
+			<tr>
+				<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;商品名称：</td>
+				<td><input name="title" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;副标题：</td>
+				<td><input name="subtitle" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;商品描述：</td>
+				<td><textarea id="description" name="description" style="width: 300px; height: 100px;"></textarea></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：</td>
+				<td><input name="remark" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;大图路径：</td>
+				<td>
+					<input id="upload_bigimg_url" name="upload_bigimg_url" placeholder="此处显示大图路径" readonly="readonly"/><br>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上传大图：</td>
+				<td>
+					<div>
+						<!--  accept="image/jpg, image/jpeg, image/png" -->
+						<input id="upload_bigimg" name="upload_bigimg" type="file" style="width:182px;" />
+						<input type="button" value="点击上传" onclick="$('#upload_bigimg').omFileUpload('upload');"/>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小图路径：</td>
+				<td>
+					<input id="upload_smallimg_url" name="upload_smallimg_url" placeholder="此处显示小图路径" readonly="readonly"/><br>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上传小图：</td>
+				<td>
+					<div>
+						<!--  accept="image/jpg, image/jpeg, image/png" -->
+						<input id="upload_smallimg" name="upload_smallimg" type="file" style="width:182px;" />
+						<input type="button" value="点击上传" onclick="$('#upload_smallimg').omFileUpload('upload');"/>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态：</td>
+				<td>
+					<input name="status" type="radio" id="sx" value="0" checked="checked" /><label for="sx">上线</label>
+					<input name="status" type="radio" id="xx" value="-1" /><label for="xx">下线</label>
+					<input name="status" type="radio" id="cs" value="1" /><label for="cs">测试</label>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分享标题：</td>
+				<td><input name="sharetitle" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分享描述：</td>
+				<td><input name="sharedesc" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分享图标：</td>
+				<td>
+					<input id="upload_shareicon_url" name="upload_shareicon_url" placeholder="此处显示分享图标路径" readonly="readonly"/><br>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上传分享图标：</td>
+				<td>
+					<div>
+						<!--  accept="image/jpg, image/jpeg, image/png" -->
+						<input id="upload_shareicon" name="upload_shareicon" type="file" style="width:182px;" />
+						<input type="button" value="点击上传" onclick="$('#upload_shareicon').omFileUpload('upload');"/>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分享链接：</td>
+				<td><input name="sharelink" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;售价：</td>
+				<td><input name="saleprice" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;会员价：</td>
+				<td><input name="vipprice" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;成本价：</td>
+				<td><input name="pcsaleprice" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;库存：</td>
+				<td><input name="stock" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排序值：</td>
+				<td><input name="orders" /></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

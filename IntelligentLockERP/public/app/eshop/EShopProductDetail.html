@@ -1,0 +1,525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>商品详情</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript" src="/public/app/js/weixin.js"></script>
+  	<style type="text/css">
+  		body{
+  			margin-bottom: 50px;
+  		}
+  		.detail_img{
+  			height:auto;
+  			margin:0 auto;
+  			padding: 0px;
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			background-size: auto 100%;
+  		}
+  		.detail_img img{
+		    width: 100%;
+		    height: auto;
+		    background-position: center;
+		    background-repeat: no-repeat;
+		    background-size: 100px 100px;
+  		}
+  		.detail_img div img{
+		    width: 100%;
+		    height: auto;
+		    background-position: center;
+		    background-repeat: no-repeat;
+		    background-size: 100px 100%;
+  		}
+  		.button_div{
+  			position: fixed;
+  			bottom: 0px;
+  			height: 50px;
+  			padding: 0px;
+  			margin: 0px;
+  		}
+  		.container{
+  			padding-left: 0px;
+  			padding-right: 0px;
+  		}
+  		.l_price_box{
+  			float: left;
+  			width: 60%;
+  			height: 50px;
+  			background-color: white;
+  		}
+  		.r_nowBuy{
+  			cursor: pointer;
+			float: right;		
+  			width: 40%;
+  			height: 50px;
+  			background-color: #ff5555;
+  		}
+  		.r_nowBuy span{
+  			cursor: pointer;
+  			display: inherit;
+		    color: white;
+		    line-height: 50px;
+		    font-size: 20px;
+		    text-align: center;
+		    width: 100%;
+  		}
+  		.r_no_stock{
+  			cursor: pointer;
+			float: right;		
+  			width: 40%;
+  			height: 50px;
+  			background-color: #dcdcdc;
+  		}
+  		.r_no_stock span{
+  			cursor: pointer;
+  			display: inherit;
+		    color: white;
+		    line-height: 50px;
+		    font-size: 20px;
+		    text-align: center;
+		    width: 100%;
+  		}
+  		.v_img{/* 会员星星图标 */
+  			width: 19px;
+    		height: 19px;
+  			display: inline-block;
+  			background-image: url(/public/app/eshop/images/hy_hl.png);
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			background-size: 100% 100%;
+  		}
+  		.nv_img{/* 非会员星星图标 */
+  			width: 19px;
+    		height: 19px;
+  			display: inline-block;
+  			background-image: url(/public/app/eshop/images/hy.png);
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			background-size: 100% 100%;
+  		}
+  		.l_price_box span{
+  			line-height: 50px;
+  			vertical-align: middle;
+  		}
+  		.l_price{
+  			font-size: 17px;
+  			color: #d80000;
+  		}
+  		.r_price{
+  			font-size: 15px;
+  			color: #cacaca;
+    		text-decoration: line-through;
+  		}
+  		.l_span{
+  			display: inline-block;
+  			margin-left: 10px;
+  		}
+  		.r_span{
+  			display: inline-block;
+			margin-left: 10px;
+  		}
+  		/* 分享弹窗 */
+	    #wqzMkShareAlertBox{
+	    	width: 100%;
+			height: 100%;
+			visibility: hidden;
+			position: fixed;
+			bottom: 0px;
+			left: 0px;
+			background-color: #00000042;
+	    }
+	    .touchBackground{
+	    	width: 100%;
+			height: calc(100% - 230px);
+			position: fixed;
+			top: 0px;
+			left: 0px;
+	    }
+	    .shareAlertByWqz{
+			width: 100%;
+			height: 230px;
+			position: fixed;
+			bottom: 0px;
+			left: 0px;
+			background-color: white;
+		}
+		.shareAlertTopByWqz{
+			width: 100%;
+			height: 50px;
+		}
+		.shareAlertTitleByWqz{
+			text-align: center;
+			line-height: 30px;
+		}
+		#shareListByWqz{
+			width: 100%;
+			height: 130px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.shareItemByWqz{
+			width: 60px;
+	    	height: 80px;
+			margin: 10px;
+			cursor: pointer;
+		}
+		.shareItemByWqz p{
+			text-align: center;
+			cursor: pointer;
+		}
+		.slogoByWqz{
+			width: 60px;
+			height: 60px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: auto 100%;
+			cursor: pointer;
+		}
+		.bottomClose{
+			width: 100%;
+			height: 50px;
+			cursor: pointer;
+		}
+		.closeText{
+			text-align: center;
+			color: #ff9334;
+		}
+		.barrage {
+			cursor: pointer;
+	        position: fixed;
+	        display: block;
+	        right: 10px;
+	        bottom: 60px;
+	        border-radius: 50%;
+	        filter:alpha(Opacity=80);
+	        -moz-opacity:0.8;
+	        opacity: 0.8;
+	    }
+	    #barrage{
+	     	background-color: #ffffff00;
+	    }
+	    .barrage_name {
+	        width: 60px;
+	        height: 60px;
+	        background-image: url(/public/app/eshop/images/share.png);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 100%  100%;
+	        border-radius: 50%;
+	   	}
+	   	#alertModel{
+	      	display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    visibility: hidden;
+		    position: fixed;
+		    left: 0px;
+		    bottom: 0px;
+		    width: 100%;
+		    height: 100%;
+		    text-align: center;
+		    z-index: 1000;
+		    background-color: rgba(0, 0, 0, 0.5);	
+	        border-radius: 5px;
+	    }
+	    .modal-data{
+           width:300px;
+           background-color: white;
+           border:0px;
+           padding:15px;
+           text-align:center;
+           padding: 0px;
+    	   padding-top: 15px;
+   	       border-radius: 5px;
+        }
+        #modal-overlay{
+           visibility: hidden;
+           position: fixed;   /* 使用绝对定位或固定定位  */
+           left: 0px;
+           bottom: 0px;
+           width:100%;
+           height:100%;
+           background: url(/public/app/eshop/images/jt.png) no-repeat right 15px top;
+           background-size: 35% auto;
+           background-color: rgba(0, 0, 0, 0.6);
+           z-index: 1000;
+       }
+  	</style>
+</head>
+<body>
+	<div class="container" id="pro">
+		<!-- <div class="detail_img col-xs-12 col-md-6 col-md-offset-3" :style="{'background-image':'url('+pro.bigimgurl+')'}">
+		</div> -->
+		<div class="detail_img col-xs-12 col-md-6 col-md-offset-3" v-html="pro.description" style="text-align: center">
+		</div>
+		<div class='row button_div col-xs-12 col-md-6 col-md-offset-3'>
+		  	<div class="l_price_box" v-if="vip"><!-- 是VIP -->
+		  		<span class="l_span">
+			  		<span class="v_img"></span><!-- 当是会员是 该图片可见 -->
+			  		<span class="l_price">￥{{(pro.vipprice).toFixed(2)}}</span>
+		  		</span>
+		  		<span class="r_span">
+					<span class="r_price">￥{{(pro.saleprice).toFixed(2)}}</span>
+		  		</span>
+		  	</div>
+		  	
+		  	<div class="l_price_box" v-else ><!-- 不是VIP -->
+		  		<span class="l_span">
+			  		<span class="l_price">￥{{(pro.saleprice).toFixed(2)}}</span>
+		  		</span>
+		  		<span class="r_span">
+		  			<span class="nv_img"></span><!-- 当不是会员时 该图片可见 -->
+					<span class="r_price">￥{{(pro.vipprice).toFixed(2)}}</span>
+		  		</span>
+		  	</div>
+		  	<div class="r_nowBuy" v-if="pro.stock>0" @click="routerTo(pro.idd)">
+		  		<span>
+		  			立即购买
+		  		</span>
+		  	</div>
+		  	<div class="r_no_stock" v-else>
+		  		<span>
+		  			库存不足
+		  		</span>
+		  	</div>
+	  </div>
+		<div id="alertModel" class="col-xs-9 col-md-3">
+	      <div class="modal-data">
+		        <span style="color: black;font-size: 15px;">提示</span>
+			  	<p><small id="alertMsg" style="line-height: 75px;"></small></p>
+	      </div>
+	    </div>
+		<div id="modal-overlay" class="col-xs-9 col-md-3" @click="close()"><!-- 提示用户右上角分享的图片 -->
+				
+		</div>
+	</div>
+	<div id="wqzMkShareAlertBox">
+	
+		<section class="touchBackground" @click="close()">
+	    </section>
+	    
+		<section class="shareAlertByWqz">
+	    	<section class="shareAlertTopByWqz"><!-- 顶部 -->
+		    	<h4 class="shareAlertTitleByWqz">分享到</h4><!-- title -->
+	    	</section>
+	    	
+			<section id="shareListByWqz"><!-- 分享图标 -->
+				<section class="shareItemByWqz" @click="toShare(1)"><!-- 微信 -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_wechat@2x.png);"></section><!-- 图标 -->
+					<p>微信</p>
+				</section>
+				<section class="shareItemByWqz" @click="toShare(2)"><!-- 朋友圈 -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_wechattimeline@2x.png);"></section><!-- 图标 -->
+					<p>朋友圈</p>
+				</section>
+				<section class="shareItemByWqz" @click="toShare(3)"><!-- QQ -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_qqfriends@2x.png);"></section><!-- 图标 -->
+					<p>QQ</p>
+				</section>
+				<section class="shareItemByWqz" @click="toShare(4)"><!-- QQ空间 -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_qzone@2x.png);"></section><!-- 图标 -->
+					<p>QQ空间</p>
+				</section>
+		    </section>
+		    
+	    	<section class="bottomClose"><!-- 底部 -->
+		    	<h4 class="closeText" @click="close()">取消</h4><!-- title -->
+	    	</section>
+	    </section>
+	    
+
+	</div>
+	<div class="barrage" id="barrage">
+        <div class="barrage_name" id="barrage_name" @click="shareIt()">
+        </div>
+    </div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		var sknapp = (function(){
+			return navigator.userAgent.toLowerCase().indexOf('sknhome') !== -1
+		})();
+		var wx= (function(){
+			return navigator.userAgent.toLowerCase().indexOf('micromessenger') !== -1
+		})();
+		//判断是否是微信浏览器
+		function is_weixin(){
+			var ua = navigator.userAgent.toLowerCase();
+			if(ua.match(/MicroMessenger/i)=="micromessenger"){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+		var sharebox = new Vue({
+			el: '#wqzMkShareAlertBox',
+			data: {
+				
+			},
+			methods:{
+				close(){
+					$("#wqzMkShareAlertBox").css({'visibility': 'hidden'})
+					$("#barrage").css({'visibility': 'visible'})
+				},
+				toShare(type){
+					window.location.href="skn://shareforshop?title="+encodeURIComponent(share.title)+"&desc="+encodeURIComponent(share.desc)+"&imgurl="+encodeURIComponent(share.imgurl)+"&linkurl="+encodeURIComponent(share.linkurl)+"&type="+type;
+				}
+			}
+		})
+		var share = new Vue({
+			el: '#barrage',
+			data: {
+				title: '',
+				desc: '',
+				imgurl: '',
+				linkurl: '',
+				shareType: ''
+			},
+			methods:{
+				shareIt(){
+					if(wx){//是微信浏览器 只让他在右上角分享
+						//显示图片
+						$("#modal-overlay").css({'visibility': 'visible'})
+						return 
+					}else if(!sknapp){
+						alert2("目前不支持非APP分享")
+						return ;
+					}
+					$("#wqzMkShareAlertBox").css({'visibility': 'visible'})
+					$("#barrage").css({'visibility': 'hidden'})//悬浮按钮
+				}
+			}
+		})
+		var proinfo = new Vue({
+			el: '#pro',
+			data: {
+				pro:null,
+				vip:false
+			},
+			methods:{
+				close(){
+					$("#modal-overlay").css({'visibility': 'hidden'})
+				},
+				routerTo(idd){
+					if(is_weixin()){//微信浏览器要做授权操作
+						window.location.href='/wx/toOAuth?ref='+encodeURIComponent('http://www.sknhome.com/public/app/eshop/EShopOrderPay.html?idd='+idd);
+					}else{//不是微信浏览器 不需要做授权操作
+						window.location.href="/public/app/eshop/EShopOrderPay.html?idd="+idd;
+					}
+				}
+			}
+		})
+		var alertSt = true;
+		function alert2(msg) {
+            if (alertSt) {
+            	$("#alertModel").css({'visibility': 'visible'})
+            	$("#alertMsg").html(msg)
+            	alertSt = false;
+            } else {
+            	$("#alertModel").css({'visibility': 'hidden'})
+            	alertSt = true;
+                return;
+            }
+            setTimeout(function() { alert2(msg) },1500) //每1000毫秒执行一次
+        }
+		function initShare(){
+			$.ajax({
+				url: '/v1/shareEShopProduct',
+				data: 
+				{
+					token:GetRequest()['token'],
+					pid:GetRequest()['idd']
+				},
+				type: 'GET',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					linkurl = "";
+					if(typeof(data.data.linkurl)!="undefined")
+						linkurl = data.data.linkurl
+					imgurl = "";
+					if(typeof(data.data.imgurl)!="undefined")
+						imgurl = data.data.imgurl
+					WX.ready({
+						title: share.title = data.data.title, // 分享标题
+
+						desc: share.desc = data.data.desc, // 分享描述
+						link: share.linkurl =linkurl.indexOf("http")!=0?("http://www.sknhome.com/"+linkurl):linkurl,  // 分享链接
+						imgUrl: share.imgurl = imgurl.indexOf('http')!=0?("http://www.sknhome.com/"+imgurl):imgurl, // 分享图标
+						success: function () {
+							
+						}	
+					});
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+		}
+  		window.onload = function(){
+  			initShare()//初始化分享数据
+  			var idd = GetRequest()['idd'];
+  			var token = GetRequest()['token'];
+  			if(typeof(GetRequest()['source']) != "undefined"){
+				$.post("/v1/saveShareSource",{'source':GetRequest()['source']},function(data){
+					/* if(data.code==202){
+						window.location.href="/public/app/eshop/EShopLogin.html";
+  					} */
+				},'json')
+			}
+  			/* 获取商品信息 */
+  			$.ajax({
+  				url: '/v1/findProInfo',
+  				data: 
+  				{
+  					idd:idd,
+  					token:token
+  				},
+  				type: 'POST',
+  				dataType: 'json',
+  				async: false,
+  				success: function(data){
+  					proinfo.pro = data;
+  				},
+  				error: function(err){
+  					console.log(err)
+  				}
+  			})
+  			
+  			/* 判断用户是否是会员 */
+	  		$.ajax({
+  				url: '/v1/checkTester',
+  				data: {},
+  				type: 'GET',
+  				dataType: 'json',
+  				async: false,
+  				success: function(data){
+  					if(data.data==1){
+  						proinfo.vip=true
+  					}
+  				},
+  				error: function(err){
+  					console.log("ajax-err:"+err)
+  				}
+  			})
+  		}
+  	</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/xuanwenchao.intelligentLockERP/!svn/ver/1567/trunk/IntelligentLockERP/app/worker/exchange
+END
+CleanOverdueBvalueThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/xuanwenchao.intelligentLockERP/!svn/ver/1010/trunk/IntelligentLockERP/app/worker/exchange/CleanOverdueBvalueThread.java
+END
+MonitorProcessThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xuanwenchao.intelligentLockERP/!svn/ver/591/trunk/IntelligentLockERP/app/worker/exchange/MonitorProcessThread.java
+END
+SendOutBvalueThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/xuanwenchao.intelligentLockERP/!svn/ver/1567/trunk/IntelligentLockERP/app/worker/exchange/SendOutBvalueThread.java
+END
+CancleOrderThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xuanwenchao.intelligentLockERP/!svn/ver/1197/trunk/IntelligentLockERP/app/worker/exchange/CancleOrderThread.java
+END
+OrderProcessThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xuanwenchao.intelligentLockERP/!svn/ver/594/trunk/IntelligentLockERP/app/worker/exchange/OrderProcessThread.java
+END
+ScanStrategyFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/worker/exchange/ScanStrategyFactory.java
+END
+Carrier.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/xuanwenchao.intelligentLockERP/!svn/ver/399/trunk/IntelligentLockERP/app/worker/exchange/Carrier.java
+END
+PreProcessThread.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/xuanwenchao.intelligentLockERP/!svn/ver/593/trunk/IntelligentLockERP/app/worker/exchange/PreProcessThread.java
+END

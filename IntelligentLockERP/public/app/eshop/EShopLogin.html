@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>登录</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		input[type=button], input[type=submit], input[type=file], button ,input[type=checkbox]{
+			cursor: pointer;
+			-webkit-appearance: none; 
+		}
+		input[type=checkbox]{
+			border-radius: 0;
+		}
+		body{
+			overflow-x:hidden;
+			width: 91%;
+			margin-left: 4%;
+		}
+		input:focus {
+		    outline: none;
+		    border-color: #cfdc00;
+		    box-shadow: 0 0 5px rgba(207, 220, 0, 0.4);
+		    border-radius: 5px;
+		}
+		.imgBox{
+			text-align: center;
+   		 	margin: 10% auto;
+   		 	margin-bottom: 90px;
+		}
+		.imgBox img{
+			width: 90px;
+			height: 90px;
+		}
+		.row_div{
+			padding-left: 0px;
+			border-bottom:1px solid #0000001c;
+			margin-bottom: 18px;
+		}
+		.row_div input{
+			border: 0px;
+			font-size: 13px;
+			padding-right: 0px;
+			padding-left: 5px;
+		}
+		input:focus {
+		    outline: none;
+		    border-color: #cfdc00;
+		    box-shadow: 0 0 5px rgba(207, 220, 0, 0.4);
+		    border-radius: 5px;
+		}
+		.right_box{
+		    text-align: center;
+		}
+		.right_box button{
+			width: 100px;
+			border-color: red;
+			color: red;
+			text-align: center;
+			height: 30px;
+			font-size: 13px;
+			padding: 0px;
+			background-color: white;
+			border: 1px solid #ff3333;
+		}
+		.right_box img{
+			width: 100px;
+			border: 0px;
+			text-align: center;
+			height: 30px;
+			padding: 0px;
+		}
+		#loginBut{
+			width: 100%;
+			border: 0px;
+			text-align: center;
+			padding: 0px;
+		}
+		#submitBut{
+			background-color:#ff6052;
+			width: 100%;
+			border: 0px;
+			text-align: center;
+			height: 50px;
+			color: white;
+			font-size: 16px;
+		}
+		/*隐藏掉我们模型的checkbox*/
+	   #checkbox{
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            display: none;
+       }
+	    /*未选中时*/        
+	   #checkbox{
+           width: 16px;
+           height: 16px;
+           border: 0px;
+           display: inline-block;
+           background: url(/public/app/eshop/images/k_wxz.jpg) no-repeat;
+           background-size: cover;
+       }
+	   /*选中checkbox时,修改背景图片的位置*/            
+	  #checkbox:checked{
+	   	   background: url(/public/app/eshop/images/k_xz.jpg) no-repeat;
+	   	   background-size: cover;
+       }
+	</style>
+	<script type="text/javascript">
+		function checkForm(){
+			debugger
+			var flag = true;
+			var value = $("#checkbox").prop('checked');
+			
+			if(!value){
+				alert("需要同意服务协议和隐私政策")
+				return false;
+			}
+			
+			var phone = $("input[name='phone']").val();
+			var validate = $("input[name='validate']").val();
+			var sms = $("input[name='sms']").val();
+			var binNum = 0;
+			if(phone!=""){
+  				var pattern = /(1[3-9]\d{9}$)/;
+  				if(!pattern.test(phone)){
+  					$("#msg").html("手机号格式不对")
+  					flag &= false;
+  				}else{
+  					$("#msg").html("")
+  				}
+  			}else{
+  				flag &= false;
+  				binNum+=2;
+  			}
+			
+			if(validate.trim()==""){/* 图形验证码 */
+				binNum+=3;
+				flag &= false;
+			}else{
+				flag &= checkValidate();
+			}
+			
+			if(sms.trim()==""){/* 手机短信 */
+				binNum+=4;
+				flag &= false;
+			}else{
+				debugger
+				flag &= checkSMS(sms,phone);
+				console.log(flag)
+			}
+			
+			if(binNum==2){
+				alert("请填写手机号");
+			}else if(binNum==3){
+				alert("请填写图形验证码");
+			}else if(binNum==4){
+				alert("请填写短信验证码");
+			}else if(binNum==5){
+				alert("请填写手机号和图形验证码");
+			}else if(binNum==6){
+				alert("请填写手机号和短信验证码");
+			}else if(binNum==7){
+				alert("请填写图形验证码和短信验证码");
+			}else if(binNum==9){
+				alert("不填写表单时不允许登录的哦");
+			}
+			if(flag){
+				return true;
+			}else{
+				return false;
+			}
+		}
+        //用ajax提交到后台的发送短信接口
+        function sendyzm(obj){
+            var phone = $("#userPhone").val();
+            var validate = $("#validate").val();
+            
+            var result = isPhoneNum();
+            if(result) {
+                $.ajax({
+                    url:"/v1/eshopSMS",
+                    data:{phone:phone,validate:validate},
+                    dataType:"json",
+                    type:"post",
+                    cache : false,
+                    success:function(res){
+                    	
+                    },
+                    error:function(error){
+                        alert("验证码发送失败");
+                        console.log(error)
+                    }
+                })
+                setTime(obj);//开始倒计时
+            }
+        }
+ 
+        //60s倒计时实现逻辑
+        var countdown = 60;
+        function setTime(obj) {
+            if (countdown == 0) {
+                obj.prop('disabled', false);
+                obj.text("点击获取验证码");
+                countdown = 60;//60秒过后button上的文字初始化,计时器初始化;
+                return;
+            } else {
+                obj.prop('disabled', true);
+                obj.text("("+countdown+"s)后重新发送") ;
+                countdown--;
+            }
+            setTimeout(function() { setTime(obj) },1000) //每1000毫秒执行一次
+        }
+ 
+ 
+        //校验手机号是否合法
+        function isPhoneNum(){
+            var phonenum = $("#userPhone").val();
+            var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+            if(!reg.test(phonenum)){
+                alert('请输入有效的手机号码！');
+                return false;
+            }else{
+                return true;
+            }
+        }
+        function checkSMS(sms,phone){
+        	var flag = true;
+        	$.ajax({
+        		url:'/v1/checkSmsCode',
+        		data:{
+        			sms:sms,
+        			phone:phone
+        			},
+        		type:'POST',
+        		dataType:'json',
+        		async: false,
+        		success:function(data){
+        			if(data.code==0){
+        				$("#msg").html("")
+        			}else{
+        				flag = false;
+        				console.log("校验失败")
+        				$("#msg").html(data.message)
+        				$("#imgCodeBox").trigger("click");
+        			}
+        		},
+        		error:function(error){
+        			console.log(error);
+        		}
+        	})
+        	return flag;
+        }
+        function checkValidate(){
+        	var imgCode = $("#validate").val();
+        	var flag = true;
+        	$.ajax({
+        		url:'/v1/checkImgCode',
+        		data:{imgCode:imgCode},
+        		type:'POST',
+        		dataType:'json',
+        		async: false,
+        		success:function(data){
+        			if(data.code==0){
+        				console.log("校验成功")
+        				$("#msg").html("")
+        			}else{
+        				console.log("校验失败")
+        				flag &= false;
+        				$("#msg").html(data.message)
+        				$("#imgCodeBox").trigger("click");
+        			}
+        		},
+        		error:function(error){
+        			console.log(error);
+        		}
+        	})
+        	return flag;
+        }
+		window.onload=function(){
+			$("#checkbox").prop("checked",false);
+			$("#second").click(function (){
+				if(checkValidate())
+	            	sendyzm($("#second"));
+	        });
+		}
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<p class="imgBox">
+				<img alt="logo" src="/public/app/eshop/images/logo.png">
+			</p>
+		</div>
+		<div class="row"><!-- 登录表单 -->
+			<form action="/v1/eshopLogin" method="POST" onsubmit="return checkForm()">
+				<div class="row">
+					<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4 row_div">
+						<div class="form-group">
+							<input type="text" id="userPhone" class="form-control" name="phone" placeholder="请输入手机号码">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4 row_div">
+						<div class="col-xs-8 col-md-8 form-group" style="padding-left: 0px;">
+							<input type="text" class="form-control" name="validate" id="validate" placeholder="请输入图形验证码">
+						</div>
+						<div class="col-xs-4 col-md-4 form-group right_box" style="padding: 0px;">
+							<img alt="点击刷新" src="/validateImage" id="imgCodeBox"
+							onclick="javascript:this.src='/validateImage?temp='+ (new Date().getTime().toString(36));">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4 row_div">
+						<div class="col-xs-8 col-md-8 form-group" style="padding-left: 0px;">
+							<input type="text" class="form-control" name="sms" placeholder="请输入短信验证码">
+						</div>
+						<div class="col-xs-4 col-md-4 form-group right_box" style="padding: 0px;">
+							<button type="button" id="second">点击获取验证码</button>
+						</div>
+						
+					</div>
+				</div>
+				<div class="row"><!-- 错误提示 -->
+					<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4" style="padding-left: 5px;margin-bottom: 15px;">
+						<p class="text-danger">
+							<span id="msg">
+							</span>
+						</p>
+					</div>
+				</div>
+				<div class="row"><!-- 登录按钮 -->
+					<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4" style="padding: 0px;margin-bottom: 10px;">
+						<input type="submit" id="submitBut" value="登录">
+					</div>
+					<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4" style="padding: 0px;">
+						<input style="margin-bottom: 0px;" type="checkbox" name="checkbox" id="checkbox"><span style="font-size: 10px;display:inline-block;vertical-align:middle;padding-bottom: 4px;">&nbsp;&nbsp;&nbsp;&nbsp;我已阅读并同意<a href="/public/app/op/01/agreement.html" style="color: red;">《服务协议》</a>和<a href="/public/app/op/01/privacy.html" style="color: red;">《隐私政策》</a></span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

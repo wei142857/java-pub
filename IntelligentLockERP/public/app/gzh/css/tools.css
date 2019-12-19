@@ -1,0 +1,138 @@
+@charset "UTF-8";
+.alert_div{/* 弹框经典 */
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	bottom: 0px;
+	background-color: rgba(0,0,0,0.3);
+}
+.alert_box{/* 共用 */
+	width: 300px;
+	min-height: 120px;
+	height: auto !important;
+	background-color: white;
+	border-radius: 10px;
+	margin: 0 auto;
+	margin-top: 50%;
+}
+.alert_title{/* 共用 */
+	height: 40px;
+	width: 100%;
+}
+.alert_title p{/* 共用 */
+	line-height: 40px;
+	text-align: center;
+}
+.alert_title_alone{/* 单独一个提示标题 */
+	height: 60px;
+	width: 100%;
+	padding-top: 38px;
+}
+.alert_title_alone p{/* 共用 */
+	line-height: 17px;
+	text-align: center;
+}
+.alert_text_center_input{/* 中间input */
+	width: 90%;
+	height: 40px;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+.alert_text_center_input input{/* 中间input */
+	width: 100%;
+	height: 40px;
+	padding-left: 8px;
+	border-radius: 5px;
+	border: 1px solid #eee;
+}
+.alert_bottom_a_or_b{/* 下面取消+确定按钮 */
+	border-top: 1px solid #eee;
+	width: 100%;
+	height: 40px;
+	margin-top: 20px;
+}
+.alert_bottom_d{/* 下面取消按钮 */
+	display: inline-block;
+	width: 150px;
+}
+.alert_bottom_d button{/* 下面取消按钮 */
+	width: 145px;
+	margin-left: 10px;
+	border: 0px;
+	background-color: white;
+	color: gray;
+	height: 39px;
+}
+.alert_bottom_c{/* 下面确定按钮 */
+	display: inline-block;
+	border-left: 1px solid #eee;
+}
+.alert_bottom_c button{/* 下面确定按钮 */
+	width: 135px;
+	border: 0px;
+	background-color: white;
+	color: #20a9f9;
+	height: 39px;
+	margin-left: 1px;
+}
+.alert_bottom_del{/* 下面删除按钮 */
+	display: inline-block;
+	border-left: 1px solid #eee;
+}
+.alert_bottom_del button{/* 下面删除按钮 */
+	width: 135px;
+	border: 0px;
+	background-color: white;
+	color: #da4242;
+	height: 39px;
+	margin-left: 1px;
+}
+.alert_types_rows{
+	width: 100%;
+	min-height: 60px;
+	height: auto !important;
+	border-radius: 5px;
+	margin: 0 auto;
+}
+.circle_box{
+	width: 95%;
+	max-width: 500px;
+	min-height: 60px;
+	height: auto !important;
+	background-color: white;
+	margin: 0 auto;
+	border-radius: 10px;
+}
+.alert_types_items{
+	position: fixed;
+    bottom: 78px;
+}
+.alert_types_cancel{
+	position: fixed;
+    bottom: 9px;
+}
+.types_item{
+	width: 100%;
+	min-height: 60px;
+	height: auto !important;
+	cursor: pointer;
+}
+.types_item p{
+	margin: 0px;
+	line-height: 60px;
+	text-align: center;
+	color: #20a9f9;
+	font-size: 17px;
+}
+.itemtopb{
+	border-top: 1px solid #eee;
+}
+#rename_alert{
+	visibility: hidden;
+}
+#delete_alert{
+	visibility: hidden;
+}
+#pwd_type{
+	visibility: hidden;
+}

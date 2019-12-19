@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SKN·智能生活</title>
+<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no" name="format-detection">
+<meta content="email=no" name="format-detection">
+<link href="css/common.css" rel="stylesheet" media="all">
+<script src="js/font.js"></script>
+</head>
+<body>
+<div id="page"> 
+    <div class="zw-cont">
+        <p>1.触摸门锁唤醒，输入“01”+“#”<br>
+           2.输入管理员密码（#键结束）或指纹<br>
+           3.按门锁语音提示操作添加或删除指纹（添加指纹：按1添加，再按1添加指纹；删除指纹：按2删除，再按1删除指纹）
+        </p>
+        <span><img src="images/skn_pic.jpg" width="100%"></span>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>司铠智能</title>
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<!-- bootstrap -->
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="http://hovertree.com/texiao/bootstrap/4/css/city-picker.css" rel="stylesheet" type="text/css" />
+    <script src="http://hovertree.com/texiao/bootstrap/4/js/city-picker.data.js"></script>
+    <script src="http://hovertree.com/texiao/bootstrap/4/js/city-picker.js"></script>
+    <script src="http://hovertree.com/texiao/bootstrap/4/js/main.js"></script>
+    <!-- layDate -->
+	<script type="text/javascript" src="/public/app/install/laydate/laydate.js"></script>
+	<style type="text/css">
+		.row_top{
+			margin-bottom: 60px;
+		}
+		.measure_fanhui{
+			background-color: white;
+			position: fixed;
+			font-size: 16px;
+			font-weight: bold;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+			z-index: 1;
+			left: 0px;
+		}
+		.fanhui_img{
+		    position: absolute;
+		    width: 36px;
+		    height: 36px;
+		    left: 10px;
+		    top: 5px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.top_space_15{
+			margin-top: 15px;
+		}
+		.top_space_20{
+			margin-top: 20px;
+		}
+		.input_style{			/* 前面文字 后面输入框的统一样式 */
+			height: 34px;
+		}
+		.input_span{			/* 输入框 前面文字 统一样式 */
+			line-height: 34px;
+			padding: 0px;
+		}
+		.city-picker-span{	/* 地区的placeholder span(bootstrap样式) */
+			border: 1px #a49e9e solid!important;
+			width: 80%!important;
+			height: 34px!important;
+			left: 20%;
+		}
+		.city-picker-dropdown{	/* 三级联动的弹出框 */
+			width: 100%!important;
+		}
+		.placeholder{			/* 地区中的placeholder 文本样式 */
+			position: absolute;
+			line-height: 34px;
+			color: #6b6b6b!important;
+   		 	left: 15px;
+   		 	width: 90%;
+			white-space:nowrap;		/* 超出title不换行 */
+			overflow:hidden;			/* 超出title隐藏 */
+			text-overflow:ellipsis;	/* 隐藏部分用省略号代替 */
+		}
+		.title{				/* 地区中的placeholder 文本样式 */
+			position: absolute;
+			line-height: 34px;
+			left: 15px;
+			width: 90%;
+			white-space:nowrap;		/* 超出title不换行 */
+			overflow:hidden;			/* 超出title隐藏 */
+			text-overflow:ellipsis;	/* 隐藏部分用省略号代替 */
+		}
+		.span_center{
+			border-top: 1px solid #ccc;
+			border-bottom: 1px solid #ccc;
+			height: 47px;
+			line-height: 47px;
+		}
+		.col-xs-3,.col-md-3{
+			position: static;
+    		width: 20%;
+		}
+		.col-xs-8,.col-md-8{
+			position: static;
+    		width: 80%;
+		}
+		#submitBut{
+			-webkit-appearance: none;
+        	border-radius: 0;
+	        background-color:#ff6052;
+	        text-align: center;
+	        font-size: 16px;
+	        color: white;
+	        width: 100%;
+	        height: 50px;
+	        border: 0px;
+	        padding: 0px;
+        }
+        .btn{
+        	position: absolute;
+        	padding: 0px;
+	        bottom: 0px;
+	        border: 0px;
+	        left: 0px;
+        }
+	</style>
+	<script type="text/javascript">
+	var oid;
+	$(function(){
+		//判断请求参数中是否有idd(预约订单的id),如果有则是修改订单,没有则是填写订单
+		//修改订单就将 原订单的所有信息回填 如果填写订单就将锁订单的 地址信息回填
+		if(getQuery("idd")!=null&&getQuery("idd")!=""){
+			//根据idd将原订单信息回填
+			$.ajax({
+				url: "/v1/appointSelMeaOrderDetail",
+				type: "GET",
+				dataType: "json",
+				data: {oid:getQuery("idd")},
+				success: function(response){
+					console.log(response);
+					if(response.code=="0"&&response.data!=null&&response.data!=""){
+						$("input[name='accept_name']").val(response.data.measurename);
+		            	$("input[name='accept_phone']").val(response.data.measurephone);
+		            	$("input[name='accept_area']").val(response.data.measurearea);
+		            	//如果 联系人地区的值不为空
+		            	if(response.data.measurearea!=""&&response.data.measurearea!=null){
+		            		$("input[name='accept_area']").next().children(":first").html(response.data.measurearea);
+		            		 //设置placeholder字体颜色
+		            		$("input[name='accept_area']").next().children(":first").css("cssText","color:#333!important");
+		            	}
+		            	$("input[name='accept_address']").val(response.data.measureaddress);
+		            	$("input[name='measuretime']").val(response.data.measuretime);
+		            	oid = response.data.oid;
+					}else if(response.code="2"){	//openid为null 非法登录 跳转登录页面
+		            	window.location.href="/public/app/install/appointInstall_login.html";
+		            }
+				}
+			});
+		}
+		//点击按钮以后 上传数据
+		$("#submitBut").click(function(){
+			checkForm();
+    	});
+		
+		$(".fanhui_img").click(function(){
+			window.location.href="/public/app/install/appointMeasure_measureOrder.html";
+		});
+		
+		//得到当前时间
+		var date_now = new Date();
+		//得到当前年份
+		var year = date_now.getFullYear();
+		//得到当前月份
+		//  1：js中获取Date中的month时，会比当前月份少一个月，所以这里需要先加一
+		//  2: 判断当前月份是否小于10，如果小于，那么就在月份的前面加一个 '0' ， 如果大于，就显示当前月份
+		var month = date_now.getMonth()+1 < 10 ? "0"+(date_now.getMonth()+1) : (date_now.getMonth()+1);
+		//我们这里 要预约的测量时间 最少是 预约当天的 第二天 所以在当前日期基础上+1
+		var date = date_now.getDate()+1 < 10 ? "0"+(date_now.getDate()+1) : (date_now.getDate()+1);
+		laydate.render({	//渲染开始时间选择
+	        elem: '#measure_time'//通过id绑定html中插入的start
+	        , type: 'date'
+	        ,min:year+"-"+month+"-"+date
+	        ,value: year+"-"+month+"-"+date
+	        ,btns: ['confirm']	//底部只有确定按钮
+			,trigger: 'click'	//采用click弹出
+			,theme: 'molv'	//墨绿主体
+	    });
+	});
+	//从url中获取state参数
+    var getQuery = function(name) {
+    	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    	var r = window.location.search.substr(1).match(reg);
+    	if (r != null)
+    		return (r[2]);
+    	return null;
+    };
+  	//检查 数据是否提交填写完整
+	function checkForm(){
+		var reg_tel = new RegExp("^[1][34578]\\d{9}$");//验证手机号
+		//收货人 姓名
+		var measurename = $("input[name='accept_name']").val();
+		if(measurename==""){
+			alert("请填写联系人姓名");
+			return false;
+		}
+		//收货人 手机号
+		var measurephone = $("input[name='accept_phone']").val();
+		if(measurephone==""){
+			alert("请填写联系人手机号");
+			return false;
+		}
+		if(!reg_tel.test(measurephone)){
+			alert("联系人手机号填写有误,请重新填写");
+			return false;
+		}
+		//收货人 地区
+		var measurearea = $("input[name='accept_area']").val();
+		if(measurearea==""){
+			alert("请选择安装地区");
+			return false;
+		}
+		//收货人 详细地址
+		var measureaddress = $("input[name='accept_address']").val();
+		if(measureaddress==""){
+			alert("请填写安装详细地址");
+			return false;
+		}
+		//预约时间
+		var measuretime = $("input[name='measuretime']").val();
+		
+		//整个页面需要提交的数据
+		var allData = {
+			idd: getQuery("idd"),
+			oid: oid,	//订单id
+			measurename: measurename,
+			measurephone: measurephone,
+			measurearea: measurearea,
+			measureaddress: measureaddress,
+			measuretime: measuretime
+		}
+		//提交数据
+        $.ajax({
+            url: "/v1/appointCreateMeasureOrd",
+            data: allData,
+            dataType: "json",
+            type: "get",
+            cache : false,
+            success:function(res){
+            	if(res.code=="0"){	//修改预约成功 直接跳转到订单页
+            		window.location.href="/public/app/install/appointMeasure_measureOrder.html";
+            	}else if(res.code=="1"||res.code=="2"){	//登录异常 跳转到登录页
+            		alert(res.message);
+            		window.location.href="/public/app/install/appointInstall_login.html";
+            		location.reload(true);
+            	}else if(res.code=="3"){	//提交的信息有误 重新填写
+            		alert(res.message);
+            		location.reload(true);
+            	}
+            },
+			error:function(error){
+				console.log(error);
+				alert("服务器错误,请稍后重试");
+			}
+        });
+	}
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<img alt="logo" src="/public/app/install/images/fanhui.png" class="fanhui_img">
+				<span>预约测量</span>
+			</div>
+		</div>
+		<div class="row bottom_space_15">
+			<div class="col-xs-12 col-md-12 top_space_15">
+                <span>1.请填写上门测量的信息（如您的收货地址和安装地址一致不需要填写此项）</span>
+			</div>
+			<div class="col-xs-12 col-md-12 top_space_20">
+				<span class="col-xs-3 col-md-3 input_span">姓名</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="accept_name" placeholder="请输入收货人姓名">
+			</div>
+			<div class="col-xs-12 col-md-12 top_space_15">
+				<span class="col-xs-3 col-md-3 input_span">手机号</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="accept_phone" placeholder="请输入收货人手机号">
+			</div>
+			<div class="col-xs-12 col-md-12 top_space_15">
+				<span class="col-xs-3 col-mdt-3 input_span">地区</span>
+				<input type="text" data-toggle="city-picker" name="accept_area" class="area_cls" readonly="readonly" placeholder="请输入安装地址">
+			</div>
+			<div class="col-xs-12 col-md-12 top_space_15">
+				<span class="col-xs-3 col-md-3 input_span">详细地址</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="accept_address" placeholder="例：2号楼806室">
+			</div>
+			<div class="col-xs-12 col-md-12 top_space_20">
+               	<span>2.请选择预约测量时间</span>
+			</div>
+			<div class="col-xs-12 col-md-12 top_space_20">
+            	<span class="col-xs-3 col-md-3 input_span">预约时间</span>
+            	<input type="text" id="measure_time" class="input_style" name='measuretime' style="text-align: center;" readonly="readonly"/>
+			</div>
+		</div>
+		<div class="row">
+            <div class="col-xs-12 col-md-12 btn">
+            	<input type="submit" id="submitBut" value="确认修改">
+            </div>
+        </div>
+	</div>
+</body>
+</html>

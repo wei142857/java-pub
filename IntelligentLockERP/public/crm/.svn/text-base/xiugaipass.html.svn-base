@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>流量银行后台管理</title>
+<link href="css/layout.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="right_main">
+	<div class="system_ddmm_right">
+            <p class="zhjh"><b>旧密码：</b><input name="" type="text" class="cg_inputbox" /></p>
+            <p class="tip">旧密码不允许为空</p>
+            <p><b>新密码：</b><input name="" type="text" class="cg_inputbox" /></p>
+            <p class="tip">密码不允许为空</p>
+            <p><b>密码确认：</b><input name="" type="text" class="cg_inputbox" /></p>
+            <p class="tip">俩次密码输入不一致，请重新输入！</p>
+            <p class="tj_button"><b></b><input name="" type="button" class="tj_btn" value="提 交" /></p>
+        </div>
+</div>
+</body>
+</html>

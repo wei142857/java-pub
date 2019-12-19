@@ -1,0 +1,123 @@
+GET		/login								app.action.UserAction.login()
+POST	/getSMSByPhone						app.action.UserAction.getSMSByPhone()
+GET		/regist								app.action.UserAction.regist()
+GET		/getUserInfo						app.action.UserAction.getUserInfo()
+GET		/setUserInfo						app.action.UserAction.setUserInfo()
+POST	/setUserAvatarUrl					app.action.UserAction.setUserAvatarUrl()
+GET		/setLoginPhone						app.action.UserAction.setLoginPhone()
+GET		/senddevicetoken					app.action.UserAction.senddevicetoken()
+GET		/imageValidate						app.action.UserAction.imageValidate()
+GET		/setPushState						app.action.UserAction.setPushState()
+GET		/getIllegalPushState				app.action.UserAction.getIllegalPushState()
+GET		/setIllegalPushState				app.action.UserAction.setIllegalPushState()
+GET		/getLockDeviceList					app.action.DeviceAction.getLockDeviceList()
+GET		/getLockDeviceDetail				app.action.DeviceAction.getLockDeviceDetail()
+GET		/getLockDeviceDesc					app.action.DeviceAction.getLockDeviceDesc()
+GET		/addLockDevice						app.action.DeviceAction.addLockDevice()
+GET		/delLockDevice						app.action.DeviceAction.delLockDevice()
+GET		/delLockDeviceLogs					app.action.DeviceAction.delLockDeviceLogs()
+GET		/setLockDeviceName					app.action.DeviceAction.setLockDeviceName()
+GET		/getLockDevicePswList				app.action.DeviceAction.getLockDevicePswList()
+GET		/addLockDevicePsw					app.action.DeviceAction.addLockDevicePsw()
+GET		/delLockDevicePsw					app.action.DeviceAction.delLockDevicePsw()
+GET		/setLockDevicePsw					app.action.DeviceAction.setLockDevicePsw()
+GET		/getLockDeviceFingerPrintList		app.action.DeviceAction.getLockDeviceFingerPrintList()
+GET		/delLockDeviceFingerPrint			app.action.DeviceAction.delLockDeviceFingerPrint()
+GET		/setLockDeviceFingerPrint			app.action.DeviceAction.setLockDeviceFingerPrint()
+GET		/getLockDeviceICCardList			app.action.DeviceAction.getLockDeviceICCardList()
+GET		/delLockDeviceICCard				app.action.DeviceAction.delLockDeviceICCard()
+GET		/setLockDeviceICCard				app.action.DeviceAction.setLockDeviceICCard()
+GET		/getSysMessageList					app.action.MessageAction.getSysMessageList()
+GET		/getDeviceServiceList				app.action.DeviceServiceAction.getDeviceServiceList() 
+POST	/receiveInsurance					app.action.InsuranceServiceAction.receiveInsurance()
+GET		/findRegion							app.action.InsuranceServiceAction.findRegion()
+POST	/findInsInfo						app.action.InsuranceServiceAction.findInsInfo()
+POST	/findLockInfo						app.action.InsuranceServiceAction.findLockInfo()
+GET		/receiveInsuranceByPay				app.action.InsuranceServiceByPayAction.receiveInsuranceByPay()
+POST	/saveInsuranceOrder					app.action.InsuranceServiceByPayAction.saveInsuranceOrder()
+
+GET		/getVipMainInfo  					app.action.VipAction.getVipMainInfo()
+GET		/getBounty  						app.action.VipAction.getBounty()
+GET		/getBountyList  					app.action.VipAction.getBountyList()
+GET		/getBuyVipResult					app.action.VipAction.getBuyVipResult()
+GET		/getProductList						app.action.ProductAction.getProductList()
+GET		/exchangeProduct					app.action.ProductAction.exchangeProduct()
+GET		/getExchangeList					app.action.ProductAction.getExchangeList()
+GET		/getEShopMainInfo					app.action.EShopAction.getEShopMainInfo()
+GET		/getEShopAddresses					app.action.EShopAction.getEShopAddresses()
+GET		/editEShopAddress					app.action.EShopAction.editEShopAddress()
+GET		/deleteEShopAddress					app.action.EShopAction.deleteEShopAddress()
+GET		/getEShopPayCode					app.action.EShopAction.getEShopPayCode()
+POST	/eshopLogin							app.action.EShopLogin.doLogin()
+POST	/eshopSMS							app.action.EShopLogin.getSMSByPhone()
+POST	/checkImgCode						app.action.EShopLogin.checkImgCode()
+POST	/checkSmsCode						app.action.EShopLogin.checkSmsCode()
+GET		/index								app.action.EShopMallIndex.index()
+POST	/findProInfo						app.action.EShopMallIndex.findProInfo()
+GET		/checkVip							app.action.EShopMallIndex.checkVip()
+GET		/getBountyCount						app.action.EShopMallIndex.getBountyCount()
+POST	/findAddr							app.action.EShopMallIndex.findAddr()
+POST	/deleteAddr							app.action.EShopMallIndex.deleteAddr()
+POST	/updataAddr							app.action.EShopMallIndex.updataAddr()
+POST	/findUserOrder						app.action.EShopMallIndex.findUserOrder()
+POST	/findOrder							app.action.EShopMallIndex.findOrder()
+POST	/saveShareSource					app.action.EShopMallIndex.saveShareSource()
+GET		/checkTester						app.action.EShopMallIndex.checkTester()
+
+GET		/buyVip_Wx							app.action.WxPayAction.buyVip_Wx()
+GET		/buyVip_Wx_Web						app.action.WxPayAction.buyVip_Wx_Web()
+POST	/notify_buyVip_Wx					app.action.WxPayAction.notify_buyVip_Wx()
+
+GET		/buyVip_Ali							app.action.AliPayAction.buyVip_Ali()
+POST	/notify_buyVip_Ali					app.action.AliPayAction.notify_buyVip_Ali()
+
+
+GET		/buyEShopProduct_Wx					app.action.WxPayAction.buyEShopProduct_Wx()
+GET		/buyEShopProduct_Wx_Wap				app.action.WxPayAction.buyEShopProduct_Wx_Wap()
+GET		/buyEShopProduct_Wx_Web				app.action.WxPayAction.buyEShopProduct_Wx_Web()
+POST	/notify_buyEShopProduct_Wx			app.action.WxPayAction.notify_buyEShopProduct_Wx()
+
+GET		/buyEShopProduct_Ali				app.action.AliPayAction.buyEShopProduct_Ali()
+GET		/buyEShopProduct_Ali_Wap			app.action.AliPayAction.buyEShopProduct_Ali_Wap()
+POST	/notify_buyEShopProduct_Ali			app.action.AliPayAction.notify_buyEShopProduct_Ali()
+
+GET		/buySubInstall_Wx_Web				app.action.WxPayAction.buySubInstall_Wx_Web()
+GET		/buySubMeasure_Wx_Web				app.action.WxPayAction.buySubMeasure_Wx_Web()
+POST	/notify_buySubscribe_Wx				app.action.WxPayAction.notify_buySubscribe_Wx()
+
+
+GET		/shareEShopMainInfo					app.action.EShopShare.shareEShopMainInfo()
+GET		/shareEShopProduct					app.action.EShopShare.shareEShopProduct()
+
+#预约安装接口:###################################################################################################
+#发送验证码
+GET		/appointSendSMS						app.action.AppointLogin.getSMSByPhone()
+#执行登陆
+GET		/appointLogin						app.action.AppointLogin.doLogin()
+#扫描设备码
+GET		/appointScanDevice					app.action.AppointLogin.offLineOrder()
+#查找订单信息
+GET		/appointFindOrder					app.action.AppointInstallAction.findOrderByOpenid()
+#上传图片
+POST	/appointUploadImg					app.action.AppointInstallAction.uploadImg()
+#生成预约订单
+GET		/appointCreateInstallOrd			app.action.AppointInstallAction.createInstallOrd()
+#查询预约订单
+GET		/appointSelInsOrder					app.action.AppointInstallAction.selectInstallOrd()
+#查询单笔预约订单详情
+GET		/appointSelInsOrderDetail			app.action.AppointInstallAction.selectInstallOrdDetail() 
+#查询单笔预约订单进度
+GET		/appointSelInsOrderPro				app.action.AppointInstallAction.selectInstallOrdPro() 
+
+GET		/buySubscribe_pass					app.action.AppointInstallAction.buySubscribe_pass() 
+
+#预约测量接口:
+GET 	/appointCreateMeasureOrd			app.action.AppointMeasureAction.createMeasureOrd()
+#查询测量订单
+GET		/appointSelMeaOrder					app.action.AppointMeasureAction.selectMeasureOrd()
+##查询单笔预约测量详情
+GET		/appointSelMeaOrderDetail			app.action.AppointMeasureAction.selectMeasureOrdDetail() 
+################################################################################################################
+
+GET		/illegalNotifyBind					app.action.IllegalNotifyAction.bind()
+GET		/illegalNotifySMS					app.action.IllegalNotifyAction.getSMSByPhone()

@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>订单</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+  	<style type="text/css">
+  		body {
+			background-color: #f7f7f7;
+		}
+		.order{
+			padding-right: 0px;
+			width: 100%;
+			min-height: 175px;
+			height: auto !important;
+			background-color: white;
+			margin-top: 15px;
+		}
+		.head_title{
+		    width: 100%;
+		    height: 30px;
+		    border-bottom: 1px solid #f7f7f7;
+		    padding: 3px;
+		}
+		.head_title span{
+			margin-right: 10px;
+		    line-height: 25px;
+		}
+		.title_status{
+			float: right;
+			font-size: 12px;
+		}
+		.pro_img{
+		    display: inline-block;
+			width:130px;
+			height:110px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: auto 70%;
+		}
+		.pro_detail{
+			display: flex;
+			align-items: center;
+			min-height: 110px;
+			height: auto !important;
+			border-bottom: 1px solid #f7f7f7;
+		}
+		.btm_price{
+			float: right;
+		    margin-top: 5px;
+		    margin-bottom: 5px;
+		    margin-right: 15px;
+		}
+		.buy_number{
+			float: right;
+			font-weight: 700;
+			margin-top: 8px;
+			padding-right: 12px;
+		}
+		.pro_info{
+		    min-height: 110px;
+		    height: auto !important;
+		    width: calc(100% - 150px);
+		    float: right;
+		    display: flex;
+		    align-items: center;
+		}
+		.pro_info_box{
+			padding-bottom: 10px;
+    		padding-top: 15px;
+			width: 100%;
+    		min-height: 85px;
+    		height: auto !important;
+		}
+		.pro_info_line{
+			line-height: 20px;
+		}
+		.pro_name{
+			font-size: 16px;
+		}
+		.pro_spec{
+			color: #808080c4;
+		}
+		.pro_price{
+			color: #d80000;
+    		font-size: 17px;
+		}
+		.pro_name{
+			font-size: 16px;
+		}
+		.pro_spec{
+			color: #808080c4;
+		}
+		.pro_num{
+			float: right;
+			color: black;
+			font-size: 15px;
+		    margin-right: 0px;
+		}
+		.price{
+			color: #d80000;
+    		font-size: 25px;
+		}
+		.container{
+			padding-left: 0px;
+			padding-right: 0px;
+		}
+  	</style>
+  	<script type="text/javascript">
+  	</script>
+</head>
+<body>
+	<div class="container" id="orders">
+		<div class="order col-xs-12 col-md-6" v-for="(order,index) in sortOrders"><!-- 一个订单 -->
+			<div class="head_title"><!-- 头部信息 时间+发货状态 -->
+				<span>{{order['addtime'] | formatDate}}</span>
+				<!-- <span>18:00:00</span> -->
+				<span class="title_status">{{order['expressstatus'] | orderFilter}}</span>
+			</div>
+			<div class="pro_detail" @click="href(order['idd'])"><!-- 商品信息 -->
+				<div class="pro_img col-xs-5 col-md-2" :style="{'background-image':'url('+order['smallimgurl']+')'}"><!-- 左侧图片div -->
+				
+				</div>
+				<div class="pro_info"><!-- 商品信息div -->
+					<div class="pro_info_box">
+						<p class="pro_info_line pro_name"><span>{{order['title']}}</span></p>
+						<p class="pro_info_line pro_spec"><span>{{order['subtitle']}}</span></p>
+						<p class="pro_info_line pro_price"><span>￥{{order['price']}}</span><span class="pro_num">x{{order['amount']}}</span></p>
+					</div>
+				</div>
+			</div>
+			<div class="btm_price"><!-- 商品付款价格 -->
+				<span style="font-size: 13px;">实付：￥{{order['money']}}</span>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var orders = new Vue({
+			el: '#orders',
+			data:{
+				orderArr: []
+			},
+			methods:{
+				href(orderid){
+					window.location.href="/public/app/eshop/EShopPayResult.html?orderid="+orderid;
+				}
+			},
+			computed:{
+				sortOrders: function(){
+					return sortByKey(this.orderArr,'addtime')
+				}
+			},
+			filters:{
+				
+				formatDate: function(timestamp){
+					let date = new Date(timestamp);
+			        let y = date.getFullYear();
+			        let MM = date.getMonth() + 1;
+			        MM = MM < 10 ? ('0' + MM) : MM;
+			        let d = date.getDate();
+			        d = d < 10 ? ('0' + d) : d;
+			        let h = date.getHours();
+			        h = h < 10 ? ('0' + h) : h;
+			        let m = date.getMinutes();
+			        m = m < 10 ? ('0' + m) : m;
+			        let s = date.getSeconds();
+			        s = s < 10 ? ('0' + s) : s;
+			        return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;
+				},
+				orderFilter: function(val){
+					if(val==0){
+						return "已发货";
+					}else if(val==2){
+						return "已退货";
+					}else{
+						return "未发货";
+					}
+				}
+				
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+		function sortByKey(array,key){//排序
+		    return array.sort(function(a,b){
+		        var x = a[key];
+		        var y = b[key];
+		        return((x>y)?-1:((x<y)?1:0));//降序
+		    })
+		}
+		window.onload = function(){
+			$.ajax({
+				url: '/v1/findUserOrder',
+				data:
+				{
+					token:GetRequest()['token']
+				},
+				type: 'POST',
+				dataType: 'json',
+				success: function(data){
+					if(data.code==202){
+						window.location.href="http://www.sknhome.com/public/app/eshop/EShopLogin.html"
+					}
+					console.log("页面加载时获取到用户所有成功的订单信息为:")
+					console.log(data)
+					orders.orderArr = data
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+		}
+	</script>
+</body>
+</html>

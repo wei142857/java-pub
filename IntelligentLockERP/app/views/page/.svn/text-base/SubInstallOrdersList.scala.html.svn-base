@@ -1,0 +1,1642 @@
+
+@htmlhead("安装兑换码 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+											height : 505,
+											dataType : "json",
+											dataSource : '/SubInstallOrders/List',
+											showIndex : false,
+											limit : 13,									
+											errorMsg : "获取数据出错",
+											emptyMsg : "没有数据",
+											
+											//Grid的header配置   ！！！！
+											colModel : [
+													
+													{
+														header : 'idd',
+														name : 'idd',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '手机号',
+														name : 'phone',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '订单ID',
+														name : 'oid',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '使用兑换码ID',
+														name : 'cid',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '状态',
+														name : 'status',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide',
+														renderer:function(colValue){
+															if(colValue==1){
+																return "待支付";
+															}else if(colValue==2){
+																return "待发货";
+															}else if(colValue==3){
+																return "待派单";
+															}else{
+																return "已派单";
+															}
+														}
+														
+														
+													},
+													
+													{
+														header : '门厚度',
+														name : 'doorthickness',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '导向片宽度',
+														name : 'slicewidth',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '导向片高度',
+														name : 'sliceheight',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '门锁图1',
+														name : 'lockimg1',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide',
+														renderer : function(colValue) {
+															if(!colValue)
+																return '';
+				                                    		return "<img src="+colValue+" width='100''>";
+				                                 		}
+														
+														
+													},
+													
+													{
+														header : '门锁图2',
+														name : 'lockimg2',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide',
+														renderer : function(colValue) {
+															if(!colValue)
+																return '';
+				                                    		return "<img src="+colValue+" width='100''>";
+				                                 		}
+														
+														
+													},
+													
+													{
+														header : '天地勾',
+														name : 'hook',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide',
+														renderer:function(colValue){
+															if(colValue==1){
+																return "有";
+															}else if(colValue==2){
+																return "没有";
+															}
+														}
+														
+														
+													},
+													
+													{
+														header : '门锁方向',
+														name : 'lockdirection',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide',
+														renderer:function(colValue){
+															if(colValue==1){
+																return "右外开";
+															}else if(colValue==2){
+																return "右内开";
+															}else if(colValue==3){
+																return "左外开";
+															}else if(colValue==4){
+																return "左内开";
+															}
+														}
+														
+														
+													},
+													
+													{
+														header : '收获人姓名',
+														name : 'consigneename',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '收获人地区',
+														name : 'consigneearea',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '收获人地址',
+														name : 'consigneeaddress',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '收获人手机号',
+														name : 'consigneephone',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装联系人姓名',
+														name : 'installname',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装地址',
+														name : 'installarea',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装详细地址',
+														name : 'installaddress',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装联系人手机号',
+														name : 'installphone',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '添加时间',
+														name : 'addtime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '物流名称',
+														name : 'expressname',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '物流订单',
+														name : 'expressorderid',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '安装费用',
+														name : 'money',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '预订单',
+														name : 'prepayid',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '支付时间',
+														name : 'updatetime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+														
+													},
+													
+													{header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+											     		 renderer:function(colValue, rowData, rowIndex){
+											     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+											     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='ship'>发货</div><div class='outorder'>派单</div></div>";
+											     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+											     			 return menu + btn;
+												         }} ],
+											         
+													onRefresh: function(nowPage, pageRecords,event){
+								                		var $grid = $('#mygrid'); 
+								                	    $grid.find("a.op-btn").each(function(){
+								                		var $btn = $(this); 
+								                		
+								                		// 初始化表格里面的操作按钮 
+								                		$btn.omButton({
+								                			icons : {left : '/public/images/op-btn-icon.png'},
+								                			width : 75,
+								                			onClick : function(event){                				
+								                				var v = $grid.find("div.op-menu:visible");
+								                				var $opMenu = $(event.currentTarget.previousSibling);
+								                				// 重新计算菜单的位置
+								                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+								                				if($opMenu.css("display") == "none"){
+								                					$opMenu.show().css({left:left});
+								                				} else{
+								                					$opMenu.hide();
+								                				}
+								                				v.hide();
+								                				event.stopPropagation();
+								                				return false;
+								                			}
+								                		});
+								                	});
+
+								                	// 绑定表格操作按钮菜单的事件 ！！！！
+								                	$grid.find("div.op-menu").each(function(){
+								                		var $menu = $(this);
+								                		var rowindex=$menu.id;
+								                		$menu.hide();
+								                		$menu.find(".ship").click(function(){
+															isAdd = false;
+															var index = $(this).parent().attr('id');
+											                showDialog('发货',index);//显示dialog
+														});
+								                		
+								                		$menu.find(".outorder").click(function(){
+															var index = $(this).parent().attr('id');
+															doAsk('确定派单吗？' , delit , index );
+														});
+								                		
+								                	});				
+								               }
+										});
+		
+						//[新增/修改]dialog初始化
+						var dialog = $("#dialog-form").omDialog({
+							width : 460,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"取消" : function() {
+									$("#dialog-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+						var showDialog = function(title, idd) {
+							validator.resetForm();
+							if(idd!=null){
+								//edit info;
+								var uri = "/SubInstallOrders/Get/"+idd;
+								$.get(uri,function(response){
+						            if(response!=null){
+										$("input[name='idd']", dialog).val(response.idd);
+										//如果不需要回填 把下面两个删掉即可
+										$("input[name='expressname']", dialog).val(response.expressname);
+										$("input[name='expressorderid']", dialog).val(response.expressorderid);
+						         }
+								});
+							}
+							dialog.omDialog("option", "title", title);
+							dialog.omDialog("open");//显示dialog 
+						};
+						
+						//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+						var submitDialog = function() {
+							if (validator.form()) {
+								var submitData = {
+									idd : $("input[name='idd']",dialog).val()
+									,expressname : $("input[name='expressname']", dialog).val()
+									,expressorderid : $("input[name='expressorderid']", dialog).val()
+								};
+								console.log($("input[name='idd']",dialog).val())
+								console.log($("input[name='expressname']",dialog).val())
+								console.log($("input[name='expressorderid']",dialog).val())
+								
+								$.post('/SubInstallOrders/UpdateShip', submitData, function(data) {
+									if(data==0){
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作失败",
+											content : "发货失败",
+											timeout : 1500
+										});
+									}else{
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "发货成功",
+											timeout : 1500
+										});
+									}
+									$("#dialog-form").omDialog("close"); //关闭dialog
+								});
+							}
+						};
+
+						// 对增加/修改表单的校验设置 ！！！！
+						var validator = $('#ipForm').validate({
+							rules : {
+								
+									
+									
+								
+									
+										phone : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+									
+								
+									
+									
+										,
+										oid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										cid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										doorthickness : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										slicewidth : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										sliceheight : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										lockimg1 : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										lockimg2 : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										hook : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										lockdirection : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										consigneename : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										consigneearea : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										consigneeaddress : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										consigneephone : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										installname : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										installarea : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										installaddress : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										installphone : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										expressname : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										expressorderid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										money : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										prepayid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										updatetime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+							},
+							messages : {
+								
+									
+									
+								
+									
+										phone : {
+											required : "手机号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+									
+								
+									
+									
+										,
+										oid : {
+											required : "订单ID不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										cid : {
+											required : "使用兑换码ID不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : "状态不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										doorthickness : {
+											required : "门厚度不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										slicewidth : {
+											required : "导向片宽度不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										sliceheight : {
+											required : "导向片高度不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										lockimg1 : {
+											required : "门锁图1不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										lockimg2 : {
+											required : "门锁图2不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										hook : {
+											required : "2没有不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										lockdirection : {
+											required : "门锁方向不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										consigneename : {
+											required : "收获人姓名不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										consigneearea : {
+											required : "收获人地区不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										consigneeaddress : {
+											required : "收获人地址不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										consigneephone : {
+											required : "收获人手机号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										installname : {
+											required : "安装联系人姓名不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										installarea : {
+											required : "安装地址不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										installaddress : {
+											required : "安装详细地址不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										installphone : {
+											required : "安装联系人手机号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : "添加时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										expressname : {
+											required : "物流名称不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										expressorderid : {
+											required : "物流订单不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										money : {
+											required : "安装费用不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										prepayid : {
+											required : "预订单不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										updatetime : {
+											required : "支付时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+							}
+						});
+						
+						//其他iframe 对话框 初始化-->
+						$( "#dialog-modal").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+						
+				        $( "#user_auth_form").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+				        
+				        $("#user_add_form").omDialog({
+				        	autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+						});	
+				        
+				        var uploadDialog = $("#upload-form").omDialog({
+							width : 500,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitUploadDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"关闭" : function() {
+									$("#upload-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						var submitUploadDialog = function(){
+							$("#upload-form").omDialog("close");
+							//var uploadidd = $("input[name='uploadidd']").val();
+							var uploadidd = '';
+							var url = "/SubInstallOrders/Upload";
+					        $.ajaxFileUpload({  
+					            url:url,  
+					            secureuri:false,  
+					            fileElementId:'file_excel',//file标签的id  
+					            dataType: 'json',//返回数据的类型  
+					            data:{uploadidd:uploadidd},//一同上传的数据  
+					            success: function (data, status) { 
+					            	console.log(data);
+					            	$.omMessageTip.show({
+										title : "操作成功",
+										content : "成功导入"+data+"条",
+										timeout : 1500
+									}); 
+					            },  
+					            error: function (data, status, e) {  
+					                alert(e);  
+					            }  
+					        });  
+						};
+						
+						$('#import').bind('click', function() {
+							$("#uploadForm")[0].reset();
+                			/*对应于指定目标的上传
+                			var index = $(this).parent().attr('id');
+                			$("input[name='uploadidd']").val(index); 
+                			*/
+                			uploadDialog.omDialog("option", "title", "导入（excel）");
+                			uploadDialog.omDialog("open");
+			            });
+						
+						//搜索按钮加图片
+						var searchPanel = $("#search-panel").omPanel({
+				            	title : "工具栏",collapsible:true
+				            });
+						 $('span#button-search').omButton({
+			          	    icons : {left : '/public/images/search.png'},width : 70
+			       	 	    });
+						 $('span#button-noSearch').omButton({
+				          	    icons : {left : '/public/images/searchNo.png'},width : 70
+				       	 	});
+						 $('span#add').omButton({
+				          	    icons : {},width : 70
+				       	 	});
+						 
+						 $('span#import').omButton({
+				          	    icons : {},width : 110
+				       	 	});
+						 
+						 $('span#button-export').omButton({
+				          	   	width : 90
+				       	 });
+						 
+						//下载Excel格式
+				       	$('span#button-export').bind('click', function(e){
+				       		var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+							
+								searchStr += 'oid='+encodeURI($("input[name='oid']", searchPanel).val())+"&";
+							
+								searchStr += 'cid='+encodeURI($("input[name='cid']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("input[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'doorthickness='+encodeURI($("input[name='doorthickness']", searchPanel).val())+"&";
+							
+								searchStr += 'slicewidth='+encodeURI($("input[name='slicewidth']", searchPanel).val())+"&";
+							
+								searchStr += 'sliceheight='+encodeURI($("input[name='sliceheight']", searchPanel).val())+"&";
+							
+								searchStr += 'lockimg1='+encodeURI($("input[name='lockimg1']", searchPanel).val())+"&";
+							
+								searchStr += 'lockimg2='+encodeURI($("input[name='lockimg2']", searchPanel).val())+"&";
+							
+								searchStr += 'hook='+encodeURI($("input[name='hook']", searchPanel).val())+"&";
+							
+								searchStr += 'lockdirection='+encodeURI($("input[name='lockdirection']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneename='+encodeURI($("input[name='consigneename']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneearea='+encodeURI($("input[name='consigneearea']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneeaddress='+encodeURI($("input[name='consigneeaddress']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneephone='+encodeURI($("input[name='consigneephone']", searchPanel).val())+"&";
+							
+								searchStr += 'installname='+encodeURI($("input[name='installname']", searchPanel).val())+"&";
+							
+								searchStr += 'installarea='+encodeURI($("input[name='installarea']", searchPanel).val())+"&";
+							
+								searchStr += 'installaddress='+encodeURI($("input[name='installaddress']", searchPanel).val())+"&";
+							
+								searchStr += 'installphone='+encodeURI($("input[name='installphone']", searchPanel).val())+"&";
+							
+								searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+								searchStr += 'expressname='+encodeURI($("input[name='expressname']", searchPanel).val())+"&";
+							
+								searchStr += 'expressorderid='+encodeURI($("input[name='expressorderid']", searchPanel).val())+"&";
+							
+								searchStr += 'money='+encodeURI($("input[name='money']", searchPanel).val())+"&";
+							
+								searchStr += 'prepayid='+encodeURI($("input[name='prepayid']", searchPanel).val())+"&";
+							
+								searchStr += 'updatetime='+encodeURI($("input[name='updatetime']", searchPanel).val())+"&";
+							
+			                var url = '/SubInstallOrders/List?export=1&'+searchStr;
+			                window.location.href = url;
+				        });	
+						
+						//搜索绑定 =》grid ！！！！
+			       	 	$('span#button-search').bind('click', function(e) {
+			                var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+							
+								searchStr += 'oid='+encodeURI($("input[name='oid']", searchPanel).val())+"&";
+							
+								searchStr += 'cid='+encodeURI($("input[name='cid']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("input[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'doorthickness='+encodeURI($("input[name='doorthickness']", searchPanel).val())+"&";
+							
+								searchStr += 'slicewidth='+encodeURI($("input[name='slicewidth']", searchPanel).val())+"&";
+							
+								searchStr += 'sliceheight='+encodeURI($("input[name='sliceheight']", searchPanel).val())+"&";
+							
+								searchStr += 'lockimg1='+encodeURI($("input[name='lockimg1']", searchPanel).val())+"&";
+							
+								searchStr += 'lockimg2='+encodeURI($("input[name='lockimg2']", searchPanel).val())+"&";
+							
+								searchStr += 'hook='+encodeURI($("input[name='hook']", searchPanel).val())+"&";
+							
+								searchStr += 'lockdirection='+encodeURI($("input[name='lockdirection']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneename='+encodeURI($("input[name='consigneename']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneearea='+encodeURI($("input[name='consigneearea']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneeaddress='+encodeURI($("input[name='consigneeaddress']", searchPanel).val())+"&";
+							
+								searchStr += 'consigneephone='+encodeURI($("input[name='consigneephone']", searchPanel).val())+"&";
+							
+								searchStr += 'installname='+encodeURI($("input[name='installname']", searchPanel).val())+"&";
+							
+								searchStr += 'installarea='+encodeURI($("input[name='installarea']", searchPanel).val())+"&";
+							
+								searchStr += 'installaddress='+encodeURI($("input[name='installaddress']", searchPanel).val())+"&";
+							
+								searchStr += 'installphone='+encodeURI($("input[name='installphone']", searchPanel).val())+"&";
+							
+								searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+								searchStr += 'expressname='+encodeURI($("input[name='expressname']", searchPanel).val())+"&";
+							
+								searchStr += 'expressorderid='+encodeURI($("input[name='expressorderid']", searchPanel).val())+"&";
+							
+								searchStr += 'money='+encodeURI($("input[name='money']", searchPanel).val())+"&";
+							
+								searchStr += 'prepayid='+encodeURI($("input[name='prepayid']", searchPanel).val())+"&";
+							
+								searchStr += 'updatetime='+encodeURI($("input[name='updatetime']", searchPanel).val())+"&";
+							
+			                $('#mygrid').omGrid("setData", '/SubInstallOrders/List?'+searchStr );
+			            });
+			       	 
+						
+			 			
+			 				/*
+			 				$("input[name='idd']", searchPanel).omCombo({
+				            	 dataSource : '/SubInstallOrders/All',
+					                optionField : function(data, index) {
+					                    return data.idd;
+					                },
+					                valueField : 'idd',
+					                inputField : 'idd'
+				            });
+			 				*/
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='addtime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='addtime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+			 				$("input[name='status']", searchPanel).omCombo({
+				            	  dataSource : [ {text : '待支付', value : 1},
+				                                 {text : '待发货', value : 2},
+				                                 {text : '待派单', value : 3},
+				                                 {text : '已派单', value : 4}
+	                              ],
+	                              valueField : 'value',
+					              inputField : 'text'
+				            });
+			 			
+						
+			 			
+			 			
+			 				$("input[name='updatetime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='updatetime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			       	    
+						//不搜索 =》grid
+			       	 	$('span#button-noSearch').bind('click', function(e) {
+		                    $('#mygrid').omGrid("setData", '/SubInstallOrders/List?key=');
+			            });	
+			            
+			             // 点击页面其他地方的时候隐藏表格里面的菜单
+			            $("body").click(function(){
+							$("#mygrid").find("div.op-menu:visible").hide();
+			            });		
+	
+					});	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/SubInstallOrders/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 outorder(data);
+               }
+           });
+       }
+       function outorder(idd){
+    	   $.post('/SubInstallOrders/OutOrder', {idd:idd}, function(data) {
+				if(data==0){
+					$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+					$.omMessageTip.show({
+						title : "派单失败",
+						content : "派单失败",
+						timeout : 1500
+					});
+				}else{
+					$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+					$.omMessageTip.show({
+						title : "派单成功",
+						content : "派单成功",
+						timeout : 1500
+					});
+				}
+				$("#dialog-form").omDialog("close"); //关闭dialog
+			});
+       }
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+
+		
+		
+		
+		
+		<span class="label">手机号：</span> 
+		<input name="phone" id="phone" />
+		
+		
+		
+		<span class="label">订单ID：</span> 
+		<input name="oid" id="oid" />
+		
+		
+		
+		<span class="label">使用兑换码ID：</span> 
+		<input name="cid" id="cid" />
+		
+		
+		
+		<span class="label">状态：</span> 
+		<input name="status" id="status" />
+		
+		
+		
+		<span class="label">收获人手机号：</span> 
+		<input name="consigneephone" id="consigneephone" />
+		
+		
+		<span class="label">安装联系人手机号：</span> 
+		<input name="installphone" id="installphone" />
+		
+		
+		
+		
+		<span class="label">物流订单：</span> 
+		<input name="expressorderid" id="expressorderid" />
+		
+		
+		
+		
+		<span class="label">预订单：</span> 
+		<input name="prepayid" id="prepayid" />
+		
+		
+		
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<!-- <span id="add">新增</span> -->
+<!-- 		<span id="import">导入（Excel97）</span> -->
+		<span id="button-export">下载Excel格式</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+	<table>
+		<tr>
+			<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+		</tr>
+		
+	</table>
+	</form>
+</div>
+
+<!-- 发货对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流名称：</td>
+					<td><input name="expressname" /></td>
+				</tr>
+				
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流订单：</td>
+					<td><input name="expressorderid" /></td>
+				</tr>
+			
+			
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

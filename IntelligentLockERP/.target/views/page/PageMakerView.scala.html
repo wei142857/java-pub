@@ -1,0 +1,69 @@
+@(entity:util.classEntity.Entity)
+@htmlhead("UserGroup List"){
+    <script type="text/javascript">
+	    function praseDate(date){
+			return date.fullYear + '-' + date.month + '-' + date.day + ' ' + date.hours + ':' + date.minutes + ':' + date.seconds;
+		}
+         $(document).ready(function() {
+        	 
+        	 var panel = $("#panel").omPanel({
+                 width:'100%',
+                 height:'480px',
+                 header: true,
+                 title:'数据分析',
+                 collapsed: false,
+                 collapsible: false,
+                 closable: false
+             });
+        	 
+            $('#file_upload').omFileUpload({
+        	    action : '/PageMaker/dataUpload',
+        	    swf : '/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-fileupload.swf',
+        	    multi : false,
+        	    onComplete : function(event,ID,fileObj,response,data){
+        	    	var jsonData = eval("("+response+")");
+        	    }
+        	  });
+
+        });
+    </script>
+ 
+    <!-- view_source_end -->   
+	<div id="panel">
+		
+			<input id="file_upload" name="file_upload" type="file" />
+			<button value="上传" onclick="$('#file_upload').omFileUpload('upload')">上传</button>
+			<button value="分析" onclick="window.location.href='/PageMaker/View'">分析</button>
+				
+				@if(entity != null){
+				<div>
+ 				<table>
+ 					<tr>
+ 						<td width="10%">类：</td>
+ 						<td>@entity.name</td>
+ 					</tr>
+ 					<tr>
+ 						<td width="10%">属性：</td>
+ 						<td>@entity.allParams.size</td>
+ 					</tr>
+ 					<tr>
+ 						<td width="10%">信息：</td>
+ 						<td>@entity.toString()</td>
+ 					</tr>
+ 					<tr>
+ 						<td width="10%"></td>
+ 						<td>
+ 						<a target="_blank" href="/PageMaker/ViewHtml">生成 HTML</a>
+ 						<a target="_blank" href="/PageMaker/ViewRouts">生成 Routs</a>
+ 						<a target="_blank" href="/PageMaker/ViewJava">生成 Java</a>
+ 						
+ 						<a target="_blank" href="/PageMaker/MakeFile">生成 </a>
+ 						
+ 						</td>
+ 					</tr>
+ 				</table>
+				</div>
+				}
+	</div> 
+					 
+}

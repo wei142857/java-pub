@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>司铠智能</title>
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<!-- bootstrap -->
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="http://hovertree.com/texiao/bootstrap/4/css/city-picker.css" rel="stylesheet" type="text/css" />
+    <script src="http://hovertree.com/texiao/bootstrap/4/js/city-picker.data.js"></script>
+    <script src="http://hovertree.com/texiao/bootstrap/4/js/city-picker.js"></script>
+    <script src="http://hovertree.com/texiao/bootstrap/4/js/main.js"></script>
+    <style type="text/css">
+		.row_top{
+			margin-bottom: 48px;
+		}
+		.measure_fanhui{
+			background-color: white;
+			position: fixed;
+			font-size: 16px;
+			font-weight: bold;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+			left: 0px;
+			z-index: 1;
+		}
+		.fanhui_img{
+		    position: absolute;
+		    width: 36px;
+		    height: 36px;
+		    left: 10px;
+		    top: 5px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.bottom_space_15{		/* 给上面元素下方 留出15px间距(复用) */
+			margin-bottom: 15px;
+		}
+		.bottom_space_20{		/* 给上面元素下方 留出20px间距(复用) */
+			margin-bottom: 20px;
+		}
+		.hint_1{				/* 第一条提示语:(填写导向片尺寸) 与 上面的间隔 */
+			margin-top: 50px;
+		}
+		.font_12{			/* 提示语 */
+			position: fixed;
+			background-color:#f8f8f8;
+			font-size: 12px;
+			padding-left: 18px;
+			height: 35px;
+			line-height: 35px;
+			left: 0px;
+			z-index: 1;
+		}
+		.yycl_img{			/* 上方浮动的 预约上门按钮(图片) */
+			height: 25px;
+		    width: auto;
+		    position: fixed;
+    		top: 52px;
+   		 	right: 18px;
+		}
+		.dxp_img{			/* 测量导向片尺寸示意图 和 选择开门方向示意图 */
+    		padding: 0px;
+    		margin-top: 20px;
+    		margin-bottom: 20px;
+		}
+		.ABC_img{			/* a B C 图片统一样式 */
+			height: 34px;
+			background-repeat: no-repeat;
+			background-position: 0% 50%;
+			background-size: 20px 20px;		
+			margin-bottom: 15px;
+		}
+		.col-xs-offset-2 {	/* a B C 图片 和 输入框 之间的距离*/
+			position: static;
+    		margin-left: 9.666667%;
+		}
+		.a_img_div{			/* a图 */
+			background-image: url("/public/app/install/images/a.png");
+		}
+		.B_img_div{			/* B图 */
+			background-image: url("/public/app/install/images/B.png");
+		}
+		.C_img_div{			/* C图 */
+			background-image: url("/public/app/install/images/C.png");
+		}
+		.ABC_input{			/* aBC图 后面的 输入框样式*/
+			width: 90%;
+			height: 34px;
+		}
+		.danwei_span{			/* input 后的单位: 毫米（MM）的样式 */
+			position: absolute;
+			right: 30px;
+			line-height: 32px;
+			z-index: 0;
+		}
+		.top_img_unify{		/* 上方两张图片的复用样式 (选择天地钩左侧图片复用) */
+			width: 100%;
+			height: auto;
+		}
+		.input_img_unify{		/* 用户上传图片的复用样式 */
+			width: 100%;
+			height: auto;
+			max-height: 190px;
+			padding: 5px;
+		}
+		.top_div_unify{		/* 包裹上方 两张图片的 大div */
+			padding: 0px;
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+		.bot_out_div{			/* 包裹下方图片的 外div 复用样式(用户上传图片前) */
+			height: 190px;
+			/* height: auto; */
+			margin-bottom: 20px;
+		}
+		.bot_inner_div{		/* 包裹下方图片的 内div 复用样式 */
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			background-size: 20px 20px;
+			border: 1px dashed #ccc;
+			height: 100%;
+		}
+		.bot_left_out{		/* 包裹下方图片的 左侧 外div */
+			padding-left: 0px;
+		}
+		.bot_left_inner{		/* 包裹下方图片的 左侧 内div */
+			background-image: url("/public/app/install/images/jia.png");
+		}
+		.bot_right_out{		/* 包裹下方图片的 右侧 外div */
+			padding-right: 0px;
+		}
+		.bot_right_inner{		/* 包裹下方图片的 右侧 内div */
+			background-image: url("/public/app/install/images/jia.png");
+		}
+		.tdg_img_top{			/* 包裹 天地沟的选择的 div(上) */
+			margin-top: 35px;
+			margin-bottom: 5px;
+		}
+		.tdg_img_bot{			/* 包裹 天地沟的选择的 div(下) */
+			margin-top: 5px;
+			margin-bottom: 25px;
+		}
+		input[type=radio] {
+    		margin: 0px 4px -7px 0px;
+    	}
+    	.direction_img{		/* 选择开门方向的背景图 */
+    		 background: url(/public/app/install/images/mfx.png) no-repeat;
+    		 background-size: 100% 100%;
+    	}
+    	.btn_door{			/* 选择开门方向的单选框 样式复用 */
+    		text-align: right;
+    		margin: 190px 5px 20px 0px;
+    		padding: 0px;
+    	}
+    	.direction_div{		/* 包裹选择开门方向 的大div */
+    		margin-left: 0px;
+    		margin-right: 0px;
+    	}
+	    .checkbox{			/* 隐藏掉我们模型的checkbox */
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            display: none;
+        }
+	    .checkbox{			/* 未选中时 */  
+           width: 24px;
+           height: 24px;
+           border: 0px;
+           display: inline-block;
+           position: static;
+           background: url(/public/app/install/images/wxz.png) no-repeat;
+           background-size: cover;
+        }
+	    .checkbox:checked{	/* 选中checkbox时,修改背景图片的位置 */     
+	   	   background: url(/public/app/install/images/xz.png) no-repeat;
+	   	   background-size: cover;
+        }
+		.is_tdg{				/* 有无天地钩/安装地址和收货地址是否一致 的 选择图片(复用) */
+			width: 21px; 
+			height: 21px;
+			margin-right: 5px;
+		}
+		.tdg_p{				/* 天地钩判断方法 文字样式 */
+			margin: 2px 0px;
+			font-size: 12px;
+		}
+		.is_tdg_span{			/* 天地沟选择的 说明文字 */
+			/* font-size: 25px; */
+		}
+		.input_style{			/* 前面文字 后面输入框的统一样式 */
+			height: 34px;
+		}
+		.input_span{			/* 输入框 前面文字 统一样式 */
+			line-height: 34px;
+			padding: 0px;
+		}
+		.city-picker-span{	/* 地区的placeholder span(bootstrap样式) */
+			border: 1px #a49e9e solid!important;
+			width: 80%!important;
+			height: 34px!important;
+			left: 20%;
+		}
+		.city-picker-dropdown{	/* 三级联动的弹出框 */
+			width: 100%!important;
+			top: auto!important;
+		}
+		.placeholder{			/* 地区中的placeholder 文本样式 */
+			position: absolute;
+			line-height: 34px;
+			color: #6b6b6b!important;
+   		 	left: 15px;
+   		 	width: 90%;				/* 千万记得设置宽度 */
+   		 	white-space:nowrap;		/* 超出title不换行 */
+			overflow:hidden;			/* 超出title隐藏 */
+			text-overflow:ellipsis;	/* 隐藏部分用省略号代替 */
+		}
+		.title{				/* 地区中的placeholder 文本样式 */
+			position: absolute;
+			line-height: 34px;
+			left: 15px;
+			width: 90%;				/* 千万记得设置宽度 */
+			white-space:nowrap;		/* 超出title不换行 */
+			overflow:hidden;			/* 超出title隐藏 */
+			text-overflow:ellipsis;	/* 隐藏部分用省略号代替 */
+		}
+		.col-xs-3,.col-md-3{
+			position: static;
+    		width: 20%;
+		}
+		.col-xs-8,.col-md-8{
+			position: static;
+    		width: 80%;
+		}
+		.is_same{			/* 文字 一致 和 不一致 的间距 */
+			margin-right: 30px;
+		}
+		#submitBut{
+	        background-color:#ff6052;
+	        width: 100%;
+	        border: 0px;
+	        text-align: center;
+	        height: 46px;
+	        color: white;
+	        font-size: 16px;
+	        padding: 0px;
+        }
+        .btn{
+        	padding: 0px;
+        	border: 0px;
+        }
+    </style>
+    <script type="text/javascript">
+    //声明全局变量(储存响应的路径)
+    var left_img_path;
+    var right_img_path;
+    var oid;
+	$(function(){
+		//判断请求参数中是否有idd(预约订单的id),如果有则是修改订单,没有则是填写订单
+		//修改订单就将 原订单的所有信息回填 如果填写订单就将锁订单的 地址信息回填
+		if(getQuery("idd")!=null&&getQuery("idd")!=""){
+			//根据idd将原订单信息回填
+			$.ajax({
+				url: "/v1/appointSelInsOrderDetail",
+				type: "GET",
+				dataType: "json",
+				data: {oid:getQuery("idd")},
+				success: function(response){
+					console.log(response.data);
+					if(response.code=="0"&&response.data!=null&&response.data!=""){
+						$("input[name='dxp_height']").val(response.data.sliceheight);
+						$("input[name='dxp_width']").val(response.data.slicewidth);
+						$("input[name='door_thickness']").val(response.data.doorthickness);
+						$("#left_preview").attr("src",response.data.lockimg1);
+						$("#right_preview").attr("src",response.data.lockimg2);
+						left_img_path = response.data.lockimg1;
+						right_img_path = response.data.lockimg2;
+						if(response.data.lockdirection=="1"){
+							$("input[value='1']").attr("checked","true");
+						}else if(response.data.lockdirection=="2"){
+							$("input[value='2']").attr("checked","true");
+						}else if(response.data.lockdirection=="3"){
+							$("input[value='3']").attr("checked","true");
+						}else{
+							$("input[value='4']").attr("checked","true");
+						}
+						if(response.data.hook=="1"){
+							$("input[id='have_tdg']").attr("checked","true");
+						}else{
+							$("input[id='nhave_tdg']").attr("checked","true");
+						}
+		            	$("input[name='accept_name']").val(response.data.consigneename);
+		            	$("input[name='accept_phone']").val(response.data.consigneephone);
+		            	$("input[name='accept_area']").val(response.data.consigneearea);
+		            	//如果 收货地区的值不为空
+		            	if(response.data.consigneearea!=""&&response.data.consigneearea!=null){
+		            		$("input[name='accept_area']").next().children(":first").html(response.data.consigneearea);
+		            		 //设置placeholder字体颜色
+		            		$("input[name='accept_area']").next().children(":first").css("cssText","color:#333!important");
+		            	}
+		            	$("input[name='accept_address']").val(response.data.consigneeaddress);
+		            	$("input[name='contacts_name']").val(response.data.installname);
+		            	$("input[name='contacts_phone']").val(response.data.installphone);
+		            	$("input[name='contacts_area']").val(response.data.installarea);
+		            	//如果 联系人地区的值不为空
+		            	if(response.data.installarea!=""&&response.data.installarea!=null){
+		            		$("input[name='contacts_area']").next().children(":first").html(response.data.installarea);
+		            		 //设置placeholder字体颜色
+		            		$("input[name='contacts_area']").next().children(":first").css("cssText","color:#333!important");
+		            	}
+		            	$("input[name='contacts_address']").val(response.data.installaddress);
+		            	oid = response.data.oid;
+		            }else if(response.code="2"){	//openid为null 非法登录 跳转登录页面
+		            	window.location.href="/public/app/install/appointInstall_login.html";
+		            }
+				}
+			});
+		}else{
+			//地址信息回填
+			$.ajax({
+				url: "/v1/appointFindOrder",
+				type: "GET",
+				dataType: "json",
+				data: {state:"102"},
+				success: function(response){
+					console.log(response.data);
+					if(response.code=="0"&&response.data!=null&&response.data!=""){
+		            	$("input[name='accept_name']").val(response.data.name);
+		            	$("input[name='accept_phone']").val(response.data.phone);
+		            	$("input[name='accept_area']").val(response.data.area);
+		            	//如果 联系人地区的值不为空
+		            	if(response.data.area!=""&&response.data.area!=null){
+		            		$("input[name='accept_area']").next().children(":first").html(response.data.area);
+		            		 //设置placeholder字体颜色
+		            		$("input[name='accept_area']").next().children(":first").css("cssText","color:#333!important");
+		            	}
+		            	$("input[name='accept_address']").val(response.data.address);
+		            	oid = response.data.oid;
+		            }else if(response.code="2"){	//openid为null 非法登录 跳转登录页面
+		            	window.location.href="/public/app/install/appointInstall_login.html";
+		            }
+				}
+			});
+		}
+    });
+	//预览图片的方法
+    function imgPreview(fileDom) {
+		/* debugger */
+    	//判断是否支持FileReader
+    	if(window.FileReader) {
+    		var reader = new FileReader();
+    	} else {
+    		alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+    	}
+    	//获取文件
+    	var file = fileDom.files[0];
+    	var imageType = /^image\//;
+    	
+    	//是否是图片
+    	if(!imageType.test(file.type)) {
+    		alert("请选择图片！");
+    		return;
+    	}
+    	//是否大于 5M (最小单位是字节)
+    	if(file.size>1024*1024*5){
+    		alert("请上传小于5M的图片");
+    		return;
+    	}
+    	
+    	reader.readAsDataURL(file);
+    	
+    	//将图片提交到服务器
+    	uploadDoorImg(file,fileDom.id);
+    	
+    	//读取完成
+    	reader.onload = function(e) {
+    		//获取图片dom
+    		var img = document.getElementById(fileDom.id+"_preview");
+    		//图片路径设置为读取的图片
+    		img.src = e.target.result;
+    	};
+    }
+	
+	//上传图片的方法
+	var uploadDoorImg = function(file,whichImg){
+		var formData = new FormData();
+		formData.append("imgFile",file);
+		$.ajax({
+			url: "/v1/appointUploadImg",
+			type: "POST",
+			data: formData,
+			async: false,
+			processData: false,
+			contentType: false,
+			success: function(data){
+				if(data.code=="0"){
+					if(whichImg=="left"){
+						left_img_path = data.message;
+						//console.log("left:"+left_img_path);
+					}else if(whichImg=="right"){
+						right_img_path = data.message;
+						//console.log("right:"+right_img_path);
+					}
+				}else{
+					alert("上传失败,请稍后再试");
+				}
+			},
+			error:function(error){
+				console.log(error);
+				alert("服务器错误,请稍后重试");
+			}
+		});
+	}
+	
+  	//从url中获取state参数
+    var getQuery = function(name) {
+    	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    	var r = window.location.search.substr(1).match(reg);
+    	if (r != null)
+    		return (r[2]);
+    	return null;
+    };
+	
+	//检查 数据是否提交填写完整
+	function checkForm(){
+		/* debugger */
+		var reg = new RegExp("^[0-9]+(.[0-9]{0,2})?$");//验证最多两位小数的数字
+		var reg_tel = new RegExp("^[1][34578]\\d{9}$");//验证手机号
+		//导向片高度
+		var sliceheight = $("input[name='dxp_height']").val();
+		if(sliceheight==""){
+			alert("请填写导向片的高度");
+			return false;
+		}
+		if(!reg.test(sliceheight)){
+			alert("导向片的高度填写有误,请重新填写");
+			return false;
+		}
+		//导向片宽度
+		var slicewidth = $("input[name='dxp_width']").val();
+		if(slicewidth==""){
+			alert("请填写导向片的宽度");
+			return false;
+		}
+		if(!reg.test(slicewidth)){
+			alert("导向片的宽度填写有误,请重新填写");
+			return false;
+		}
+		//门的厚度
+		var doorthickness = $("input[name='door_thickness']").val();
+		if(doorthickness==""){
+			alert("请填写门的厚度");
+			return false;
+		}
+		if(!reg.test(doorthickness)){
+			alert("门的厚度填写有误,请重新填写");
+			return false;
+		}
+		//用户上传的图片
+		if(left_img_path==""||right_img_path==""||typeof(left_img_path)=="undefined"||typeof(right_img_path)=="undefined"){
+			alert("请按示意图上传照片");
+			return false;
+		}
+		//选择的开门方向
+		var lockdirection = $("input[name='choose_direction']:checked").val();
+		
+		//有无天地钩
+		var hook = $("input[name='choose_tdg']:checked").val();
+		//收货人 姓名
+		var consigneename = $("input[name='accept_name']").val();
+		if(consigneename==""){
+			alert("请填写收货人姓名");
+			return false;
+		}
+		//收货人 手机号
+		var consigneephone = $("input[name='accept_phone']").val();
+		if(consigneephone==""){
+			alert("请填写收货人手机号");
+			return false;
+		}
+		if(!reg_tel.test(consigneephone)){
+			alert("收货人手机号填写有误,请重新填写");
+			return false;
+		}
+		//收货人 地区
+		var consigneearea = $("input[name='accept_area']").val();
+		if(consigneearea==""){
+			alert("请选择收货地区");
+			return false;
+		}
+		//收货人 详细地址
+		var consigneeaddress = $("input[name='accept_address']").val();
+		if(consigneeaddress==""){
+			alert("请填写收货详细地址");
+			return false;
+		}
+		//联系人信息 是否和 收货地址一致
+		var choose_same = $("input[name='choose_same']:checked").val();
+		if(choose_same=="0"){	//一致
+			var installname = $("input[name='accept_name']").val();
+			var installphone = $("input[name='accept_phone']").val();
+			var installarea = $("input[name='accept_area']").val();
+			var installaddress = $("input[name='accept_address']").val();
+		}else{
+			var installname = $("input[name='contacts_name']").val();
+			if(installname==""){
+				alert("请填写安装时联系人姓名");
+				return false;
+			}
+			var installphone = $("input[name='contacts_phone']").val();
+			if(installphone==""){
+				alert("请填写安装时联系人手机号");
+				return false;
+			}
+			if(!reg_tel.test(installphone)){
+				alert("联系人手机号填写有误,请重新填写");
+				return false;
+			}
+			var installarea = $("input[name='contacts_area']").val();
+			if(installarea==""){
+				alert("请填写安装地址");
+				return false;
+			}
+			var installaddress = $("input[name='contacts_address']").val();
+			if(installaddress==""){
+				alert("请填写安装的详细地址");
+				return false;
+			}
+		}
+		//整个页面需要提交的数据
+		var allData = {
+			idd: getQuery("idd"),
+			oid: oid,	//订单id
+			sliceheight: sliceheight,
+			slicewidth: slicewidth,
+			doorthickness: doorthickness,
+			lockimg1: left_img_path,
+			lockimg2: right_img_path,
+			lockdirection: lockdirection,
+			hook: hook,
+			consigneename: consigneename,
+			consigneephone: consigneephone,
+			consigneearea: consigneearea,
+			consigneeaddress: consigneeaddress,
+			installname: installname,
+			installphone: installphone,
+			installarea: installarea,
+			installaddress: installaddress
+       	}
+		//提交数据
+        $.ajax({
+            url: "/v1/appointCreateInstallOrd",
+            data: allData,
+            dataType: "json",
+            type: "get",
+            cache : false,
+            success:function(res){
+            	if(res.code=="0"){	//预约成功
+            		if(getQuery("idd")!=null&&getQuery("idd")!=""){	//跳转到订单页
+	            		window.location.href="/public/app/install/appointInstall_installOrder.html";
+            		}else{	 //跳转到支付页
+	            		window.location.href="/public/app/install/appointInstall_installType.html?oid="+res.data;
+            		}
+            	}else if(res.code=="1"||res.code=="2"){	//登录异常 跳转到登录页
+            		alert(res.message);
+            		window.location.href="/public/app/install/appointInstall_login.html";
+            	}else if(res.code=="3"){	//提交的信息有误 重新填写
+            		alert(res.message);
+            		/* location.reload(true); */
+            	}else if(res.code=="4"){	//免费安装订单
+            		window.location.href = "/public/app/install/appointInstall_installOrder.html";
+            	}
+            },
+			error:function(error){
+				console.log(error);
+				alert("服务器错误,请稍后重试");
+			}
+        });
+	}
+	
+	//点击预 上方约测量按钮触发的方法
+	function clickMeaImg(){
+		if(oid==null){
+			window.location.href="/public/app/install/appointMeasure_submit.html?isReturn=1";
+		}
+		jQuery.ajax({
+            url: "/v1/appointSelMeaOrderDetail",
+            data: {oid : oid},
+            type: 'get',
+          	dataType:"json",
+          	success: function (res){
+          		if(res.code=="0"){
+          			if(res.data.ismeasure=="0"){
+		                alert("您已经预约测量过啦,请勿重新预约");
+          			}else{
+              			window.location.href="/public/app/install/appointMeasure_submit.html?isReturn=1";
+              		}
+          		}else{
+          			window.location.href="/public/app/install/appointMeasure_submit.html?isReturn=1";
+          		}
+           }
+       })
+	}
+	
+    window.onload=function(){
+    	//如果参数中中没有idd 将上面的返回按钮 隐藏
+    	if(getQuery("idd")==""||getQuery("idd")==null){
+    		$(".fanhui_img").css("display","none");
+    	}
+    	//点击返回按钮 跳转到订单页(前提是从订单页进入此页)
+    	$(".fanhui_img").click(function(){
+    		//如果url中有idd的参数
+    		if(getQuery("idd")!=""&&getQuery("idd")!=null){
+    			window.location.href="/public/app/install/appointInstall_installOrder.html";
+    		}
+		});
+    	//预约安装 上传左侧图片
+    	$("#install_left_img").click(function(){
+    		document.getElementById("left").click();
+    	});
+    	//上传右侧图片
+		$("#install_right_img").click(function(){
+			document.getElementById("right").click();
+    	});
+		//点击 上方预约测量按钮
+		$(".yycl_img").click(function(){	//跳转到预约测量页面	
+			clickMeaImg();
+    	});
+    	//点击按钮以后 上传数据
+		$("#submitBut").click(function(){
+			checkForm();
+    	});
+		//选中(一致)按钮以后隐藏输入联系人信息的div
+		$('input[name="choose_same"]').change(function(){
+		    if ($('input[id="same"]').prop("checked")) {
+		    	$(".contacts_div").hide();
+		   	} else {
+		   		$(".contacts_div").show();
+		   	}
+		})
+    }
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<img alt="logo" src="/public/app/install/images/fanhui.png" class="fanhui_img">
+				<span>预约安装</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 font_12">
+				<span>如果您不知道如何测量,可预约师傅上门测量</span>
+				<img alt="图片加载失败" src="/public/app/install/images/yycl.jpg" class="yycl_img">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 hint_1">
+				<span>1.请填写导向片尺寸</span>
+			</div>
+			<div class="col-xs-12 col-md-12">
+				<span>请按图示测量、填写导向片高度、宽度和门的厚度。</span>
+				<img alt="图片加载失败" src="/public/app/install/images/dxp.png" class="col-xs-12 col-md-12 dxp_img">
+			</div>
+			<div class="col-xs-12 col-md-12">
+				<div class="a_img_div ABC_img">
+					<input type="text" class="col-xs-12 col-md-12 col-xs-offset-2 col-md-offset-2 ABC_input" name="dxp_height" placeholder="请输入导向片的高度">
+					<span class="danwei_span">毫米（MM）</span>
+				</div>			
+				<div class="B_img_div ABC_img">
+					<input type="text" class="col-xs-12 col-md-12 col-xs-offset-2 col-md-offset-2 ABC_input" name="dxp_width" placeholder="请输入导向片的宽度">
+					<span class="danwei_span">毫米（MM）</span>
+				</div>
+				<div class="C_img_div ABC_img">
+					<input type="text" class="col-xs-12 col-md-12 col-xs-offset-2 col-md-offset-2 ABC_input" name="door_thickness" placeholder="请输入门的厚度">
+					<span class="danwei_span">毫米（MM）</span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<span>2.请按如下示意图上传照片</span>
+			</div>
+			<div class="col-xs-12 col-md-12 top_div_unify">
+				<div class="col-xs-6 col-md-6">
+					<img alt="logo" src="/public/app/install/images/mw.png" class="top_img_unify" >
+				</div>
+				<div class="col-xs-6 col-md-6">
+					<img alt="logo" src="/public/app/install/images/suo.png" class="top_img_unify">
+				</div>
+			</div>
+		</div>
+		<div class="row">	<!-- 用户上传图片 -->
+			<div class="col-xs-12 col-md-12">
+			<form id="upload-form">
+				<div class="col-xs-6 col-md-6 bot_out_div bot_left_out">
+					<div class="bot_inner_div bot_left_inner" id="install_left_img">
+						<img id="left_preview" class="input_img_unify"/>
+						<input type="file" id="left" name="input_left_img" style="display: none;" accept="image/*" onchange="imgPreview(this)">
+					</div>
+				</div>
+				<div class="col-xs-6 col-md-6 bot_out_div bot_right_out">
+					<div class="bot_inner_div bot_right_inner" id="install_right_img">
+						<img id="right_preview" class="input_img_unify"/>
+						<input type="file" id="right" name="input_right_img" style="display: none;" accept="image/*" onchange="imgPreview(this)">
+					</div>
+				</div>
+			</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<span>3.请选择开门方向</span>
+			</div>
+		</div>
+		<div class="row direction_div">
+			<div class="col-xs-12 col-md-12 direction_img dxp_img">
+				<div class="col-xs-3 col-md-3 btn_door" style="margin-left: 18px;">
+					<input type="radio" name="choose_direction" class="checkbox" value="1" checked="checked">
+				</div>
+				<div class="col-xs-3 col-md-3 btn_door" style="margin-left: -8px;">
+					<input type="radio" name="choose_direction" class="checkbox" value="2">
+				</div>
+				<div class="col-xs-3 col-md-3 btn_door" style="margin-left: -8px;">
+					<input type="radio" name="choose_direction" class="checkbox" value="3">
+				</div>
+				<div class="col-xs-3 col-md-3 btn_door" style="margin-left: -8px;">
+					<input type="radio" name="choose_direction" class="checkbox" value="4">
+				</div>
+			</div>
+		</div>
+		<div class="row bottom_space_20">
+			<div class="col-xs-12 col-md-12">
+				<span>4.选择有无天地沟</span>
+			</div>
+			<div class="col-xs-12 col-md-12">
+				<div class="col-xs-6 col-md-6 ">	<!-- 天地钩示意图 -->
+					<img alt="图片加载失败" src="/public/app/install/images/tdg.jpg" class="top_img_unify">
+				</div>
+				<div class="col-xs-6 col-md-6 tdg_img_top">
+					<input type="radio" id="have_tdg" name="choose_tdg" class="checkbox" value="1" checked="checked">
+					<label class="is_tdg_span" for="have_tdg">有天地钩</label>
+				</div>
+				<div class="col-xs-6 col-md-6 tdg_img_bot">
+					<input type="radio" id="nhave_tdg" name="choose_tdg" class="checkbox" value="2">
+					<label class="is_tdg_span" for="nhave_tdg">无天地钩</label>
+				</div>
+				<div class="col-xs-6 col-md-6">
+					<p class="tdg_p">判断方法：</p>
+					<p class="tdg_p">①用手摸门顶边缘是否有锁孔</p>
+					<p class="tdg_p">②门锁弹出状态时，门顶边缘是否有锁舌弹出</p>
+				</div>
+			</div>
+		</div>
+		<div class="row bottom_space_20">
+			<div class="col-xs-12 col-md-12 bottom_space_20">
+				<span>5.请填写锁体及导向片（或智能锁）的收货信息</span>
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span class="col-xs-3 col-md-3 input_span">姓名</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="accept_name" placeholder="请输入收货人姓名">
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span class="col-xs-3 col-md-3 input_span">手机号</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="accept_phone" placeholder="请输入收货人手机号">
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span class="col-xs-3 col-mdt-3 input_span">地区</span>
+				<input type="text" data-toggle="city-picker" name="accept_area" readonly="readonly" placeholder="请输入锁体及导向片的收货地址">
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_20">
+				<span class="col-xs-3 col-md-3 input_span">详细地址</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="accept_address" placeholder="例：2号楼806室">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span>5.请填写上门安装信息</span>
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span>安装地址是否同收货地址一致?</span>
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_20">
+				<input type="radio" id="same" name="choose_same" class="checkbox" value="0">
+				<label class="is_tdg_span is_same" for="same">一致</label>
+				<input type="radio" id="nsame" name="choose_same" class="checkbox" value="1" checked="checked">
+				<label class="is_tdg_span" for="nsame">不一致</label>
+			</div>
+		</div>
+		<div class="row bottom_space_20 contacts_div">
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span class="col-xs-3 col-md-3 input_span">姓名</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="contacts_name" placeholder="请输入联系人姓名">
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span class="col-xs-3 col-md-3 input_span">手机号</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="contacts_phone" placeholder="请输入联系人手机号">
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_15">
+				<span class="col-xs-3 col-mdt-3 input_span">地区</span>
+				<input type="text" data-toggle="city-picker" name="contacts_area" readonly="readonly" placeholder="请输入安装地址">
+			</div>
+			<div class="col-xs-12 col-md-12 bottom_space_20">
+				<span class="col-xs-3 col-md-3 input_span">详细地址</span>
+				<input type="text" class="col-xs-8 col-md-8 input_style" name="contacts_address" placeholder="例：2号楼806室">
+			</div>
+		</div>
+		<div class="row">
+            <div class="col-xs-12 col-md-12 btn">
+            	<input type="submit" id="submitBut" value="提交">
+            </div>
+        </div>
+	</div>
+</body>
+</html>

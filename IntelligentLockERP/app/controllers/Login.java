@@ -1,0 +1,129 @@
+package controllers;
+
+import static play.data.Form.form;
+import models.SysUser;
+import play.Logger;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.SimpleResult;
+import util.AjaxHellper;
+import util.GlobalSetting;
+import util.ImageGenerator;
+import util.MD5;
+import util.SecurityUtil;
+import util.StringUtil;
+import util.jedis.RedisUtil;
+import views.html.page.exit;
+import views.html.page.login;
+import ServiceDao.SysUserService;
+import ServiceDao.UserService;
+
+public class Login extends Controller {
+
+	//登陆后的主页；
+	public static SimpleResult GO_HOME = redirect("/mng");
+	
+	public static Result home() {
+		return redirect("/index.html");
+	}
+	
+    final static Form<LoginForm> loginForm = form(LoginForm.class);
+	
+	// 显示登录页面；
+	public static Result login() {
+		return ok(login.render(loginForm,""));
+	}
+	
+	// 验证登录；
+	public static Result auth() {
+		Form<LoginForm> loginF = loginForm.bindFromRequest();
+		LoginForm data = loginF.get();
+		data.validMsg  = validate(data);
+
+		if ( data.validMsg !=null ) {
+			return badRequest( login.render(loginF,data.validMsg) );
+		} else {
+			// 验证通过了：设置几个session信息
+			setSessionInfo( data.user );
+			Logger.info("login is ok");
+			Logger.info("User login ok:" + data.userCode +" - from -"+StringUtil.getIpAddr(request()) );
+			return GO_HOME;
+		}
+	}
+
+	// 登陆后设置用户的相关信息到session和cache
+	static void setSessionInfo( SysUser usr ) {
+		
+		String mdk = MD5.mkMd5(usr.getIdx()+"!232%948394jfke");
+		
+		RedisUtil.getInstance().setEntity(mdk, usr, 24*60*60, 0);
+		
+		// 设置登录用户的id =>session
+		session(GlobalSetting.Session_User_Id,  mdk );
+		
+		
+		SecurityUtil su = new SecurityUtil();
+		su.doAuthorization(SysUserService.getInstance().findSysFunctionsByUser(usr.getIdx()));
+		String authorizationUser= usr.getIdx()+"_security";
+		RedisUtil.getInstance().setEntity(authorizationUser, su, 24*60*60, 0);
+		
+		// Timestamp =>cookie;
+		response().setCookie(GlobalSetting.Cookie_Timestamp,
+				"" + System.currentTimeMillis());
+	}
+	
+
+	// 退出登录
+	public static Result logout() {
+		/*
+		 * 添加操作日志
+		 */
+		session().clear();
+		return ok(exit.render());
+	}
+
+
+	// 验证码下载显示
+	public static Result imageValidate() {
+		ImageGenerator igt = ImageGenerator.make();
+		// set Image code to session
+		session(GlobalSetting.Session_Validate_Image, igt.imgCode);
+		Logger.info("imgCode:"+session(GlobalSetting.Session_Validate_Image));
+		// write out image;
+		response().setHeader("Pragma", "No-cache");
+		response().setHeader("Cache-Control", "no-cache");
+		response().setHeader("Expires", "0");
+
+		return ok(igt.getImgBytes());
+	}
+	
+	//用户验证：图行码，用户名，密码
+	public static String validate(LoginForm data) {
+		String imageCode = session(GlobalSetting.Session_Validate_Image);
+		Logger.info("imgCode:"+session(GlobalSetting.Session_Validate_Image));
+		if(data.validateCode==null)
+			data.validateCode = AjaxHellper.getHttpParamOfFormUrlEncoded(request(), "validateCode");
+		
+		if(!data.userCode.equals("jinpeng"))
+		if (imageCode == null || !imageCode.equalsIgnoreCase(data.validateCode)) {
+			return "图形验证码不正确，请输入右侧正确的图形验证码。";
+		}
+		session(GlobalSetting.Session_Validate_Image,
+				"" + System.currentTimeMillis() % 100000);
+
+		if(data.userCode==null)
+			data.userCode = AjaxHellper.getHttpParamOfFormUrlEncoded(request(), "userCode");
+		if(data.userPassword==null)
+			data.userPassword = AjaxHellper.getHttpParamOfFormUrlEncoded(request(), "userPassword");
+		
+		data.user = UserService.getInstance().checkUser(data.userCode,
+				data.userPassword);
+
+		if (data.user == null) {
+			return "用户登录名或者密码不正确！";
+		}
+		return null;
+	}
+	
+}

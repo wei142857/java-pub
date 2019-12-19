@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>司铠智能</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .row_top{
+			margin-bottom: 48px;
+		}
+		.container{
+			position: absolute;
+			width: 100%;
+			left: 0px;
+			font-size: 14px;
+		}
+		.measure_fanhui{
+			background-color: #f8f8f8;
+			position: absolute;
+			font-size: 16px;
+			font-weight: bold;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+		}
+		.fanhui_img{		/* 左上角的图片 */
+		    position: absolute;
+		    width: 36px;
+		    height: 36px;
+		    left: 8px;
+		    top: 5px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.info_unify_style{	/* 复用样式 */
+			padding-left: 18px;
+			color: #ccc;
+			height: 35px;
+			line-height: 35px;
+			border-bottom: 1px solid #ccc;
+		}
+		.bottom_space_20{		/* 给上面元素下方 留出20px间距(复用) */
+			margin-bottom: 20px;
+		}
+		.top_space_10{		/* 给下面元素上方 留出10px间距(复用) */
+			margin-top: 10px;
+		}
+		.space_style{			/* 灰色空白条 */
+			position: absolute;
+			left: 0px;
+			height: 10px;
+			background-color: #f8f8f8;
+		}
+		.unify_img_style{		/* 两张图片的复用样式 */
+			width: 100%;
+			height: auto;
+		}
+		.unify_div_style{
+			padding-left: 0px;
+			padding-right: 30px;
+			margin-bottom: 15px;
+		}
+		.door_info{		/* 门的测量信息 */
+			margin: 0px 0px 0px -15px;
+		}
+		.userInfo_p{			/* 联系人地址信息 */
+			padding: 15px 18px 15px 18px;
+   			line-height: 30px;
+   			height: auto;
+		}
+    </style>
+</head>
+<body>
+	<div class="container" id="detail_div">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<img alt="logo" src="/public/app/install/images/fanhui.png" class="fanhui_img">
+				<span>订单详情</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 info_unify_style bottom_space_20">
+				<span>门锁数据</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<div class="col-xs-4 col-md-4 unify_div_style">
+					<img alt="logo" src="/public/app/install/images/mw.png" class="unify_img_style" id="left_img">
+				</div>
+				<div class="col-xs-4 col-md-4 unify_div_style">
+					<img alt="logo" src="/public/app/install/images/mw.png" class="unify_img_style" id="right_img">
+				</div>
+				<div class="col-xs-12 col-md-12 door_info">
+					<p>导向片宽度：{{site.slicewidth}} mm</p>
+					<p>导向片高度：{{site.sliceheight}} mm</p>
+					<p>门厚：{{site.doorthickness}} mm</p>
+					<p>开门方向：{{site.lockdirection}}</p>
+					<p>天地钩：{{site.hook}}</p>				
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-12 space_style"></div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 info_unify_style top_space_10">
+				<span>收货地址信息</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 userInfo_p">
+				<div>
+					<span>姓名：{{site.consigneename}}</span>
+				</div>
+				<div>
+					<span>手机号：{{site.consigneephone}}</span>
+				</div>
+				<div>
+					<span>地址：{{site.consigneearea}} {{site.consigneeaddress}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-12 space_style"></div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 info_unify_style top_space_10">
+				<span>安装地址信息</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 userInfo_p">
+				<div>
+					<span>姓名：{{site.installname}}</span>
+				</div>
+				<div>
+					<span>手机号：{{site.installphone}}</span>
+				</div>
+				<div>
+					<span>地址：{{site.installarea}} {{site.installaddress}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-12 space_style"></div>
+		<div class="row show_payfee">
+			<div class="col-xs-12 col-md-12 info_unify_style top_space_10">
+				<span>安装费</span>
+			</div>
+		</div>
+		<div class="row show_payfee">
+			<div class="col-xs-12 col-md-12 userInfo_p">
+				<div>
+					<span>{{site.money}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<script type="text/javascript">
+		//从url中获取参数
+	    var getQuery = function(name) {
+	    	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	    	var r = window.location.search.substr(1).match(reg);
+	    	if (r != null)
+	    		return (r[2]);
+	    	return null;
+	    };
+	    var vm=new Vue({
+		    el: "#detail_div",
+		    data(){
+		        return {
+		            site: {
+		            	addtime: "",
+		            	cid: "",
+		            	consigneeaddress: "",
+		            	consigneearea: "",
+		            	consigneename: "",
+		            	consigneephone: "",
+		            	doorthickness: "",
+		            	expressname: "",
+		            	expressorderid: "",
+		            	hook: "",
+		            	idd: "",
+		            	installaddress: "",
+		            	installarea: "",
+		            	installname: "",
+		            	installphone: "",
+		            	lockdirection: "",
+		            	lockimg1: "",
+		            	lockimg2: "",
+		            	money: "",
+		            	oid: "",
+		            	phone: "",
+		            	prepayid: "",
+		            	sliceheight: "",
+		            	slicewidth: "",
+		            	status: "",
+		            	updatetime: ""
+		            }
+		        }
+		   	},
+		    mounted:function(){
+		        //需要执行的方法可以在mounted中进行触发，其获取的数据可以赋到data中后，可以放在前面进行渲染
+		        this.showData();
+		    },
+		    methods:{
+		    	showData:function () {
+		            jQuery.ajax({
+		                url: "/v1/appointSelInsOrderDetail",
+		                data: {oid : getQuery("idd")},
+		                type: 'get',
+		              	dataType:"json",
+		              	success: function (res){
+		              		console.log(res);
+		              		if(res.code=="0"){
+				                vm.site=res.data;
+				                if(vm.site.hook=="1"){
+				                	vm.site.hook="有天地钩";
+				                }else{
+				                	vm.site.hook="无天地钩";
+				                }
+				                if(vm.site.lockdirection=="1"){
+				                	vm.site.lockdirection="右外开";
+				                }else if(vm.site.lockdirection=="2"){
+				                	vm.site.lockdirection="右内开";
+				                }else if(vm.site.lockdirection=="3"){
+				                	vm.site.lockdirection="左外开";
+				                }else{
+				                	vm.site.lockdirection="左内开";
+				                }
+				                if(vm.site.money==""&&vm.site.cid==""){
+				                	$(".show_payfee").css("display","none");
+				                }else if(vm.site.money==""){
+				                	vm.site.money="已使用安装码免费安装";
+				                }else{
+				                	vm.site.money="已支付安装费￥"+vm.site.money;
+				                }
+				                $("#left_img").attr("src", vm.site.lockimg1);
+				                $("#right_img").attr("src", vm.site.lockimg2);
+		              		}else if(res.code=="1"||res.code=="2"){
+		              			window.location.href="/public/app/install/appointInstall_login.html";
+		              		}
+		               }
+		           })
+		        }
+		    }
+	    })
+		window.onload=function(){
+			$(".fanhui_img").click(function(){
+				window.location.href="/public/app/install/appointInstall_installOrder.html";
+			});
+		}
+	</Script>
+</body>
+</html>

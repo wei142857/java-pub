@@ -1,0 +1,64 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>@title</title>                
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/jquery.js"></script>
+	    <!-- <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-core.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-combo.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-mouse.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-position.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-resizable.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-dialog.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-validate.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-ajaxsubmit.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-messagebox.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-draggable.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-fileupload.js"></script> -->
+	    
+	    <script type="text/javascript" src="/public/javascripts/common/common.js"></script>
+<!-- 	    <script type="text/javascript" src="/public/javascripts/common/IsOnLine.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-panel.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-button.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-borderlayout.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-tabs.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-tree.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-menu.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid-sort.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid-headergroup.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-messagetip.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid-roweditor.js"></script>	
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-calendar.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-numberfield.js"></script>    	    
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/rules.js"></script>    	    
+		<script type="text/javascript" src="/public/images/themeloader.js"></script>
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-all.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-base.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-theme.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid-headergroup.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-button.css" />   
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-menu.css" />
+	    
+	     <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-dialog.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-messagetip.css" /> 	
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-resizable.css" />   
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid-sort.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-borderlayout.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-panel.css" />	    
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-messagebox.css" />
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid-roweditor.css" /> -->
+	    
+	    <script type="text/javascript" src="/public/javascripts/md5.js"></script>
+	    <link rel="stylesheet" type="text/css" href="/public/stylesheets/style1.css" />
+
+<script type="text/javascript">
+</script>
+
+    </head>
+    <body >
+        @content
+    </body>
+</html>

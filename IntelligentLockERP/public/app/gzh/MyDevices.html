@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		#no_device p{
+  			margin-top: 50%;
+  			width:100%;
+  			height: calc(100% - 40px);
+  			text-align: center;
+  			color: gray;
+  		}
+  		#btn_box{
+  			position: fixed;
+  			width:100%;
+  			height: 40px;
+  			bottom: 0px;
+  			left: 0px;
+  		}
+  		#btn_box button{
+  			width:100%;
+  			height: 40px;
+  			background-color: #da4242;
+  			border: 1px solid #da4242;
+  			color: white; 
+  			cursor: pointer;
+  		}
+  		.device_top_div{
+  			width: 100%;
+  			height: 110px;
+  		}
+  		.device_but_div{
+  			width: 100%;
+  			height: 50px;
+  			border-top: 1px solid #eee;
+  		}
+  		.device_but_div div{
+  			display: inline-block;
+  			line-height: 50px;
+  			padding-top: 8px;
+  			width: 24%;
+  		}
+  		.device{
+  			background-color: white;
+  			padding: 10px 10px 0px 10px;
+  			margin-bottom: 7px;
+  		}
+  		.list_but{
+    		display: block;
+  			border: 1px solid #da4242;
+  			line-height: 30px;
+  			width: 70px;
+  			padding: 0px;
+  			color:#da4242;
+  			background-color: white; 
+  			margin: 0 auto;
+  			cursor: pointer;
+  		}
+  		.device_img_div{
+  			display: inline-block;
+  			width: 100px;
+  			height: 100px;
+  		}
+  		.device_img_div img{
+  			width: 100px;
+  			height: 100px;
+  		}
+  		.device_info{
+  			float: right;
+  			width: calc(99% - 110px);
+  			height: 80px;
+    		margin-top: 10px;
+  		}
+  		.device_info div{
+  			line-height: 26px;
+  		}
+  	</style>
+	<title>我的设备</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>我的设备</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-bottom: 45px;padding-top: 30px;">
+		<div id="no_device" v-if="devicelist==null"><p>暂未绑定设备</p></div>
+		<!-- 如果有设备 -->
+		<template v-else><!-- 循环遍历设备列表 -->
+			<template v-for="device in devicelist">
+				<div class="device">
+					<div class="device_top_div"><!-- 上半部分设备详情 -->
+						<div class="device_img_div"><!-- 商品左侧图片 -->
+							<img alt="商品图片" :src="device.lockimgurl">
+						</div>
+						<div class="device_info"><!-- 设备名称日期等 -->
+							<div><span>{{device.lockdescname}}</span></div>
+							<div><span>购买日期:&nbsp;&nbsp;</span><span>{{device.buytime | formatDate}}</span></div>
+							<div><span>激活日期:&nbsp;&nbsp;</span><span>{{device.bindtime | formatDate}}</span></div>
+						</div>
+					</div>
+					<div  class="device_but_div"><!-- 设备权益 -->
+						<div>
+							<button class="list_but" @click="devicemanagerpage(device.lockid)">设备管理</button>
+						</div>
+						<div>
+							<button class="list_but" @click="warrantypage(device.warrantyCardUrl)">保修卡</button>
+						</div>
+						<div>
+							<button class="list_but" @click="insurancepage(device.insuranceStat,device.insuranceUrl)">{{device.insuranceStat | insuranceStatFilter}}</button>
+						</div>
+						<div>
+							<button class="list_but" @click="myflowpage(device.lockdeviceid)" v-if="device.locktype.indexOf('A7')== -1&device.locktype.indexOf('N1')== -1">我的流量</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			</template>
+	</template>
+	<div id="btn_box"><!-- 绑定设备 -->
+		<button>绑定设备</button>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			toptitle()//头部标题
+			$("#btn_box").click(function(){
+				window.location.href = "/public/app/gzh/BindDevice.html";
+			})
+			$.ajax({
+				url: '/gzh/v1/getLockDeviceList',
+				data: {},
+				type: 'GET',
+				dateType: 'json',
+				success:function(res){
+					var jsonObj = JSON.parse(res);
+					if(jsonObj.code==202){//首先判断用户是否登陆
+						window.location.href = "/public/app/gzh/devicelogin.html";
+					}
+					if(jsonObj.code==0){
+						if(jsonObj.data.items!=0){
+							devices.devicelist=jsonObj.data.items;
+						}
+					}else{
+						alert(jsonObj.message)
+					}
+				},
+				error:function(err){
+					console.log(err)
+				}
+			})
+		}
+		var devices = new Vue({
+			el: '.container',
+			data: {
+				devicelist:null
+			},
+			methods:{
+				devicemanagerpage(lockid){/* 跳转到设备管理页面 */
+					window.location.href = "/public/app/gzh/DeviceManagement.html?lockid="+lockid;
+				},
+				warrantypage(url){/* 跳转到保修卡页面 */
+					window.location.href = url;
+				},
+				deviceinsurancepage(lockdeviceid){/* 跳转到领取保险页面 */
+					window.location.href = "/public/app/op/03/UserInfoInsurance.html?deviceid="+lockdeviceid;
+				},
+				myflowpage(lockdeviceid){/* 跳转到我的流量页面 */
+					window.location.href = "/public/app/gzh/MyFlow.html?deviceid="+lockdeviceid;
+				},
+				insurancepage(insuranceStat,url){
+					var vipStat = null;
+					$.ajaxSettings.async = false;
+					$.get(
+						"/gzh/v1/checkVip",
+						{},
+						function(res){
+							var jsonObj = JSON.parse(res);
+							if(jsonObj.code==202){
+								vipStat = 202;
+							}else{
+								vipStat = jsonObj.data.vipStat;
+							}
+						}
+					)
+					$.ajaxSettings.async = true;
+					if(vipStat==202){
+						alert("您还没有登陆，请刷新页面重试")
+					}else if(vipStat==1){
+						window.location.href = url;
+					}else if(vipStat==2){//用户不是会员
+						alert("您目前不是会员，无法领取保险")
+					}else if(vipStat==3&insuranceStat=="1"){//会员过期了 没来得及领取
+						alert("提示抱歉您的司铠会员已过期不能领取保险，请续费会员后再领取")
+					}else if(vipStat==3&insuranceStat!="1"){//已领取但会员已经过期
+						window.location.href = url;
+					}else{
+						alert("请刷新页面重试")
+					}
+				}
+			},
+			filters:{
+				formatDate: function(timestamp){
+					let date = new Date(timestamp);
+			        let y = date.getFullYear();
+			        let MM = date.getMonth() + 1;
+			        MM = MM < 10 ? ('0' + MM) : MM;
+			        let d = date.getDate();
+					d = d < 10 ? ('0' + d) : d;
+			        let h = date.getHours();
+			        h = h < 10 ? ('0' + h) : h;
+			        let m = date.getMinutes();
+			        m = m < 10 ? ('0' + m) : m;
+			        let s = date.getSeconds();
+			        s = s < 10 ? ('0' + s) : s;
+			        return y + '-' + MM + '-' + d;// + ' ' + h + ':' + m + ':' + s;
+				},
+				insuranceStatFilter(status){
+					if(status=="1"){
+						return "领取保险";
+					}else if(status=="2"){
+						return "查看保单";
+					}else if(status=="3"){
+						return "查看保单";
+					}else if(status=="4"){
+						return "查看保单";
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

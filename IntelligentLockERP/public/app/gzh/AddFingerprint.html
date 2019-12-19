@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<script type="text/javascript">
+	  	window.onload=function(){
+			toptitle()//头部标题
+		}
+  	</script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		#prompt{
+  			padding-left: 10px;
+  			padding-top: 20px;
+  		}
+  		#prompt p{
+  			font-size: 18px;
+  		}
+  		#next_btn{
+  			width:100%;
+  			height: 40px;
+  			margin-top: 30px;
+  		}
+  		#next_btn button{
+  			display: block;
+  			width:90%;
+  			max-width: 600px;
+  			height: 40px;
+  			background-color: #da4242;
+  			border: 1px solid #da4242;
+  			color: white; 
+  			margin: 0 auto;
+  			cursor: pointer;
+  		}
+  		.prompt_img img{
+  			width: 90%;
+		    margin: 0 auto;
+		    display: block;
+  		}
+  		#loading{
+			display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    position: fixed;
+		    bottom: 0px;
+		    left: 0px;
+		    background-color: white;
+		    width: 100%;
+		    height: 100%;
+		}
+  		#loading img{
+			width: 120px;
+			height: 20px;
+		}
+  	</style>
+	<title>添加指纹</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>添加指纹</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-top: 30px;padding-bottom:15px;">
+		<div id="prompt">
+			<p>1.触摸门锁唤醒，输入“01”+“#”</p>
+			<p>2.输入管理员密码（#键结束）或指纹</p>
+			<p>3.按门锁语音提示操作添加或删除指纹（添加指纹：按1添加，再按1添加指纹；删除指纹：按2删除，再按1删除指纹）</p>
+		</div>
+		<div class="prompt_img"><!-- 提示图片 -->
+			<img alt="提示" src="./images/adddeviceimg.png">
+		</div>
+	</div>
+</body>
+</html>

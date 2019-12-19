@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width,user-scalable=no" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+	   	.container{
+	   		padding-right: 30px;
+			padding-left: 30px;
+	   	}
+		.imgBox{					/* 包裹 中间大图的 div */
+               text-align: center;
+               margin: 10% auto;
+               margin-top: 80px;
+               margin-bottom: 46px;
+        }
+        .imgBox img{				/* 中间的大图(智能) */
+               width: 90px;
+               height: 90px;
+        }
+		.sms_btn{				/* 获取验证码(倒计时) 按钮 */
+			width: 80%;
+               border-color: red;
+               color: red;
+               text-align: center;
+               height: 50px;
+               padding: 0px;
+               background-color: white;
+               border: 1px solid #ff3333;
+		}
+		input[type=text]{		/* input的复用样式 */
+        	border:1px solid;
+        	border-color: rgba(0,0,0,0.1);
+        	box-shadow: inset 0 0px 0px rgba(0,0,0,.075);
+        	height: 50px;
+        	padding-left: 15px;
+        }
+		.phone_input{				/* 用户输入 手机号的 imput */
+        	width: 100%;
+        	
+        }
+        .sms_input_div{			/* 包裹 输入验证码 input 的 div */
+        	padding-right: 0px;
+        }
+        .sms_input{				/* 用户输入 短信验证码的 input */
+        	width: 110%;
+        }
+        .row_remark_div{			/* 包裹 提示信息说明的 div */
+       		width: 100%;
+  			font-size: 12px;
+  			margin: 10px 0px;
+        }
+        .msg_div{				/* 包裹错误信息的 div */
+        	height: 20px;
+        	line-height: 20px;
+        	margin-top: 5px;
+        	margin-bottom: 10px;
+        	font-size: 12px;
+        	color: red;
+        }
+        #submitBut{				/* 登录按钮 */
+	        background-color:#ff6052;
+	        width: 100%;
+	        border: 0px;
+	        text-align: center;
+	        height: 50px;
+	        color: white;
+	        font-size: 16px;
+	        padding: 0px;
+	        margin-top: 10px;
+       	}
+        .right_box{
+        	padding-right: 0px;
+            text-align: center;
+        }
+	</style>
+	<script type="text/javascript">
+		// 验证form表单提交的数据
+	    function checkForm(){
+           	/* debugger */
+            var phone = $("input[name='phone']").val();
+            var sms = $("input[name='sms']").val();
+            // 检验手机号格式
+            if(phone!=""){
+                if(!isPhoneNum()){
+                	alert('请输入有效的手机号码！');
+	                return false;
+                }
+            }else{
+	            alert('请填写手机号！');
+	            return false;
+            }
+            // 检验短信验证码
+            if(sms.trim()==""){
+            	alert("请填写短信验证码");
+            	return false;
+            }
+            var data = {
+            	phone: phone,
+            	sms: sms,
+            	again:getQuery("again"),
+            	state: getQuery("state")
+            }
+          	//提交数据
+            $.ajax({
+                url: "/v1/appointLogin",
+                data: data,
+                dataType: "json",
+                type: "get",
+                cache : false,
+                success:function(res){
+                	if(res.code=="0"){
+                		$("#msg").html("");
+                		var item = getQuery("state");                		
+                		if(item!=null){
+                			if(item=="102"){			/* 预约安装 填写信息页面 */
+                				window.location.href="/public/app/install/appointInstall_inputInfo.html";
+                			}else if(item=="103"){		/* 预约测量 填写信息页面 */
+                				window.location.href="/public/app/install/appointMeasure_submit.html";
+                    		}
+                		}else{
+                			$("#msg").html("登陆失败！");
+                		}
+                	}else if(res.code=="3"){			/* 线下扫设备码 页面 */
+                		window.location.href="/public/app/install/appointInstall_scanDevice.html?state="+getQuery('state');
+                	}else if(res.code=="4"){			/* 预约安装订单页面 */
+                		window.location.href="/public/app/install/appointInstall_installOrder.html";
+                	}else if(res.code=="5"){			/* 预约安装测量页面 */
+                		window.location.href="/public/app/install/appointMeasure_measureOrder.html";
+                	}else if(res.code=="6"){			/* openid为null 非法登录 刷新登录页面 */
+                		location.reload(true);
+    	            }else{
+                		$("#msg").html(res.message);
+                	}
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            })
+	    }
+		
+		//从url中获取参数
+	    var getQuery = function(name) {
+	    	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	    	var r = window.location.search.substr(1).match(reg);
+	    	if (r != null)
+	    		return (r[2]);
+	    	return null;
+	    };
+		
+	  	//用ajax提交到后台的发送短信接口
+        function sendyzm(obj){
+            var phone = $("#userPhone").val();
+            var result = isPhoneNum();
+            if(phone==""){
+            	alert('请填写手机号！');
+            	return false;
+            }
+            if(result) {
+                $.ajax({
+                    url:"/v1/appointSendSMS",
+                    data:{phone:phone},
+                    dataType:"json",
+                    type:"get",
+                    cache : false,
+                    success:function(res){
+                    	if(res.code=="101"){
+                    		alert('请输入有效的手机号码！');
+                    	}
+                    },
+                    error:function(error){
+                        alert("验证码发送失败");
+                        console.log(error);
+                    }
+                })
+                setTime(obj);//开始倒计时
+            }else{
+            	alert('请输入有效的手机号码！');            	
+            }
+        }
+	  	
+	  	//页面 校验手机号是否合法
+      	function isPhoneNum(){
+          	var phonenum = $("#userPhone").val();
+          	var reg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
+          	if(!reg.test(phonenum)){
+              	return false;	//不合法
+          	}else{
+              	return true;	//合法
+          	}
+      	}
+
+        //60s倒计时实现逻辑
+        var countdown = 60;
+        function setTime(obj) {
+            if (countdown == 0) {
+                obj.prop('disabled', false);
+                obj.text("点击获取验证码");
+                countdown = 60;//60秒过后button上的文字初始化,计时器初始化;
+                return;
+            } else {
+                obj.prop('disabled', true);
+                obj.text("("+countdown+"s)后重新发送") ;
+                countdown--;
+            }
+            setTimeout(function() { setTime(obj) },1000) //每1000毫秒执行一次
+        }
+        
+      	//图像加载完成 后点击 发送验证码
+        window.onload=function(){
+            $("#second").click(function (){
+   				sendyzm($("#second"));
+            });
+            $("#submitBut").click(function(){
+            	checkForm();
+            });
+        }
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="row imgBox">
+			 <img alt="logo" src="/public/app/install/images/logo.jpg">	
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<input type="text" id="userPhone" name="phone" placeholder="请输入手机号码" class="phone_input">
+			</div>
+			<div class="col-xs-12 col-md-12 row_remark_div">
+				<div>*京东、天猫用户请填写下单时填写的收货手机号</div>
+			</div>
+	        <div class="col-xs-6 col-md-6 sms_input_div">
+	            	<input type="text" name="sms" placeholder="请输入短信验证码" class="sms_input">
+	       	</div>
+            <div class="col-xs-6 col-md-6 right_box">
+            	<button type="button" id="second" class="sms_btn">获取验证码</button>
+            </div>
+            <!-- 错误提示 -->
+            <div class="col-xs-12 col-md-12 msg_div">
+             	<span id="msg"></span>
+            </div>
+            <div class="col-xs-12 col-md-12">
+            	<input type="submit" id="submitBut" value="登录">
+            </div>
+            <div class="col-xs-12 col-md-12 row_remark_div">
+				<span>注：请登录后预约或查询</span>	            
+            </div>
+	    </div>
+	</div>
+</body>

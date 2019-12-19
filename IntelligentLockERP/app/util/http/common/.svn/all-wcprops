@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common
+END
+HttpMethods.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common/HttpMethods.java
+END
+HttpConfig.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common/HttpConfig.java
+END
+HttpCookies.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common/HttpCookies.java
+END
+SSLs.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common/SSLs.java
+END
+HttpResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common/HttpResult.java
+END
+HttpHeader.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common/HttpHeader.java
+END
+Utils.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/xuanwenchao.intelligentLockERP/!svn/ver/389/trunk/IntelligentLockERP/app/util/http/common/Utils.java
+END

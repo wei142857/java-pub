@@ -1,0 +1,1261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>智家保</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+input, input:focus {
+	outline: none;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+option {
+	text-align: center;
+	color: black;
+}
+/* 填写地址 */
+.addrBox { /* 整个选择地址的盒子 */
+	background-color: #fbfbfb;
+	width: 100%;
+	height: 500px;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+}
+
+.addrBoxTop { /* 整个选择地址title的盒子 */
+	background-color: white;
+}
+
+.addrBoxTitle { /* 选择地址的title */
+	display: inline-block;
+	width: calc(100% - 40px);
+	text-align: center;
+	line-height: 60px;
+	padding: 0px;
+	margin: 0px;
+	height: 50px;
+	padding-left: 40px;
+}
+
+.addrBoxClose { /* 选择地址关闭的span */
+	cursor: pointer;
+	display: inline-block;
+	height: 40px;
+	width: 35px;
+	font-size: 28px;
+	vertical-align: middle;
+	color: #757575;
+	text-align: center;
+}
+
+.country_box {
+	background-color: white;
+}
+
+.country { /* 选择中国大陆/海外国家 */
+	display: inline-block;
+	width: calc(50% - 2px);
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	background-color: white;
+}
+
+.addr_box {
+	width: 100%;
+	height: 40px;
+	background-color: white;
+}
+
+.addr_box_title {
+	/* width: 100%; */
+	list-style: none;
+	height: 40px;
+	padding-left: 25px;
+}
+
+.addr_box_title li {
+	float: left;
+	width: 33%;
+	max-width: 200px;
+	text-align: left;
+	max-width: 200px;
+}
+
+.addr_box_title li span {
+	white-space: nowrap;
+}
+
+.addrs {
+	line-height: 40px;
+}
+
+.address {
+	overflow: scroll;
+	height: 100%;
+	padding-bottom: 60px;
+}
+
+.address ul {
+	margin-bottom: 120px;
+}
+
+.address li {
+	height: 35px;
+	font-size: 17px;
+	list-style: none;
+	cursor: pointer;
+}
+
+.address li span {
+	line-height: 30px;
+	white-space: nowrap;
+}
+
+.active {
+	color: red;
+}
+/* 填写地址 */
+a {
+	color: gray;
+}
+
+tr {
+	height: 50px;
+}
+
+td {
+	height: 50px;
+}
+
+.titles {
+	margin: 0px;
+	margin-bottom: 3px;
+}
+
+.right-td {
+	text-align: right;
+}
+
+.tit-right {
+	text-align: right;
+	color: #808080;
+	font-size: 18px;
+}
+
+.tr-bottom {
+	border-bottom: 12px solid #f9f9f9;
+}
+
+.inputs {
+	width: 100%;
+	border: 0px;
+}
+
+#button {
+	color: white;
+	background-color: #bdbdbd;
+	border: 0px;
+	border-radius: 3px;
+	width: 98%;
+	margin-left: 1%;
+	height: 55px;
+}
+
+.addr_ul {
+	float: right;
+	list-style: none;
+	width: 100%;
+}
+
+.addr_ul li {
+	float: left;
+	list-style: none;
+	width: 30%;
+	margin-left: 2%
+}
+
+.li_t {
+	width: 30px;
+}
+
+.sels {
+	width: 110x;
+	padding: 0px;
+}
+
+.arrow {
+	width: 24px;
+	height: 18px;
+	display: inline-block;
+	background-image: url(./images/y_icon.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	vertical-align: middle;
+}
+
+.arrow2 {
+	width: 24px;
+	height: 18px;
+	display: inline-block;
+	background-image: url(./images/y_icon.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	margin-top: 10px;
+}
+
+.a_l {
+	vertical-align: middle;
+	font-size: 15px;
+}
+
+.append_addr {
+	padding: 0px;
+}
+
+.loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	background-color: white;
+	width: 100%;
+	height: 100%;
+}
+
+.loading p {
+	vertical-align: middle;
+	text-align: center;
+}
+
+#seleVal {
+	position: inherit;
+	border: solid 1px red;
+	width: 80px;
+	height: 35px;
+	appearance: none;
+	-moz-appearance: none;
+	opacity: 0;
+	-webkit-appearance: none;
+	float: right;
+}
+/*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+#seleVal::-ms-expand {
+	display: none;
+}
+
+.select_div {
+	margin-right: 20px;
+	position: inherit;
+	width: 80px;
+	height: 35px;
+	text-align: center;
+	border: solid 1px red;
+	color: red;
+	float: right;
+}
+
+#modal-overlay {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	visibility: hidden;
+	position: fixed; /* 使用绝对定位或固定定位  */
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	z-index: 1000;
+	background-color: #00000017;
+}
+
+.modal-data {
+	width: 300px;
+	background-color: white;
+	border: 0px;
+	padding: 15px;
+	text-align: center;
+	padding: 0px;
+	padding-top: 15px;
+	padding: 20px;
+}
+
+.q_box {
+	height: 50px;
+}
+
+.q_box span {
+	line-height: 50px;
+}
+
+.q_box_a {
+	float: left;
+	width: 50%;
+	height: 50px;
+	cursor: pointer;
+	margin-top: 20px;
+	border-top: 1px solid #00000012;
+	border-right: 1px solid #00000012;
+	font-size: 17px;
+}
+
+.q_box_b {
+	width: 100%;
+	cursor: pointer;
+	height: 50px;
+	color: red;
+	margin-top: 20px;
+	border-top: 1px solid #00000012;
+	font-size: 17px;
+}
+#alertModel{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	visibility: hidden;
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	z-index: 1000;
+	background-color: rgba(0, 0, 0, 0.5);	
+	border-radius: 5px;
+}
+</style>
+</head>
+<body>
+	<div class="container col-xs-12 col-md-8 col-md-offset-2" id="form_tab">
+		<div>
+			<img alt="banner" src="./images/banner.jpg" style="width: 100%">
+		</div>
+		<div class="row">
+			<form onsubmit="return false">
+				<table class="table">
+					<!-- <caption>悬停表格布局</caption> -->
+					<thead>
+						<tr>
+							<th style="line-height: 25px;">
+								<h4 class="titles">保险责任</h4>
+							</th>
+							<th class="tit-right" style="line-height: 25px; cursor: pointer;"
+								@click="href('ProtectionDetails.html')"><span class="a_l">查看保障详情</span><span
+								class="arrow"></span></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr>
+							<td colspan='2' class="left-td" style="line-height: 35px;"><span>房屋主体及附属设备</span><span
+								style="display: inline-block; float: right;">保额3000元</span></td>
+						</tr>
+
+						<tr>
+							<td colspan='2' class="left-td" style="line-height: 35px;"><span>房屋主体及附属设备盗抢</span><span
+								style="display: inline-block; float: right;">保额3000元</span></td>
+						</tr>
+
+						<tr class="tr-bottom">
+							<td colspan='2' class="left-td" style="line-height: 35px;"><span>现金、首饰盗抢</span><span
+								style="display: inline-block; float: right;">保额3000元</span></td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px;"><span>起保日期</span></td>
+							<td class="right-td" style="line-height: 35px;">{{new
+								Date().getTime() | dataFilter}}</td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px;"><span>终保日期</span></td>
+							<td class="right-td" style="line-height: 35px;">{{new
+								Date().getTime() | dataYearFilter}}</td>
+						</tr>
+
+						<tr class="tr-bottom">
+							<td class="left-td" style="line-height: 35px;"><span
+								style="white-space: nowrap;">保障时间</span></td>
+							<td class="right-td" style="line-height: 35px;">1年</td>
+						</tr>
+
+					</tbody>
+
+					<thead>
+						<tr>
+							<th>
+								<h4 class="titles" style="line-height: 15px;">投保人信息</h4>
+							</th>
+							<th class="tit-right" style="line-height: 15px;"></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr class="tr-bottom">
+							<td class="left-td" style="line-height: 35px;">投保人</td>
+							<td class="right-td" style="line-height: 35px;">北京聚淘科技有限公司</td>
+						</tr>
+
+					</tbody>
+
+					<thead>
+						<tr>
+							<th>
+								<h4 class="titles" style="line-height: 15px;">被保人信息</h4>
+							</th>
+							<th class="tit-right" style="line-height: 15px;"></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px;">被保人姓名</td>
+							<td class="right-td" style="line-height: 35px;"><input
+								type="text" v-model="name" name="insured_name" class="inputs"
+								style="text-align: right;" placeholder="请填写房屋所有人的姓名"
+								id="insured_name" /></td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px;">证件类型</td>
+							<td class="right-td" style="line-height: 35px; padding-top: 8px;">
+								<div class="select_div">
+									<span id="addrspan"
+										style="position: absolute; width: 80px; right: 29px; height: 35px;">{{selV}}</span>
+									<select id="seleVal" v-model="cardtype">
+										<option selected="selected" value="01" @click="test(01)">身份证</option>
+										<!-- <option value="02">护照</option> -->
+										<option value="03">军官证</option>
+										<!-- <option value="04">驾驶证</option> -->
+										<option value="05">港澳同胞证</option>
+										<option value="07">中国护照</option>
+										<!-- <option value="08">外国人永久居留证</option>
+					      		<option value="1">组织机构代码证</option>
+					      		<option value="2">税务登记证</option>
+					      		<option value="3">营业执照</option> -->
+										<option value="99">其他</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px;">证件号</td>
+							<td class="right-td" style="line-height: 35px;"><input
+								type="text" v-model="cardnum" name="licensenumber"
+								class="inputs" style="text-align: right;"
+								placeholder="请填写房屋所属人的证件号" id="licensenumber" /></td>
+						</tr>
+						<tr>
+							<td class="left-td" style="line-height: 35px;">手机号</td>
+							<td class="right-td" style="line-height: 35px;"><input
+								type="text" v-model="phone" name="phone" class="inputs"
+								style="text-align: right;" placeholder="请填写手机号" id="phone" /></td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px;">电子邮箱</td>
+							<td class="right-td" style="line-height: 35px;"><input
+								type="text" v-model="email" name="email" class="inputs"
+								style="text-align: right;" placeholder="此邮箱将用于接收电子保单" id="email" />
+							</td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px;">房屋所在地</td>
+							<td class="right-td" style="line-height: 35px;"><span
+								id="append_addr" @click="close()"
+								style="cursor: pointer; color: #757575;">请填写地址</span><span
+								class="arrow"></span></td>
+						</tr>
+
+						<tr class="tr-bottom">
+							<td class="left-td" style="line-height: 35px;">房屋详细地址</td>
+							<td class="right-td" style="line-height: 35px;"><input
+								type="text" v-model="address" name="addr_info" class="inputs"
+								style="text-align: right;" placeholder="请输入详细地址" id="addr_info" />
+							</td>
+						</tr>
+
+					</tbody>
+
+					<thead>
+						<tr>
+							<th>
+								<h4 class="titles" style="line-height: 15px;">产品条款</h4>
+							</th>
+							<th class="tit-right" style="line-height: 15px;"></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px; cursor: pointer;"
+								colspan="2" @click="href('ComprehensiveInsuranceClause.html')">
+								<span> 家庭财产综合险条款 </span> <span style="float: right"> <span
+									class="a_l"></span><span class="arrow2"></span>
+							</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px; cursor: pointer;"
+								colspan="2" @click="href('BurglaryInsuranceTerms(A).html')">
+								<span> 家庭财产综合险附加室内盗抢险（A款）条款 </span> <span style="float: right">
+									<span class="a_l"></span><span class="arrow2"></span>
+							</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px; cursor: pointer;"
+								colspan="2" @click="href('BurglaryInsuranceTerms.html')"><span>
+									家庭财产综合险附加现金、首饰盗抢险保险条款 </span> <span style="float: right"> <span
+									class="a_l"></span><span class="arrow2"></span>
+							</span></td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px; cursor: pointer;"
+								colspan="2" @click="href('ClaimProcess.html')"><span>
+									理赔流程 </span> <span style="float: right"> <span class="a_l"></span><span
+									class="arrow2"></span>
+							</span></td>
+						</tr>
+					<tbody style="background-color: #f9f9f9;">
+						<tr style="height: 80px;">
+							<td class="left-td" colspan="2" style="padding-top: 20px;">
+									<div>
+										<div style="display: inline-block;">
+											<input type="checkbox" name="checkskndetail"
+												id="checkskndetail" v-model="sknDetail"
+												style="margin-top: 0px; vertical-align: middle;">
+										</div>
+										<div style="display: inline-flex;width: 321px;">
+											<span
+											style="vertical-align: middle;">同意并授权“北京聚淘科技有限公司”为本人购买本保险产品<span
+											style="color: red; cursor: pointer;" @click="readedDetail()">&nbsp;详情</span></span>
+										</div>
+									</div>
+									<div style="margin-top: 5px;">
+										<div style="display: inline-block;">
+											<input type="checkbox" name="checkbox" value="off"
+												v-model="AgreeOrNot" id="checkbox"
+												style="margin-top: 0px; vertical-align: middle;">
+										</div>
+												
+										<div style="display: inline-flex;width: 321px;">
+											<span style="vertical-align: middle;">本人已仔细阅读<span
+											style="color: red; cursor: pointer;"
+											@click="href('InsuranceInFormation.html')">《投保须知及声明》</span></span>
+										</div>
+									</div>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="left-td" style="line-height: 35px; border-top: 0px;"
+								colspan="2">
+								<button type="submit" id="button" @click="submit()">提交信息</button>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+			</form>
+		</div>
+
+		<!-- 模态框DIV -->
+		<div id="modal-overlay" class="col-xs-9 col-md-3">
+			<div class="modal-data">
+				<div>
+					<span style="color: black; font-size: 15px;">详情</span>
+					<p style="margin-left: 10px; margin-right: 10px; margin-top: 10px;">
+						<small>投保时，本投保人已就该产品的保障内容以及保险金额等向被保险人/被保人监护人进行了明确说明，征得其同意并授权投保人为其购买保险，如因投保人未如实告知造成任何损失由本投保人承担。</small>
+					</p>
+				</div>
+
+				<div class="q_box">
+					<div class="q_box_b" @click="readedDetail()">
+						<span>确定</span>
+					</div>
+					<!-- <p>点击 <a href="#" onclick="overlay()">这里</a>关闭</p> -->
+				</div>
+			</div>
+		</div>
+		<div class="loading" style="visibility: hidden;">
+			<p>正在核实您的信息 请稍后...</p>
+		</div>
+		<section class="addrBox" style="visibility: hidden;"> 
+			<section class="addrBoxTop"><!-- 顶部 -->
+				<h4 class="addrBoxTitle">选择地址</h4>
+				<!-- title --> 
+				<span class="addrBoxClose" @click="close()">×</span><!-- 关闭 -->
+			</section> 
+			<!-- <section class="country_box">
+			    	<span class="country">中国大陆</span>
+			    	<span class="country">海外国家/地区</span>
+		    	</section> --> 
+			<section class="addr_box"><!-- 已选择城市标题拼接 -->
+				<ul class="addr_box_title">
+					<li @click="t1C()"><span id="t1" class="addrs"
+						:class="{active:tCode==1}">{{t1 | textFilter}}</span></li>
+					<li @click="t2C()"><span id="t2" class="addrs"
+						:class="{active:tCode==2}">{{t2 | textFilter}}</span></li>
+					<li @click="t3C()"><span id="t3" class="addrs"
+						:class="{active:tCode==3}">{{t3 | textFilter}}</span></li>
+					<li @click="t4C()"><span id="t4" class="addrs"
+						:class="{active:tCode==4}">{{t4 | textFilter}}</span></li>
+				</ul>
+			</section> 
+			<section class="address">
+				<p style="margin-bottom: 0px;">
+					<span style="line-height: 30px; padding-left: 25px; color: #afafaf;">选择省份/地区</span>
+				</p>
+				<ul>
+					<li v-for=" addr in addrListFilter" @click="cliAddr(addr)"><span>{{addr['name']}}</span></li>
+				</ul>
+			</section> 
+		</section>
+		<!-- alert模态框 -->
+	   	<div id="alertModel" class="col-xs-9 col-md-3">
+	      <div class="modal-data">
+		        <span style="color: black;font-size: 15px;display: block; margin-bottom: 20px;">提示</span>
+			  	<p><small id="alertMsg" style="line-height: 19px;"></small></p>
+	      </div>
+	    </div>
+	</div>
+
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		var vcity={ 11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",
+		    21:"辽宁",22:"吉林",23:"黑龙江",31:"上海",32:"江苏",
+		    33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",
+		    42:"湖北",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",
+		    51:"四川",52:"贵州",53:"云南",54:"西藏",61:"陕西",62:"甘肃",
+		    63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外"
+		}; 
+		function checkCard(card){
+			//是否为空
+		    //if(!card||!isCardNo(card)||!checkProvince(card)||!checkBirthday(card)||!checkParity(card)){
+		    if(!card||!isCardNo(card)||!checkProvince(card)||!checkBirthday(card)){
+		    	//if(!card||!isCardNo(card)){
+		        return false;
+		    }
+		    return true;
+		}; 
+	
+		//检查号码是否符合规范，包括长度，类型
+		function isCardNo(card){
+		    //身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X
+		    var reg = /(^\d{15}$)|(^\d{17}(\d|X)$)/;
+		    if(reg.test(card) === false){
+		        return false;
+		    }
+		    return true;
+		}; 
+		
+		//取身份证前两位,校验省份
+		function checkProvince(card){
+		    var province = card.substr(0,2);
+		    if(vcity[province] == undefined) {
+		        return false;
+		    }
+		    return true;
+		} 
+		
+		//检查生日是否正确
+		function checkBirthday(card){
+		    var len = card.length;
+		    //身份证15位时，次序为省（3位）市（3位）年（2位）月（2位）日（2位）校验位（3位），皆为数字
+		    if(len == '15'){
+		        var re_fifteen = /^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/;
+		        var arr_data = card.match(re_fifteen);
+		        var year = arr_data[2];
+		        var month = arr_data[3];
+		        var day = arr_data[4];
+		        var birthday = new Date('19'+year+'/'+month+'/'+day);
+		        return verifyBirthday('19'+year,month,day,birthday);
+		    }
+		    //身份证18位时，次序为省（3位）市（3位）年（4位）月（2位）日（2位）校验位（4位），校验位末尾可能为X
+		    if(len == '18'){
+		        var re_eighteen = /^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/;
+		        var arr_data = card.match(re_eighteen);
+		        var year = arr_data[2];
+		        var month = arr_data[3];
+		        var day = arr_data[4];
+		        var birthday = new Date(year+'/'+month+'/'+day);
+		        return verifyBirthday(year,month,day,birthday);
+		    }
+		    return false;
+		}; 
+		
+		//校验日期
+		function verifyBirthday(year,month,day,birthday){
+		    var now = new Date();
+		    var now_year = now.getFullYear();
+		    //年月日是否合理
+		    if(birthday.getFullYear() == year && (birthday.getMonth() + 1) == month && birthday.getDate() == day){
+		        //判断年份的范围（3岁到100岁之间)
+		        var time = now_year - year;
+		        if(time >= 3 && time <= 100)
+		        {
+		            return true;
+		        }
+		        return false;
+		    }
+		    return false;
+		}; 
+		
+		//校验位的检测
+		/* function checkParity(card){
+		    //15位转18位
+		    card = changeFivteenToEighteen(card);
+		    var len = card.length;
+		    if(len == '18'){
+		        var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+		        var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+		        var cardTemp = 0, i, valnum;
+		        for(i = 0; i < 17; i ++){
+		            cardTemp += card.substr(i, 1) * arrInt[i];
+		        }
+		        valnum = arrCh[cardTemp % 11];
+		        if(valnum == card.substr(17, 1)){
+		            return true;
+		        }
+		        return false;
+		    }
+		    return false;
+		}; */
+		
+		//15位转18位身份证号
+		function changeFivteenToEighteen(card){
+		    if(card.length == '15'){
+		        var arrInt = new array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+		        var arrCh = new array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+		        var cardTemp = 0, i;
+		        card = card.substr(0, 6) + '19' + card.substr(6, card.length - 6);
+		        for(i = 0; i < 17; i ++){
+		            cardTemp += card.substr(i, 1) * arrInt[i];
+		        }
+		        card += arrCh[cardTemp % 11];
+		        return card;
+		    }
+		    return card;
+		};
+		
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+		function checkForm(cardtype){
+			var insured_name = $("#insured_name").val();//被保人姓名
+			var licensenumber = $("#licensenumber").val();//证件号 
+			var phone = $("#phone").val();
+			var email = $("#email").val();
+			var addr = $("#addr").val();//房屋所在地
+			var addr_info = $("#addr_info").val();//详细地址
+			
+			var flag = true;
+			var num = 0;
+			
+			if(insured_name!=""){
+				//正则规则↓
+				var pattren = /^([\u4e00-\u9fa5 ]{2,20}|[a-zA-Z\.\s]{1,20})$/;
+				//正则规则↑
+				
+				if(!pattren.test(insured_name)){//正则
+					alert("姓名格式有误");
+					flag &= false;
+				}
+				
+			}else{
+				alert("姓名不能为空")
+				
+				flag &= false;
+			}
+			
+			//01-身份证，02-护照;03-军官证，04-驾驶证;05-港澳同胞证，07-中国护照，08-外国人永久居留证，1-组织机构代码证，2-税务登记证，3-营业执照，99-其他
+			if(cardtype=="01"){
+				if(licensenumber!=""){//校验身份证
+					if (!checkCard(licensenumber)) {
+						alert("请输入正确的身份证号码");
+					    flag &= false;
+					}
+				}else{
+					alert("证件号不能为空")
+					flag &= false;
+				}
+			}else if(cardtype=="03"){//校验军官证
+				var re = /^[a-zA-Z0-9]{7,21}$/;
+				if(licensenumber!=""){//校验军官证
+					if(!re.test(licensenumber)){
+						alert("军官证号格式有误")
+						flag &= false;
+					}
+				}else{
+					alert("军官证号不能为空")
+					flag &= false;
+				}
+			}else if(cardtype=="05"){//校验港澳同胞证
+				var re = /^[a-zA-Z0-9]{5,21}$/;
+				if(licensenumber!=""){//校验港澳同胞证
+					if(!re.test(licensenumber)){
+						alert("港澳同胞证号格式有误")
+						flag &= false;
+					}
+				}else{
+					alert("港澳同胞证号不能为空")
+					flag &= false;
+				}
+			}else if(cardtype=="07"){//校验中国护照
+				var re1 = /^[a-zA-Z]{5,17}$/;
+				var re2 = /^[a-zA-Z0-9]{5,17}$/;
+				if(licensenumber!=""){//校验中国护照
+					if(!(re1.test(licensenumber) || re2.test(licensenumber))){
+						alert("中国护照号填写有误");
+						flag &= false;
+					}
+				}else{
+					alert("中国护照号不能为空")
+					flag &= false;
+				}
+			}else{//校验其他
+				if(licensenumber.length<6){
+					alert("证件号过短")
+					flag &= false;
+				}
+			}
+			
+			if(phone!=""){
+				var pattern = /(1[3-9]\d{9}$)/;
+				if(!pattern.test(phone)){
+					alert("手机号格式不对")
+					flag &= false;
+				}
+			}else{
+				alert("手机号不能为空")
+				flag &= false;
+			}
+			
+			if(email!=""){
+				var pattern = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+				if(!pattern.test(email)){
+					alert("邮箱格式不对")
+					flag &= false;
+				}
+			}else{
+				alert("邮箱不能为空")
+				flag &= false;
+			}
+			
+			if(addr=="请填写"){
+				alert("请填写房屋所在地")
+				flag &= false;
+			}
+			if(addr_info==""){
+				alert("详细地址不能为空")
+				flag &= false;
+			}
+			
+			return flag;
+		}
+		var ins = new Vue({
+			el: '#form_tab',
+			data: {
+				selV: '身份证',
+				name: null,/* 被保人姓名 */
+				cardtype: "01",/* 证件类型 */
+				cardnum: null,/* 证件号 */
+				phone: null,/* 手机号 */
+				email: null,/* 邮箱 */
+				address: null,/* 详细地址 */
+				AgreeOrNot: false,/* 用户是否同意智能锁保险协议 */
+				sknDetail: false,/* 用户是否同意四年诺巴特 */
+				
+				tCode: 1,
+    			
+    			t1: '-请选择-',
+    			t2: '',
+    			t3: '',
+    			t4: '',
+    			
+    			addrArr: [],/* ADDRDATA */
+    			/* addrList: [],/* 展示给用户的地址列表 */
+    			
+    			t1Id: 0,/* 选中的城市id */
+    			t1Name: '',/* 选中的城市name */
+    			
+    			t2Id: 0,/* 选中的城市id */
+    			t2Name: '',/* 选中的城市name */
+    			
+    			t3Id: 0,/* 选中的城市id */
+    			t3Name: '',/* 选中的城市name */
+				
+			},
+			computed:{
+				addrListFilter: function(){
+    				var code = this.tCode
+    				var t1Id = this.t1Id
+    				var t2Id = this.t2Id
+    				var t3Id = this.t3Id
+					return this.addrArr.filter(function(addr){
+						if(code==1){
+							if(addr['parent_id']==0){
+								return addr;
+							}
+	   			 		}else if(code==2){
+		   			 		if(addr['parent_id'] == t1Id){
+								return addr;
+							}
+	   			 		}else if(code==3){
+		   			 		if(addr['parent_id'] == t2Id){
+								return addr;
+							}
+	   			 		}
+					})
+				}
+			},
+			filters:{
+				textFilter: function(val){
+					if(val.length > 6){
+						return val.substr(0,6)+"...";
+					}
+					return val;
+				},
+				dataFilter: function(timestamp){
+					let date = new Date(timestamp);
+					
+			        /* let y = date.getFullYear();
+			        let MM = date.getMonth() + 1;
+			        MM = MM < 10 ? ('0' + MM) : MM;
+			        let d = date.getDate();
+			        d = d+5 < 10 ? ('0' + d+5) : d+5;
+			        
+					return y + '-' + MM + '-' + d; */
+					date.setDate(date.getDate() + 5);
+	                var month = date.getMonth() + 1;
+	                var day = date.getDate();
+	                var mm = "'" + month + "'";
+	                var dd = "'" + day + "'";
+	                
+	                //单位数前面加0
+	                if(mm.length == 3) {
+	                    month = "0" + month;
+	                }
+	                if(dd.length == 3) {
+	                    day = "0" + day;
+	                }
+
+	                var time = date.getFullYear() + "-" + month + "-" + day
+	                return time;
+				},
+				dataYearFilter: function(timestamp){
+					let date = new Date(timestamp);
+					
+			        /* let y = date.getFullYear();
+			        let MM = date.getMonth() + 1;
+			        MM = MM < 10 ? ('0' + MM) : MM;
+			        let d = date.getDate();
+			        d = d+5 < 10 ? ('0' + d+5) : d+5;
+			        
+					return y + '-' + MM + '-' + d; */
+					date.setDate(date.getDate() + 5);
+	                var month = date.getMonth() + 1;
+	                var day = date.getDate();
+	                var mm = "'" + month + "'";
+	                var dd = "'" + day + "'";
+	                
+	                //单位数前面加0
+	                if(mm.length == 3) {
+	                    month = "0" + month;
+	                }
+	                if(dd.length == 3) {
+	                    day = "0" + day;
+	                }
+
+	                var time = (date.getFullYear()+1) + "-" + month + "-" + day
+	                return time;
+				}
+			},
+			methods:{
+				alertSknDetail(){
+					alert("123")
+				},
+				href(url){
+					window.location.href="/public/app/op/03/"+url;
+				},
+				t1C(){/* 点击标题 */
+   					/* this.t2='-请选择-'; */
+   					this.tCode=1;
+   			 	},
+   			 	t2C(){
+   			 		if(this.t2Name==''){
+	   					this.t2='-请选择-'
+   			 		}else{
+	   					this.t2=this.t2Name
+   			 		}
+					this.tCode=2;
+   			 	},
+   			 	t3C(){
+   			 		if(this.t3Name==''){
+   						this.t3='-请选择-'
+			 		}else{
+   						this.t3=this.t3Name
+			 		}
+   					this.tCode=3;
+   			 	},
+   			 	close(){
+   			 		close();
+   			 	},
+   			 	cliAddr(addr){/* 点击标题对应的地址 */
+   			 		if(this.tCode==1){
+   			 			this.t1Id=addr['id'];
+   			 			this.t1Name=addr['name'];
+   			 			this.t1=addr['name'];
+   			 			$("#t2").trigger('click')
+   			 			if(!findMore(this.t1Id)){
+	   			 			this.t2Id=0;
+   			 				this.t2Name='';
+   			 				
+	   			 			this.t3Id=0;
+   			 				this.t3Name='';
+   			 				var text1 = "";
+			 				if((text1=this.t1Name).length>6){
+			 					text1 = text1.substr(0,6)+"...";
+			 				}
+	   			 			$("#append_addr").html(text1)
+				 			close();
+   			 			}
+   			 		}else if(this.tCode==2){
+   			 			this.t2Id=addr['id'];
+			 			this.t2Name=addr['name'];
+			 			this.t2=addr['name'];
+			 			$("#t3").trigger('click')
+			 			if(!findMore(this.t2Id)){
+			 				this.t3Id=0;
+   			 				this.t3Name='';
+   			 				var text1 = "";
+   			 				if((text1=this.t1Name).length>6){
+   			 					text1 = text1.substr(0,6)+"...";
+   			 				}
+   			 				var text2 = "";
+   			 				if((text2=this.t2Name).length>6){
+   			 					text2 = text2.substr(0,6)+"...";
+   			 				}
+	   			 			$("#append_addr").html(text1+" "+text2)
+				 			close();
+   			 			}
+   			 		}else if(this.tCode==3){
+   			 			this.t3Id=addr['id'];
+			 			this.t3Name=addr['name'];
+			 			this.t3=addr['name'];
+			 			
+			 			var text1 = "";
+			 			if((text1=this.t1Name).length>6){
+		 					text1 = text1.substr(0,5)+"...";
+		 				}
+		 				var text2 = "";
+		 				if((text2=this.t2Name).length>6){
+		 					text2 = text2.substr(0,5)+"...";
+		 				}
+		 				var text3 = "";
+		 				if((text3=this.t3Name).length>6){
+		 					text3 = text3.substr(0,6)+"...";
+		 				}
+			 			$("#append_addr").html(text1+" "+text2+" "+text3)
+			 			close();
+   			 		}
+   			 	},
+				submit(){
+					if(!(this.AgreeOrNot&&this.sknDetail)){
+						alert("请先同意协议")
+					}else{
+						var formBoo = checkForm(this.cardtype);
+						if(formBoo){
+							var request = GetRequest();
+		   			 		load()
+							$.ajax({
+								url: "/v1/receiveInsurance",
+								data: {
+									"insured_name":this.name,
+				  					"licenseType":this.cardtype,
+				  					"licensenumber":this.cardnum,
+				  					"phone":this.phone,
+				  					"email":this.email,
+				  					
+				  					"province":this.t1Name,
+				  					"provinceCode":this.t1Id,
+				  					"city":this.t2Name,
+				  					"cityCode":this.t2Id,
+				  					"area":this.t3Name,
+				  					"areaCode":this.t3Id,
+				  					"token":GetRequest()['token'],
+				  					"addr_info":this.address,
+				  					"deviceid":request['deviceid']
+								},
+								type: 'POST',
+								dataType: 'json',
+								async: true,
+								success: function(res){
+									if(res.code==101){
+										unload();
+										alert2(res.message)
+										window.history.back();
+									}else if(res.code==202){//未登录
+										unload();
+										alert2("没有登陆信息，请先登录")
+										window.history.back();
+									}else if(res.code==0){
+										window.location.href="/public/app/op/03/InsuranceResutl.html?deviceid="+request['deviceid'];
+									}
+								},
+								error: function(err){
+									console.log(err)
+									alert2("系统繁忙,请稍后重试...")
+									unload()
+								}
+							})
+						}
+					}
+				}
+			},
+			watch : {
+				AgreeOrNot: function(boo){/* 回调函数 */
+					if(this.sknDetail&&boo){
+						$("#button").css({"background-color":"#f5b200"})
+					}else{
+						$("#button").css({"background-color":"#bdbdbd"})
+					}
+				},
+				sknDetail: function(boo){/* 回调函数 */
+					if(this.AgreeOrNot&&boo){
+						$("#button").css({"background-color":"#f5b200"})
+					}else{
+						$("#button").css({"background-color":"#bdbdbd"})
+					}
+				},
+				cardtype: function(type){/* 回调函数 */
+					if(this.cardtype=="01"){
+						return this.selV="身份证";
+					}else if(this.cardtype=="03"){
+						return this.selV="军官证";
+					}else if(this.cardtype=="05"){
+						return this.selV="港澳同胞证";
+					}else if(this.cardtype=="07"){
+						return this.selV="中国护照";
+					}else{
+						return this.selV="其他";
+					}
+				},
+			}
+		})
+		function load(){
+			$(".loading").css({'visibility':'visible'})
+		}
+		function unload(){
+			$(".loading").css({'visibility':'hidden'})
+		}
+		function findMore(id){
+	 		var i = ins.addrArr.length;
+		 	while (i--) {
+		        if (ins.addrArr[i]['parent_id'] == id) {
+		            return true;
+		        }
+		    }
+		    return false;
+	 	}
+		function close(){
+            $(".addrBox").css("visibility")=="hidden"?
+            		$(".addrBox").css({"visibility":"visible"})
+            		:
+            		$(".addrBox").css({"visibility":"hidden"});
+    	}
+		function readedDetail(){
+			$("#modal-overlay").css("visibility")=="hidden"?
+            		$("#modal-overlay").css({"visibility":"visible"})
+            		:
+            		$("#modal-overlay").css({"visibility":"hidden"});
+		}
+		//自制弹窗
+ 		var alertSt = true;
+ 		function alert2(msg) {
+            if (alertSt) {
+            	$("#alertModel").css({'visibility': 'visible'})
+            	$("#alertMsg").html(msg)
+            	alertSt = false;
+            } else {
+            	$("#alertModel").css({'visibility': 'hidden'})
+            	alertSt = true;
+                return;
+            }
+            setTimeout(function() { alert2(msg) },3000)
+        }
+		window.onload=function(){
+			$.ajax({
+				url: '/v1/findRegion',
+				data: {},
+				type: 'GET',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					ins.addrArr = data
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+			$.ajax({
+				url: "/gzh/v1/checkVip",
+				data: {
+					token: GetRequest()['token']
+				},  
+				type: 'GET',
+				dataType: 'json',
+				async: false,
+				success: function(res){
+					if(res.code==0){//成功
+						var vipStat = res.data.vipStat
+						if(vipStat==2){//不是会员
+							alert("您不是会员，无法领取保险")
+							window.history.back();
+						}else if(vipStat==3){
+							alert("您的会员已过期，续费会员即可领取保险")
+							window.history.back();
+						}
+					}else if(res.code==202){//未登录
+						alert("没有登陆信息，请先登录")
+						window.history.back();
+					}
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+			
+  		}
+	</script>
+</body>
+</html>

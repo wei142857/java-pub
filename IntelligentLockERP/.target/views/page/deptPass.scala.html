@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>后台管理</title>
+<link href="/public/crm/css/layout.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/jquery.js"></script>
+
+</head>
+<script type="text/javascript">
+function dept()
+{
+		$("#out").html("");
+	    var msg=$('#msg').val();
+		if(msg==""){
+			$("#msg").focus(); 
+			$("#tip").html('密文不能为空');
+			return;
+		}
+		else{
+			$("#tip").html('');
+		}
+		
+		var pass=$('#pass').val();
+		if(pass==""){
+			$("#pass").focus(); 
+			$("#tip1").html('密钥不允许为空');
+			return;
+		}
+		else{
+			$("#tip1").html('');
+		}
+		
+		$.ajax({
+			type : 'get',
+			/* dataType : 'json', */
+			async : true,
+			data:{'msg':msg,'pass':pass},
+			url : '/mng/dept',
+			success : function(returnData) {
+				$("#out").html( returnData );
+			}
+		});
+}
+
+</script>
+
+<body>
+
+<div class="right_main">
+	<div class="system_ddmm_right">
+            <p class="zhjh">
+            <b>消息密文：</b><input name="" type="text" class="cg_inputbox" id="msg"/></p>
+            <p class="tip" id="tip"></p>
+            <p><b>密钥：</b><input name="" type="text" class="cg_inputbox" id="pass"/></p>
+            <p class="tip" id="tip2"></p>
+            <p class="tj_button"><b></b>
+               <input name="" type="button" class="tj_btn" value="解密" id="send" 
+                  onclick="dept()"  /></p>
+                  
+            <p class="tip" id="tip1"></p>
+            <p><div id="out" style="color:red"></div></p>
+            
+        </div>
+</div>
+</body>
+</html>

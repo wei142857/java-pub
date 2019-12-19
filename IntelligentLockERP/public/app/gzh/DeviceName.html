@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		.rows{
+  			background-color: white;
+  			padding-left: 10px;
+  		}
+  		.rows div{
+  			display: inline-block;
+  			line-height: 48px;
+  		}
+  		.row_right{
+  			float: right;
+  		}
+  		#dn_ipt{
+  			line-height: 25px;
+  			border: 0px;
+  			text-align: right;
+  			padding-right: 10px;
+  			width: 200px;
+  		}
+  		#btn_box{
+  			width:100%;
+  			height: 40px;
+  			margin-top: 30px;
+  		}
+  		#btn_box button{
+  			display: block;
+  			width:90%;
+  			max-width: 600px;
+  			height: 40px;
+  			background-color: #da4242;
+  			border: 1px solid #da4242;
+  			color: white; 
+  			margin: 0 auto;
+  			cursor: pointer;
+  		}
+  	</style>
+	<title>设备名称</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>设备名称</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-top: 30px;">
+		<div class="rows bottom_special">
+			<div class="row_title">设备名称</div>
+			<div class="row_right">
+				<div class="row_arrow">
+					<input id="dn_ipt" type="text" name="devicename" v-model="newName" maxlength="15" placeholder="输入设备名称">
+				</div>
+			</div>
+		</div>
+		<!-- 按钮 -->
+		<div id="btn_box">
+			<button @click="rename()">确定</button>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		window.onload = function(){
+			toptitle()//头部标题
+		}
+		var rename = new Vue({
+			el:'.container',
+			data:{
+				newName: ""
+			},
+			methods:{
+				rename(){
+					if(this.newName.trim()!=""){
+						if(this.newName.length>15){
+							alert("名称要小于15个字")
+						}else{
+							var lockid = GetRequest()['lockid']
+							$.ajax({
+				  				url: "/gzh/v1/setLockDeviceName",
+				  				data:{
+				  					lockid:lockid,
+				  					devicename: this.newName
+				  				},
+				  				type:"GET",
+				  				dataType:"json",
+				  				async: false,
+				  				success: function(res){
+				  					if(res.code==202){//首先判断用户是否登陆
+										window.location.href = "/public/app/gzh/devicelogin.html";
+									}
+				  					if(res.code==0){
+				  						window.location.href=document.referrer;
+				  					}
+				  				},
+				  				error: function(err){
+				  					alert("失败的请求！")
+				  				}
+				  			})
+						}
+					}else{
+						console.log("不能为空")
+					}
+				}
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+	</script>
+</body>
+</html>

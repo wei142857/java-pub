@@ -1,0 +1,1346 @@
+
+@htmlhead("预约测量订单 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+											height : 505,
+											dataType : "json",
+											dataSource : '/SubMeasureOrders/List',
+											showIndex : false,
+											limit : 13,									
+											errorMsg : "获取数据出错",
+											emptyMsg : "没有数据",
+											
+											//Grid的header配置   ！！！！
+											colModel : [
+													
+													{
+														header : 'idd',
+														name : 'idd',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '手机号',
+														name : 'phone',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '订单ID',
+														name : 'oid',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '测量联系人姓名',
+														name : 'measurename',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '测量地址',
+														name : 'measurearea',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '测量详细地址',
+														name : 'measureaddress',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '测量联系人手机号',
+														name : 'measurephone',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '状态',
+														name : 'status',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide',
+														renderer:function(colValue){
+															if(colValue==1){
+																return "待支付";
+															}else if(colValue==3){
+																return "待派单";
+															}else{
+																return "已派单";
+															}
+														}
+														
+														
+													},
+													
+													{
+														header : '支付金额',
+														name : 'money',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '添加时间',
+														name : 'addtime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '预约测量时间',
+														name : 'measuretime',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '预订单',
+														name : 'prepayid',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '支付时间',
+														name : 'updatetime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+														
+													},
+													
+													{header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+											     		 renderer:function(colValue, rowData, rowIndex){
+											     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+											     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='outorder'>派单</div></div>";
+											     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+											     			 return menu + btn;
+												         }} ],
+											         
+													onRefresh: function(nowPage, pageRecords,event){
+								                		var $grid = $('#mygrid'); 
+								                	    $grid.find("a.op-btn").each(function(){
+								                		var $btn = $(this); 
+								                		
+								                		// 初始化表格里面的操作按钮 
+								                		$btn.omButton({
+								                			icons : {left : '/public/images/op-btn-icon.png'},
+								                			width : 75,
+								                			onClick : function(event){                				
+								                				var v = $grid.find("div.op-menu:visible");
+								                				var $opMenu = $(event.currentTarget.previousSibling);
+								                				// 重新计算菜单的位置
+								                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+								                				if($opMenu.css("display") == "none"){
+								                					$opMenu.show().css({left:left});
+								                				} else{
+								                					$opMenu.hide();
+								                				}
+								                				v.hide();
+								                				event.stopPropagation();
+								                				return false;
+								                			}
+								                		});
+								                	});
+
+								                	// 绑定表格操作按钮菜单的事件 ！！！！
+								                	$grid.find("div.op-menu").each(function(){
+								                		var $menu = $(this);
+								                		var rowindex=$menu.id;
+								                		$menu.hide();
+								                		
+								                		$menu.find(".outorder").click(function(){
+															var index = $(this).parent().attr('id');
+															doAsk('确定派单吗？' , delit , index );
+														});
+								                		
+								                	});				
+								               }
+										});
+		
+						//[新增/修改]dialog初始化
+						var dialog = $("#dialog-form").omDialog({
+							width : 460,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"取消" : function() {
+									$("#dialog-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						$('#add').bind('click', function() {
+			                isAdd = true;
+			                showDialog('新增',null);//显示dialog
+			            });
+						
+						//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+						var showDialog = function(title, idd) {
+							validator.resetForm();
+							if(idd!=null){
+								//edit info;
+								var uri = "/SubMeasureOrders/Get/"+idd;
+								$.get(uri,function(response){
+						            if(response!=null){
+										$("input[name='idd']", dialog).val(response.idd);
+										
+											$("input[name='idd']", dialog).val(response.idd);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='phone']", dialog).val(response.phone);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='oid']", dialog).val(response.oid);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='measurename']", dialog).val(response.measurename);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='measurearea']", dialog).val(response.measurearea);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='measureaddress']", dialog).val(response.measureaddress);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='measurephone']", dialog).val(response.measurephone);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='status']", dialog).val(response.status);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='money']", dialog).val(response.money);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='addtime']", dialog).val(response.addtime);
+											
+											
+												$("input[name='addtime']", dialog).val(fmtDate(new Date(response.addtime),"yyyy-MM-dd"));
+											
+											
+											
+											
+											
+										
+											$("input[name='measuretime']", dialog).val(response.measuretime);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='prepayid']", dialog).val(response.prepayid);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='updatetime']", dialog).val(response.updatetime);
+											
+											
+												$("input[name='updatetime']", dialog).val(fmtDate(new Date(response.updatetime),"yyyy-MM-dd"));
+											
+											
+											
+											
+											
+										
+						         }
+								});
+							}
+							dialog.omDialog("option", "title", title);
+							dialog.omDialog("open");//显示dialog 
+						};
+						
+						//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+						var submitDialog = function() {
+							if (validator.form()) {
+								var submitData = {
+									operation : isAdd ? 'add' : 'modify',
+									idd : $("input[name='idd']",dialog).val(),
+									
+										
+											
+												idd : $("input[name='idd']", dialog).val()	
+											
+											
+										
+									
+										
+											
+											
+												,phone : $("input[name='phone']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,oid : $("input[name='oid']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,measurename : $("input[name='measurename']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,measurearea : $("input[name='measurearea']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,measureaddress : $("input[name='measureaddress']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,measurephone : $("input[name='measurephone']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,status : $("input[name='status']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,money : $("input[name='money']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,addtime : $("input[name='addtime']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,measuretime : $("input[name='measuretime']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,prepayid : $("input[name='prepayid']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,updatetime : $("input[name='updatetime']", dialog).val()
+											
+										
+									
+								};
+
+								$.post('/SubMeasureOrders/Modify', submitData, function() {
+									if (isAdd) {
+										$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "添加数据成功",
+											timeout : 1500
+										});
+									} else {
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "修改数据成功",
+											timeout : 1500
+										});
+									}
+									$("#dialog-form").omDialog("close"); //关闭dialog
+								});
+							}
+						};
+
+						// 对增加/修改表单的校验设置 ！！！！
+						var validator = $('#ipForm').validate({
+							rules : {
+								
+									
+									
+								
+									
+										phone : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+									
+								
+									
+									
+										,
+										oid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										measurename : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										measurearea : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										measureaddress : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										measurephone : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										money : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										measuretime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										prepayid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										updatetime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+							},
+							messages : {
+								
+									
+									
+								
+									
+										phone : {
+											required : "手机号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+									
+								
+									
+									
+										,
+										oid : {
+											required : "订单ID不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										measurename : {
+											required : "测量联系人姓名不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										measurearea : {
+											required : "测量地址不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										measureaddress : {
+											required : "测量详细地址不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										measurephone : {
+											required : "测量联系人手机号不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : "状态不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										money : {
+											required : "支付金额不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : "添加时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										measuretime : {
+											required : "预约测量时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										prepayid : {
+											required : "预订单不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										updatetime : {
+											required : "支付时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+							}
+						});
+						
+						//其他iframe 对话框 初始化-->
+						$( "#dialog-modal").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+						
+				        $( "#user_auth_form").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+				        
+				        $("#user_add_form").omDialog({
+				        	autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+						});	
+				        
+				        var uploadDialog = $("#upload-form").omDialog({
+							width : 500,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitUploadDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"关闭" : function() {
+									$("#upload-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						var submitUploadDialog = function(){
+							$("#upload-form").omDialog("close");
+							//var uploadidd = $("input[name='uploadidd']").val();
+							var uploadidd = '';
+							var url = "/SubMeasureOrders/Upload";
+					        $.ajaxFileUpload({  
+					            url:url,  
+					            secureuri:false,  
+					            fileElementId:'file_excel',//file标签的id  
+					            dataType: 'json',//返回数据的类型  
+					            data:{uploadidd:uploadidd},//一同上传的数据  
+					            success: function (data, status) { 
+					            	console.log(data);
+					            	$.omMessageTip.show({
+										title : "操作成功",
+										content : "成功导入"+data+"条",
+										timeout : 1500
+									}); 
+					            },  
+					            error: function (data, status, e) {  
+					                alert(e);  
+					            }  
+					        });  
+						};
+						
+						$('#import').bind('click', function() {
+							$("#uploadForm")[0].reset();
+                			/*对应于指定目标的上传
+                			var index = $(this).parent().attr('id');
+                			$("input[name='uploadidd']").val(index); 
+                			*/
+                			uploadDialog.omDialog("option", "title", "导入（excel）");
+                			uploadDialog.omDialog("open");
+			            });
+						
+						//搜索按钮加图片
+						var searchPanel = $("#search-panel").omPanel({
+				            	title : "工具栏",collapsible:true
+				            });
+						 $('span#button-search').omButton({
+			          	    icons : {left : '/public/images/search.png'},width : 70
+			       	 	    });
+						 $('span#button-noSearch').omButton({
+				          	    icons : {left : '/public/images/searchNo.png'},width : 70
+				       	 	});
+						 $('span#add').omButton({
+				          	    icons : {},width : 70
+				       	 	});
+						 
+						 $('span#import').omButton({
+				          	    icons : {},width : 110
+				       	 	});
+						 
+						 $('span#button-export').omButton({
+				          	   	width : 90
+				       	 });
+						 
+						//下载Excel格式
+				       	$('span#button-export').bind('click', function(e){
+				       		var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+							
+								searchStr += 'oid='+encodeURI($("input[name='oid']", searchPanel).val())+"&";
+							
+								searchStr += 'measurename='+encodeURI($("input[name='measurename']", searchPanel).val())+"&";
+							
+								searchStr += 'measurearea='+encodeURI($("input[name='measurearea']", searchPanel).val())+"&";
+							
+								searchStr += 'measureaddress='+encodeURI($("input[name='measureaddress']", searchPanel).val())+"&";
+							
+								searchStr += 'measurephone='+encodeURI($("input[name='measurephone']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("input[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'money='+encodeURI($("input[name='money']", searchPanel).val())+"&";
+							
+								searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+								searchStr += 'measuretime='+encodeURI($("input[name='measuretime']", searchPanel).val())+"&";
+							
+								searchStr += 'prepayid='+encodeURI($("input[name='prepayid']", searchPanel).val())+"&";
+							
+								searchStr += 'updatetime='+encodeURI($("input[name='updatetime']", searchPanel).val())+"&";
+							
+			                var url = '/SubMeasureOrders/List?export=1&'+searchStr;
+			                window.location.href = url;
+				        });	
+						
+						//搜索绑定 =》grid ！！！！
+			       	 	$('span#button-search').bind('click', function(e) {
+			                var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'phone='+encodeURI($("input[name='phone']", searchPanel).val())+"&";
+							
+								searchStr += 'oid='+encodeURI($("input[name='oid']", searchPanel).val())+"&";
+							
+								searchStr += 'measurename='+encodeURI($("input[name='measurename']", searchPanel).val())+"&";
+							
+								searchStr += 'measurearea='+encodeURI($("input[name='measurearea']", searchPanel).val())+"&";
+							
+								searchStr += 'measureaddress='+encodeURI($("input[name='measureaddress']", searchPanel).val())+"&";
+							
+								searchStr += 'measurephone='+encodeURI($("input[name='measurephone']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("input[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'money='+encodeURI($("input[name='money']", searchPanel).val())+"&";
+							
+								searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+								searchStr += 'measuretime='+encodeURI($("input[name='measuretime']", searchPanel).val())+"&";
+							
+								searchStr += 'prepayid='+encodeURI($("input[name='prepayid']", searchPanel).val())+"&";
+							
+								searchStr += 'updatetime='+encodeURI($("input[name='updatetime']", searchPanel).val())+"&";
+							
+			                $('#mygrid').omGrid("setData", '/SubMeasureOrders/List?'+searchStr );
+			            });
+			       	 
+						
+			 			
+			 				/*
+			 				$("input[name='idd']", searchPanel).omCombo({
+				            	 dataSource : '/SubMeasureOrders/All',
+					                optionField : function(data, index) {
+					                    return data.idd;
+					                },
+					                valueField : 'idd',
+					                inputField : 'idd'
+				            });
+			 				*/
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='addtime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='addtime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 				$("input[name='status']", searchPanel).omCombo({
+				            	  dataSource : [ {text : '待支付', value : 1},
+				                                 {text : '待发货', value : 2},
+				                                 {text : '待派单', value : 3},
+				                                 {text : '已派单', value : 4}
+	                              ],
+	                              valueField : 'value',
+					              inputField : 'text'
+				            });
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='updatetime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='updatetime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			       	    
+						//不搜索 =》grid
+			       	 	$('span#button-noSearch').bind('click', function(e) {
+		                    $('#mygrid').omGrid("setData", '/SubMeasureOrders/List?key=');
+			            });	
+			            
+			             // 点击页面其他地方的时候隐藏表格里面的菜单
+			            $("body").click(function(){
+							$("#mygrid").find("div.op-menu:visible").hide();
+			            });		
+	
+					});	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/SubMeasureOrders/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 outorder(data)
+               }
+           });
+       }
+       function outorder( idd ){
+    	   $.post('/SubMeasureOrders/OutOrder', {idd:idd}, function(data) {
+				if(data==0){
+					$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+					$.omMessageTip.show({
+						title : "派单失败",
+						content : "派单失败",
+						timeout : 1500
+					});
+				}else{
+					$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+					$.omMessageTip.show({
+						title : "派单成功",
+						content : "派单成功",
+						timeout : 1500
+					});
+				}
+				$("#dialog-form").omDialog("close"); //关闭dialog
+			});
+       }
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+
+		
+		
+		
+		
+		<span class="label">手机号：</span> 
+		<input name="phone" id="phone" />
+		
+		
+		
+		<span class="label">订单ID：</span> 
+		<input name="oid" id="oid" />
+		
+		
+		
+		<span class="label">测量联系人手机号：</span> 
+		<input name="measurephone" id="measurephone" />
+		
+		
+		
+		<span class="label">状态：</span> 
+		<input name="status" id="status" />
+		
+		
+		
+		
+		<span class="label">预订单：</span> 
+		<input name="prepayid" id="prepayid" />
+		
+		
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+<!-- 		<span id="add">新增</span> -->
+<!-- 		<span id="import">导入（Excel97）</span> -->
+		<span id="button-export">下载Excel格式</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+	<table>
+		<tr>
+			<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+		</tr>
+		
+	</table>
+	</form>
+</div>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			
+			
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;手机号：</td>
+					<td><input name="phone" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单ID：</td>
+					<td><input name="oid" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测量联系人姓名：</td>
+					<td><input name="measurename" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测量地址：</td>
+					<td><input name="measurearea" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测量详细地址：</td>
+					<td><input name="measureaddress" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测量联系人手机号：</td>
+					<td><input name="measurephone" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态：</td>
+					<td><input name="status" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;支付金额：</td>
+					<td><input name="money" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加时间：</td>
+					<td><input name="addtime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;预约测量时间：</td>
+					<td><input name="measuretime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;预订单：</td>
+					<td><input name="prepayid" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;支付时间：</td>
+					<td><input name="updatetime" /></td>
+				</tr>
+				
+			
+			
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

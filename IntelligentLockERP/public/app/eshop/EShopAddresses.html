@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>地址管理</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<style type="text/css">
+  		body {
+			background-color: #f7f7f7;
+			padding-bottom: 60px;
+			padding-left: 0px;
+		}
+		.addr{
+			margin-top: 8px;
+			font-size: 13px;
+			color: #808080c2;
+		}
+		.addrs{
+			background-color: white;
+			padding: 15px;
+			cursor: pointer;
+			margin-top: 10px;	
+			padding-top: 8px;
+			padding-bottom: 0px;
+			padding-left: 15px;
+		}
+		.user_info{/* 第一行的用户名和电话号 */
+			font-size: 13px;
+			border-bottom:1px solid #f7f7f7;
+		}
+		.edit_info{
+			padding: 8px;
+			margin-bottom: 0px;
+			font-size: 13px;
+			padding-left: 3px;
+			padding-bottom: 0px;
+		}
+		/*隐藏掉我们模型的checkbox*/
+	    .checkbox{
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            display: none;
+            margin-top: 0px;
+        }
+	    /*未选中时*/        
+	    .checkbox{
+           width: 17px;
+           height: 17px;
+           border: 0px;
+           display: inline-block;
+           background: url(/public/app/eshop/images/wxz.png) no-repeat;
+           background-size: cover;
+        }
+	    /*选中checkbox时,修改背景图片的位置*/            
+	    .checkbox:checked{
+	   	   background: url(/public/app/eshop/images/xz.png) no-repeat;
+	   	   background-size: cover;
+        }
+        .defaultAddrText{
+        	margin-bottom: 4px;
+		    display: inline-block;
+		    vertical-align: middle;
+		    padding-bottom: 5px;
+		    padding-left: 7px;
+		    color: #a7a7a7;
+        }
+        .edit_logo{
+        	width: 17px;
+           	height: 17px;
+           	display: inline-block;
+        	background: url(/public/app/eshop/images/bj.png) no-repeat;
+	   	   	background-size: cover;
+        }
+        .del_logo{
+        	width: 17px;
+           	height: 17px;
+           	display: inline-block;
+        	background: url(/public/app/eshop/images/sc.png) no-repeat;
+	   	   	background-size: cover;
+	   	   	margin-left: 15px;
+        }
+        .edit_del_box{
+       	    float: right;
+       	    padding-top: 4px;
+        }
+        .update_text{
+        	margin-bottom: 3px;
+		    display: inline-block;
+		    vertical-align: middle;
+		    padding-bottom: 5px;
+		    padding-left: 3px;
+		    color: #a7a7a7;
+        }
+        .button_div{
+        	display:block;
+        	position: fixed;/* 位置 固定 绝对定位 */
+			bottom: 0px;
+			width: 100%;
+			height: 50px;
+			margin: 0px;
+			cursor: pointer;
+			text-align:center;
+			background-image: url(/public/app/eshop/images/tjxdz.jpg);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: auto 100%;
+        }
+        .button_div img{
+        	width: 100%;
+			border: 0px;
+			text-align: center;
+			height: 100%;
+			position: absolute;
+			bottom: 0px;
+        }
+        .zwdz_div{
+        	text-align: center;
+       	    width: 100%;
+       	    margin: 0px;
+        }
+        .zwdz_div img{
+        	width: 110px;
+        	height: 140px;
+        	margin-top: 100px;
+        }
+        .container{
+        	padding: 0px;
+        }
+        #modal-overlay {
+           display:flex;
+           align-items:center;
+           justify-content:center;
+           visibility: hidden;
+           position: fixed;   /* 使用绝对定位或固定定位  */
+           left: 0px;
+           bottom: 0px;
+           width:100%;
+           height:100%;
+           text-align:center;
+           z-index: 1000;
+           background-color: rgba(0, 0, 0, 0.5);
+      }
+      /* 模态框样式 */
+      .modal-data{
+           width:300px;
+           background-color: white;
+           border:0px;
+           padding:15px;
+           text-align:center;
+           padding: 0px;
+    	   padding-top: 15px;
+   	       border-radius: 5px;
+      }
+      .q_box{
+      	height: 70px; 
+      }
+      .q_box span{
+      	line-height: 50px;
+      }
+      .q_box_a{
+      	float: left;
+      	width: 50%;
+		height: 50px;
+		cursor:pointer;
+		color: #5b8cff;
+		margin-top: 20px;
+		border-top: 1px solid #00000012;
+		border-right: 1px solid #00000012;
+		font-size: 17px;
+      }
+      .q_box_b{
+      	float: right;
+      	width: 50%;
+		cursor:pointer;
+		height: 50px;
+		color: #5b8cff;
+		margin-top: 20px;
+		border-top: 1px solid #00000012;
+		font-size: 17px;
+      }
+      .def_box{
+      	display: inline-block;
+      }
+      #addrs{
+      	margin: 0px;
+      }
+  	</style>
+  	<script type="text/javascript">
+		/* window.onload=function(){
+			var body = $(".container").html().trim();
+			if(body==""){
+				$(".container").html("<div class='row zwdz_div'><img alt='' src='/images/wdz.png'></div><div class='row button_div'><a href='#'><img alt='添加新地址' src='/images/tjxdz.jpg'></a></div>");
+			}else{
+				$(".container").html("<div class='row addrs'><div class='user_info'><span>哆啦A梦</span>&nbsp;&nbsp;&nbsp;<span>186*****162</span><p class='addr'><small>北京市朝阳区东区国际2号楼806室</small></p></div><div class='edit_info'><input type='radio' name='checkbox' value='off' class='checkbox' checked='checked'><span class='defaultAddrText'>默认地址</span><div class='edit_del_box'><a class='a_edit_click'><span class='edit_logo'></span><span class='update_text'>编辑</span></a><a class='a_del_click'><span class='del_logo'></span><span class='update_text'>删除</span></a></div></div></div><div class='row button_div col-xs-12 col-md-3'><a href='#'><img alt='添加新地址' src='/images/tjxdz.jpg'></a></div>");
+			}
+	  		$(".a_edit_click").click(function(){
+	  			alert("edit?");
+	  		});
+	  		$(".a_del_click").click(function(){
+	  			alert("delete?");
+	  		});
+		} */
+	      function overlay () {
+	        var e1 = document.getElementById('modal-overlay');
+	        e1.style.visibility = (e1.style.visibility == "visible") ? "hidden" : "visible";
+	      }
+	 
+  	</script>
+</head>
+<body>
+	<div class="container">
+	  
+	  <div class='row' id="addrs">
+	  	<div v-if="addrs!=null">
+		  	<div class="addrs" v-for="addr in addrs">
+			  	<div class='user_info' @click="go(addr['idd'])">
+			  		<span>{{addr['name']}}</span>&nbsp;&nbsp;&nbsp;<span>{{addr['phone']}}</span>
+			  		<p class='addr'><span>{{addr['area']}}{{addr['address']}}</<span></p>
+			  	</div>
+			  	<div class='edit_info'>
+			  		<div v-if="addr.isdefault==1" class="def_box">
+					  	<input type='radio' name='checkbox' value='off' class='checkbox' checked='checked' disabled><span class='defaultAddrText'>默认地址</span>
+			  		</div>
+			  		<div v-else class="def_box">
+					  	<input type='radio' name='checkbox' value='off' class='checkbox' disabled><span class='defaultAddrText'>默认地址</span>
+			  		</div>
+				  	<div class='edit_del_box'>
+				  		<a class='a_edit_click' @click="editBox(addr)"><span class='edit_logo'></span><span class='update_text'>编辑</span></a>
+				  		<a class='a_del_click'  @click="delBox(addr)"><span class='del_logo'></span><span class='update_text'>删除</span></a>
+				  	</div>
+			    </div>
+		  	</div>
+	  	</div>
+	  	
+	  	<div v-else>
+	  		<div class='row zwdz_div'>
+	  			<img alt='' src='/public/app/eshop/images/wdz.png'>
+	  		</div>
+	  	</div>
+	  	
+		<!-- 模态框DIV -->
+	   	<div id="modal-overlay" class="col-xs-9 col-md-3">
+	      <div class="modal-data">
+	        <span style="color: black;font-size: 15px;">删除地址</span>
+		  	<p><small>是否确认删除地址?</small></p>
+		  	<div class="q_box">
+		  	  <div class="q_box_a" @click="close()">
+		  	     <span>取消</span>
+		  	   </div>
+		  	   <div class="q_box_b" @click="del()">
+		  	  	 <span>删除</span>
+		  	   </div>
+		  	  </div>
+	          <!-- <p>点击 <a href="#" onclick="overlay()">这里</a>关闭</p> -->
+	      </div>
+	    </div>
+	  </div>
+	  
+   	  
+	</div>
+    <div class='row button_div' @click="addAddress()" id="but">
+    
+    </div>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <script type="text/javascript">
+    	var vw = new Vue({
+    		el: '#but',
+    		data:{
+    			
+    		},
+    		methods:{
+    			addAddress(){
+    				window.location.href="/public/app/eshop/EShopAddAddress.html";
+    			}
+    		}
+    	})
+    	var addrinfo = new Vue({
+    		el: '#addrs',
+    		data: {
+    			addrs: null,
+    			delIdd:0
+    		},
+    		methods:{
+    			go(addrid){
+    				window.location.href = "/public/app/eshop/EShopOrderPay.html?idd="+GetRequest()['pid']+"&addrid="+addrid;
+    			},
+    			delBox(addr){
+    				/* if(addr.isdefault==0){ */
+    				this.delIdd = addr.idd
+   					overlay ()
+    				/* }else{
+    					alert("尝试更改默认地址再来删除哦")
+    				} */
+    			},
+    			editBox(addr){
+    				window.location.href="/public/app/eshop/EShopAddAddress.html?idd="+addr.idd;
+    			},
+    			del(){
+    				this.close()
+    				deleteAddr(this.delIdd)
+    			},
+    			close(){
+    				var e1 = document.getElementById('modal-overlay');
+    		        e1.style.visibility = (e1.style.visibility == "visible") ? "hidden" : "visible";
+    			}
+    		}
+    	})
+    	function overlay () {
+            var e1 = document.getElementById('modal-overlay');
+            e1.style.visibility = (e1.style.visibility == "visible") ? "hidden" : "visible";
+        }
+    	function deleteAddr(idd){
+    		$.post('/v1/deleteAddr',{idd:idd},function(data){
+    			var obj = JSON.parse(data)['data'];
+    			console.log("删除地址的结果")
+    			console.log(data)
+    			console.log(obj)
+    			if(obj==0){
+    				alert("网络服务器出现异常")
+	    			console.log("删除失败")
+	    			/* window.location.href=updateUrl(window.location.href,'v'); //传入自定义的变量名 */
+	    			location.reload();
+    			}else if(obj==1){
+    				location.reload();
+    			}
+    		})
+    	}
+    	window.onload = function(){
+    		var top = ($(window).height() - $("modal-overlay").height())/2;   
+    		var left = ($(window).width() - $("modal-overlay").width())/2;   
+    		var scrollTop = $(document).scrollTop();   
+    		var scrollLeft = $(document).scrollLeft();   
+    		$("modal-overlay").css( { position : 'absolute', 'top' : top + scrollTop, left : left + scrollLeft } ).show();
+    		/* 获取用户地址信息 */
+	  		$.ajax({
+  				url: '/v1/findAddr',
+  				data: {},
+  				type: 'POST',
+  				dataType: 'json',
+  				async: false,
+  				success: function(data){
+  					if(data.code==202){
+  						window.location.href="/public/app/eshop/EShopLogin.html";
+  					}
+  					var arr = data.data;
+  					if(arr.length==0){
+	  					console.log("用户需要先添加地址")
+  					}else{
+  						addrinfo.addrs = arr
+  					}
+  				},
+  				error: function(err){
+  					console.log(err)
+  				}
+  			})
+    	}
+    	function updateUrl(url,key){
+            var key= (key || 't') +'=';  //默认是"t"
+            var reg=new RegExp(key+'\\d+');  //正则：t=1472286066028
+            var timestamp=+new Date();
+            if(url.indexOf(key)>-1){ //有时间戳，直接更新
+                return url.replace(reg,key+timestamp);
+            }else{  //没有时间戳，加上时间戳
+                if(url.indexOf('\?')>-1){
+                    var urlArr=url.split('\?');
+                    if(urlArr[1]){
+                        return urlArr[0]+'?'+key+timestamp+'&'+urlArr[1];
+                    }else{
+                        return urlArr[0]+'?'+key+timestamp;
+                    }
+                }else{
+                    if(url.indexOf('#')>-1){
+                        return url.split('#')[0]+'?'+key+timestamp+location.hash;
+                    }else{
+                        return url+'?'+key+timestamp;
+                    }
+                }
+            }
+        }
+    	function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+    </script>
+</body>
+</html>

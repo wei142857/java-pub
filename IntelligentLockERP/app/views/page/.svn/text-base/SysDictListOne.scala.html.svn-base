@@ -1,0 +1,655 @@
+
+@(ltype:String) @htmlhead("SysDict 列表"){
+
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//Grid 初始化
+		$('#mygrid').omGrid({
+											height : 525,
+											dataType : "json",
+											dataSource : '/SysDict/ListOne?dictType=@ltype',
+											showIndex : false,
+											limit : 13,									
+											errorMsg : "获取数据出错",
+											emptyMsg : "没有数据",
+											
+											//Grid的header配置   ！！！！
+											colModel : [
+													
+													{
+														header : '类型码',
+														name : 'dictType',
+														width : 120,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : '类型名称',
+														name : 'dictTypeName',
+														width : 80,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : '属性值',
+														name : 'dictId',
+														width : 80,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : '属性定义',
+														name : 'dictName',
+														width : 100,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : '状态',
+														name : 'status',
+														width : 50,
+														align : 'center',
+														sort:'clientSide',
+															renderer : function(colValue) {   
+																if(colValue == 0){
+																	return "正常";
+																}else{
+																	return "废弃";
+																}
+					                                 		}
+													},
+													
+													{
+														header : '排序',
+														name : 'sortno',
+														width : 50,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : '说明',
+														name : 'remark',
+														width : 100,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+											     		 renderer:function(colValue, rowData, rowIndex){
+											     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+											     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div><div class='delete'>删除</div></div>";
+											     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+											     			 return menu + btn;
+												         }} ],
+											         
+													onRefresh: function(nowPage, pageRecords,event){
+								                		var $grid = $('#mygrid'); 
+								                	    $grid.find("a.op-btn").each(function(){
+								                		var $btn = $(this); 
+								                		
+								                		// 初始化表格里面的操作按钮 
+								                		$btn.omButton({
+								                			icons : {left : '/public/images/op-btn-icon.png'},
+								                			width : 75,
+								                			onClick : function(event){                				
+								                				var v = $grid.find("div.op-menu:visible");
+								                				var $opMenu = $(event.currentTarget.previousSibling);
+								                				// 重新计算菜单的位置
+								                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+								                				if($opMenu.css("display") == "none"){
+								                					$opMenu.show().css({left:left});
+								                				} else{
+								                					$opMenu.hide();
+								                				}
+								                				v.hide();
+								                				event.stopPropagation();
+								                				return false;
+								                			}
+								                		});
+								                	});
+
+								                	// 绑定表格操作按钮菜单的事件 ！！！！
+								                	$grid.find("div.op-menu").each(function(){
+								                		var $menu = $(this);
+								                		var rowindex=$menu.id;
+								                		$menu.hide();
+								                		$menu.find(".edit").click(function(){
+															isAdd = false;
+															var index = $(this).parent().attr('id');
+											                showDialog('修改',index);//显示dialog
+														});
+								                		
+								                		$menu.find(".delete").click(function(){
+															var index = $(this).parent().attr('id');
+															doAsk('确定删除吗？' , delit , index );
+														});
+								                		
+								                	});				
+								               }
+										});
+		
+						//[新增/修改]dialog初始化
+						var dialog = $("#dialog-form").omDialog({
+							width : 400,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"取消" : function() {
+									$("#dialog-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						$('#add').bind('click', function() {
+			                isAdd = true;
+			                showDialog('新增',null);//显示dialog
+			            });
+						
+						//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+						var showDialog = function(title, idd) {
+							validator.resetForm();
+							if(idd!=null){
+								//edit info;
+								var uri = "/SysDict/Get/"+idd;
+								$.get(uri,function(response){
+						            if(response!=null){
+										$("input[name='idd']", dialog).val(response.idd);
+										
+											$("input[name='idd']", dialog).val(response.idd);
+										
+											$("input[name='dictType']", dialog).val(response.dictType);
+										
+											$("input[name='dictTypeName']", dialog).val(response.dictTypeName);
+										
+											$("input[name='dictId']", dialog).val(response.dictId);
+										
+											$("input[name='dictName']", dialog).val(response.dictName);
+										
+											$("input[name='status']", dialog).val(response.status);
+											$("input[name='status']", dialog).omCombo("value",response.status);
+										
+											$("input[name='sortno']", dialog).val(response.sortno);
+										
+											$("input[name='remark']", dialog).val(response.remark);
+										
+						         }
+								});
+							}
+							dialog.omDialog("option", "title", title);
+							dialog.omDialog("open");//显示dialog 
+						};
+						
+						//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+						var submitDialog = function() {
+							if (validator.form()) {
+								var submitData = {
+									operation : isAdd ? 'add' : 'modify',
+									idd : $("input[name='idd']",dialog).val(),
+									
+										
+											idd : $("input[name='idd']", dialog).val()	
+										
+										
+									
+										
+										
+											,dictType : $("input[name='dictType']", dialog).val()
+										
+									
+										
+										
+											,dictTypeName : $("input[name='dictTypeName']", dialog).val()
+										
+									
+										
+										
+											,dictId : $("input[name='dictId']", dialog).val()
+										
+									
+										
+										
+											,dictName : $("input[name='dictName']", dialog).val()
+										
+									
+										
+										
+											,status : $("input[name='status']", dialog).val()
+										
+									
+										
+										
+											,sortno : $("input[name='sortno']", dialog).val()
+										
+									
+										
+										
+											,remark : $("input[name='remark']", dialog).val()
+										
+									
+								};
+
+								$.post('/SysDict/Modify', submitData, function() {
+									if (isAdd) {
+										$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "添加数据成功",
+											timeout : 1500
+										});
+									} else {
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "修改数据成功",
+											timeout : 1500
+										});
+									}
+									$("#dialog-form").omDialog("close"); //关闭dialog
+								});
+							}
+						};
+
+						// 对增加/修改表单的校验设置 ！！！！
+						var validator = $('#ipForm').validate({
+							rules : {
+								
+									
+									
+								
+									
+										dictType : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+									
+								
+									
+									
+										,
+										dictTypeName : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+										,
+										dictId : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+										,
+										dictName : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+										,
+										sortno : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+// 										,
+// 										remark : {
+// 											required : true,
+// 		                        			maxlength : 20
+// 										}
+									
+								
+							},
+							messages : {
+								
+									
+									
+								
+									
+										dictType : {
+											required : "dictType 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+									
+								
+									
+									
+										,
+										dictTypeName : {
+											required : "dictTypeName 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+										,
+										dictId : {
+											required : "dictId 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+										,
+										dictName : {
+											required : "dictName 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+										,
+										status : {
+											required : "status 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+										,
+										sortno : {
+											required : "sortno 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+// 										,
+// 										remark : {
+// 											required : "remark 不能为空",
+// 											maxlength : '长度不能超过20个字符'
+// 										}
+									
+								
+							}
+						});
+						
+						//其他iframe 对话框 初始化-->
+						$( "#dialog-modal").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+						
+				        $( "#user_auth_form").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+				        
+				        $("#user_add_form").omDialog({
+				        	autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+						});	
+						
+						//搜索按钮加图片
+						var searchPanel = $("#search-panel").omPanel({
+				            	title : "工具栏",collapsible:true
+				            });
+						 $('span#button-search').omButton({
+			          	    icons : {left : '/public/images/search.png'},width : 70
+			       	 	    });
+						 $('span#button-noSearch').omButton({
+				          	    icons : {left : '/public/images/searchNo.png'},width : 70
+				       	 	});
+						 $('span#add').omButton({
+				          	    icons : {},width : 70
+				       	 	});
+						 $('span#button-export').omButton({
+				          	   	width : 90
+				       	 });
+						 
+						//下载Excel格式
+				       	$('span#button-export').bind('click', function(e){
+				       		var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'dictTypeName='+encodeURI($("input[name='dictTypeName']", searchPanel).val())+"&";
+							
+								searchStr += 'dictId='+encodeURI($("input[name='dictId']", searchPanel).val())+"&";
+							
+								searchStr += 'dictName='+encodeURI($("input[name='dictName']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("input[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'sortno='+encodeURI($("input[name='sortno']", searchPanel).val())+"&";
+							
+								searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+							
+			                var url = '/SysDict/ListOne?dictType=@ltype&export=1&'+searchStr;
+			                window.location.href = url;
+				        });	
+						
+						//搜索绑定 =》grid ！！！！
+			       	 	$('span#button-search').bind('click', function(e) {
+			                var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'dictTypeName='+encodeURI($("input[name='dictTypeName']", searchPanel).val())+"&";
+							
+								searchStr += 'dictId='+encodeURI($("input[name='dictId']", searchPanel).val())+"&";
+							
+								searchStr += 'dictName='+encodeURI($("input[name='dictName']", searchPanel).val())+"&";
+							
+								searchStr += 'status='+encodeURI($("input[name='status']", searchPanel).val())+"&";
+							
+								searchStr += 'sortno='+encodeURI($("input[name='sortno']", searchPanel).val())+"&";
+							
+								searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+							
+			                $('#mygrid').omGrid("setData", '/SysDict/ListOne?dictType=@ltype&'+searchStr );
+			            });
+			       	 
+						
+			 			
+			 				$("input[name='idd']", searchPanel).omCombo({
+				            	 dataSource : '/SysDict/All',
+					                optionField : function(data, index) {
+					                    return data.idd;
+					                },
+					                valueField : 'idd',
+					                inputField : 'idd'
+				            });
+			 				
+			 				$('#status').omCombo({
+								dataSource : [ {text : '正常', value : 0}, 
+				                               {text : '废弃', value : 1}
+				                              ]
+				            }); 
+			 			
+			 			
+						//不搜索 =》grid
+			       	 	$('span#button-noSearch').bind('click', function(e) {
+		                    $('#mygrid').omGrid("setData", '/SysDict/ListOne?dictType=@ltype&key=');
+			            });	
+			            
+			             // 点击页面其他地方的时候隐藏表格里面的菜单
+			            $("body").click(function(){
+							$("#mygrid").find("div.op-menu:visible").hide();
+			            });		
+	
+					});	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/SysDict/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+		<a href="javascript:history.go(-1);">返回</a>
+		
+		<span id="add">新增</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<input type="hidden" name="dictType" value="@ltype" />
+		<table>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型名称：</td>
+				<td><input name="dictTypeName" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;值：</td>
+				<td><input name="dictId" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明：</td>
+				<td><input name="dictName" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态：</td>
+				<td><input name="status" id="status" /></td>
+			</tr>
+			
+			
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排序：</td>
+				<td><input name="sortno" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明：</td>
+				<td><input name="remark" /></td>
+			</tr>
+			
+			
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

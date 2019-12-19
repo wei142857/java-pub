@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>司铠智能</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		body{
+			background-color: #f8f8f8;
+		}
+		.row_top{
+			margin-bottom: 48px;
+		}
+		.row_bottom{
+			background-color: white;
+			margin-bottom: 10px;
+			padding-top:15px;
+			padding-bottom: 15px;
+		}
+		.row_bottom_s{
+			background-color: white;
+			margin-bottom: 56px;
+			padding-top:15px;
+			padding-bottom: 15px;
+		}
+		.measure_fanhui{
+			position: absolute;
+			font-size: 16px;
+			font-weight: bold;
+			width: 100%;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+			left: 0px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.spt_div{			/* 包裹商品图的 div */
+			padding: 0px;
+		}
+		.spt_img{			/* 商品图 */
+			width: 100%;
+			height: auto;
+		}
+		.but_big_div{			/* 包裹按钮div的 大的div */
+			padding-right: 0px;
+		}
+		.but_div{			/* 包裹按钮图片的 div */
+			padding: 0px;
+			width: 31.5%;
+			margin-right: 5px;
+		}
+		.but_div_s{			/* 包裹按钮图片的(s) div */
+			padding: 0px;
+			width: 31.5%;
+		}
+		.but_img{			/* 按钮图片 统一样式 */
+			width: 100%;
+			height: auto;
+		}
+		.txt_div{			/* 包裹文字的div */
+			padding-right: 0px;
+			margin-top: 15px;
+			height: 50%;
+		}
+		#submitBut{
+	        background-color:#ff6052;
+	        width: 100%;
+	        border: 0px;
+	        text-align: center;
+	        height: 46px;
+	        color: white;
+	        font-size: 16px;
+	        padding: 0px;
+        }
+        .btn{
+        	position: relative;
+        	padding: 0px;
+	        bottom: 0px;
+	        border: 0px;
+        }
+	</style>
+</head>
+<body>
+	<div class="container" id="measure_div">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<span>订单</span>
+			</div>
+		</div>
+		<div class="row" v-for="(site,index) in sites" :class="index == sites.length-1 ? 'row_bottom_s' : 'row_bottom'">
+			<div class="col-xs-12 col-md-12">
+				<div class="col-xs-4 col-md-4 spt_div">
+					<img alt="图片加载失败" v-bind:src="site.smallimgurl" class="spt_img" />
+				</div>
+				<div class="col-xs-8 col-md-8 txt_div">
+					<p>产品：{{site.title}}</p>
+					<p>状态：{{site.status}}</p>
+				</div>
+				<div class="col-xs-8 col-md-8 but_big_div">
+					<div class="col-xs-2 col-md-2 but_div">
+						<img alt="图片加载失败" src="/public/app/install/images/ddxq.jpg" class="but_img" @click="showDetail(site)" />
+					</div>
+					<div class="col-xs-2 col-md-2 but_div">
+						<img alt="图片加载失败" src="/public/app/install/images/ckjd.jpg" class="but_img" @click="showProgress(site)"/>
+					</div>
+					<div class="col-xs-2 col-md-2 but_div_s">
+						<img alt="图片加载失败" src="/public/app/install/images/xgyy.jpg" class="but_img" @click="updateAppoint(site)" v-if="site.status=='待派单'"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+            <div class="col-xs-12 col-md-12 btn" id="foot">
+            	<input type="submit" id="submitBut" value="再次预约测量">
+            </div>
+        </div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<script type="text/javascript">
+	var vm=new Vue({
+	    el: "#measure_div",
+	    data: {
+	        sites: []
+	    },
+	    mounted:function(){
+	        this.showData();
+	    },
+	    methods:{
+	        showData:function () {
+	            jQuery.ajax({
+	                url: "/v1/appointSelMeaOrder",
+	                data: "",
+	                type: 'get',
+	              	dataType:"json",
+	              	success: function (res) {
+	              		console.log(res);
+	              		if(res.code=="0"){
+	              			for(var i=0;i<res.data.length;i++){
+			                  	vm.sites.push(res.data[i]);
+			              	}
+	              		}else if(res.code=="1"||res.code=="2"){
+	              			window.location.href="/public/app/install/appointInstall_login.html";
+	              		}
+	               }
+	           })
+	        },
+	        showProgress:function(site){	/* 点击 查看进度 按钮 */
+	        	window.location.href="/public/app/install/appointInstall_checkProgress.html?state=103&idd="+site.idd;
+	        },
+	        updateAppoint:function(site){	/* 点击 修改预约测量 按钮 */
+	        	window.location.href="/public/app/install/appointMeasure_update.html?idd="+site.idd;
+	        },
+	        showDetail:function(site){		/* 点击 查看订单详情 按钮 */
+	        	window.location.href="/public/app/install/appointMeasure_orderDetail.html?idd="+site.idd;
+	        }
+	     }
+	});
+	$(function(){
+		//点击 再次预约测量 按钮
+		$("#submitBut").click(function(){
+			window.location.href="/public/app/install/appointInstall_login.html?again=again&state=103";
+    	});
+		//将按钮 一直在页面的底部
+		var foot = document.getElementById("foot");
+		if(window.offsetHeight<window.innerHeight){
+			foot.style.cssText='position:absolute;bottom:0;';
+		}else{
+			foot.style.cssText='position:fixed;bottom:0;left:0px;';
+		}
+	})
+    </script>
+</body>
+</html>

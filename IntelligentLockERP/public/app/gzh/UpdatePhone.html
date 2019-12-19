@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<link rel="stylesheet" href="./css/tools.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<script type="text/javascript">
+	  	window.onload=function(){
+			toptitle()//头部标题
+		}
+  	</script>
+  	<style type="text/css">
+  		body{
+ 			background-color: #f7f7f7;
+  		}
+  		input[type=button], input[type=submit], input[type=file], button ,input[type=checkbox]{
+			cursor: pointer;
+			-webkit-appearance: none; 
+		}
+		input[type=checkbox]{
+			border-radius: 0;
+		}
+  		#title{
+  			width: 100%;
+  			height: auto;
+  			padding: 15px;
+  			padding-bottom: 80px;
+  		}
+		.row_div{
+			padding-left: 0px;
+			border-bottom:1px solid #0000001c;
+			margin-bottom: 18px;
+			padding-right: 0px;
+		}
+		.row_div input{
+			border: 0px;
+			font-size: 13px;
+			padding-right: 0px;
+			padding-left: 5px;
+		}
+		input:focus {
+		    outline: none;
+		    border-color: #cfdc00;
+		    box-shadow: 0 0 5px rgba(207, 220, 0, 0.4);
+		    border-radius: 5px;
+		}
+		.right_box{
+		    text-align: center;
+		    padding-left: 0px;
+		}
+		.right_box button{
+			width: 100px;
+			border-color: #da4242;
+			color: red;
+			text-align: center;
+			height: 33px;
+			font-size: 13px;
+			padding: 0px;
+			background-color: white;
+			border: 1px solid #da4242;
+			cursor: pointer;
+		}
+		.right_box img{
+			width: 100px;
+			border: 0px;
+			text-align: center;
+			height: 30px;
+			padding: 0px;
+		}
+		#loginBut{
+			width: 100%;
+			border: 0px;
+			text-align: center;
+			padding: 0px;
+		}
+		#submitBut{
+			background-color:#da4242;
+			width: 100%;
+			border: 0px;
+			text-align: center;
+			height: 50px;
+			color: white;
+			font-size: 16px;
+			cursor: pointer;
+		}
+  	</style>
+	<title>改绑手机号</title>
+</head>
+<body>
+	<div id="return_title"><!-- 返回标题 -->
+		<div id="return_left_img">
+			<img alt="" src="./images/left_arrow.png">
+		</div>
+		<div id="return_center_title">
+			<p>改绑手机号</p>
+		</div>
+	</div>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3" style="padding: 0px;padding-bottom: 45px;padding-top: 30px;">
+		<div id="title">
+			<p>改绑手机号为更换绑定智能锁的手机号，新手机号会收到智能锁预警等相关信息。</p>
+			<p>更换当前手机号:&nbsp;&nbsp;<span>13716306414</span></p>
+		</div>
+		<div class="row">
+			<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4 row_div">
+				<div class="form-group">
+					<input type="text" id="userPhone" class="form-control" name="phone" placeholder="请输入手机号码" style="border: 0px;">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4 row_div">
+				<div class="col-xs-8 col-md-8 form-group" style="padding-left: 0px;">
+					<input type="text" class="form-control" name="sms" placeholder="请输入短信验证码">
+				</div>
+				<div class="col-xs-4 col-md-4 form-group right_box">
+					<button type="button">获取验证码</button>
+				</div>
+				
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8 col-md-4 col-xs-offset-2 col-md-offset-4" style="padding: 0px;margin-bottom: 10px;">
+				<input type="submit" id="submitBut" value="确定改绑">
+			</div>
+		</div>
+	</div>
+</body>
+</html>

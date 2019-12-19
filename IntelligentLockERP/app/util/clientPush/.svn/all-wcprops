@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/xuanwenchao.intelligentLockERP/!svn/ver/1587/trunk/IntelligentLockERP/app/util/clientPush
+END
+NotificationDelegate.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/xuanwenchao.intelligentLockERP/!svn/ver/1570/trunk/IntelligentLockERP/app/util/clientPush/NotificationDelegate.java
+END
+IosSmsPush.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xuanwenchao.intelligentLockERP/!svn/ver/1570/trunk/IntelligentLockERP/app/util/clientPush/IosSmsPush.java
+END
+AndroidSmsPush.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xuanwenchao.intelligentLockERP/!svn/ver/1580/trunk/IntelligentLockERP/app/util/clientPush/AndroidSmsPush.java
+END
+SmsPush.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xuanwenchao.intelligentLockERP/!svn/ver/1587/trunk/IntelligentLockERP/app/util/clientPush/SmsPush.java
+END

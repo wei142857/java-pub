@@ -1,0 +1,99 @@
+var price1;
+			var idd = GetRequest()['idd'];
+			var orderinfo = new Vue({
+				el: '.pp',
+				data: {
+					pro:null,
+					addrInfo:null
+				},
+				methods:{
+					isVip(){
+						var flag = false;
+						$.ajaxSettings.async = false;
+						$.get("/v1/checkVip?idd="+this.pro.idd, function(result){
+							var code = JSON.parse(result)['data'];
+							if(code==1){
+								flag=true;
+							}
+						});
+						if(flag){
+							price1 = 1;
+						}else{
+							price1 = 2;
+						}
+						$.ajaxSettings.async = true;
+						return flag;
+					}
+				}
+			})
+  			
+  			$.ajax({
+  				url: '/v1/findProInfo',
+  				data: {idd:idd},
+  				type: 'POST',
+  				dataType: 'json',
+  				success: function(data){
+  					orderinfo.pro = data;
+  				},
+  				error: function(err){
+  					console.log(err)
+  				}
+  			})
+			function GetRequest() {
+		  		var url = location.search; //获取url中"?"符后的字串
+		  		var theRequest = new Object();
+		  		if (url.indexOf("?") != -1) {
+			  		var str = url.substr(1);
+			  		strs = str.split("&");
+			  		for(var i = 0; i < strs.length; i ++) {
+			  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+			  		}
+		  		}
+		  		return theRequest;
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			alert("开始")
+						var flag = false;
+						$.ajaxSettings.async = false;
+						/* session获取 */
+						$.get("/v1/checkVip", function(result){
+							var code = JSON.parse(result)['data'];
+							if(code==1){
+								flag=true;
+							}
+						});
+						/* session获取 */
+						$.get("/v1/getBountyCount", function(result){
+							var count = JSON.parse(result)['data'];
+							this.bounty=count;
+						});
+						$.ajaxSettings.async = true;
+						
+						console.log("初始化 商品数量："+this.pro_count)
+						console.log("初始化 最终价格："+this.total_price)
+						console.log("初始化 奖励金数量："+this.bounty)
+						if(flag){
+							price1 = 1;
+						}else{
+							price1 = 2;
+						}
+						return flag;

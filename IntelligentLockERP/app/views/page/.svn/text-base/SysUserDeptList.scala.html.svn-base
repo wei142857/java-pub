@@ -1,0 +1,624 @@
+
+ @htmlhead("SysUserDept 列表"){
+
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//Grid 初始化
+		$('#mygrid').omGrid({
+											height : 505,
+											dataType : "json",
+											dataSource : '/SysUserDept/List',
+											showIndex : false,
+											limit : 13,									
+											errorMsg : "获取数据出错",
+											emptyMsg : "没有数据",
+											
+											//Grid的header配置   ！！！！
+											colModel : [
+													
+													{
+														header : 'idx',
+														name : 'idx',
+														width : 50,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : 'uid',
+														name : 'uid',
+														width : 50,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : 'did',
+														name : 'did',
+														width : 50,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : 'state',
+														name : 'state',
+														width : 50,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : 'deptcode',
+														name : 'deptcode',
+														width : 50,
+														align : 'center',
+														sort:'clientSide'
+														
+													},
+													
+													{
+														header : 'addtime',
+														name : 'addtime',
+														width : 50,
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+													},
+													
+													{header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+											     		 renderer:function(colValue, rowData, rowIndex){
+											     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+											     			 var menu = "<div id='"+rowData.idx+"' class='op-menu'><div class='edit'>编辑</div><div class='delete'>删除</div></div>";
+											     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+											     			 return menu + btn;
+												         }} ],
+											         
+													onRefresh: function(nowPage, pageRecords,event){
+								                		var $grid = $('#mygrid'); 
+								                	    $grid.find("a.op-btn").each(function(){
+								                		var $btn = $(this); 
+								                		
+								                		// 初始化表格里面的操作按钮 
+								                		$btn.omButton({
+								                			icons : {left : '/public/images/op-btn-icon.png'},
+								                			width : 75,
+								                			onClick : function(event){                				
+								                				var v = $grid.find("div.op-menu:visible");
+								                				var $opMenu = $(event.currentTarget.previousSibling);
+								                				// 重新计算菜单的位置
+								                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+								                				if($opMenu.css("display") == "none"){
+								                					$opMenu.show().css({left:left});
+								                				} else{
+								                					$opMenu.hide();
+								                				}
+								                				v.hide();
+								                				event.stopPropagation();
+								                				return false;
+								                			}
+								                		});
+								                	});
+
+								                	// 绑定表格操作按钮菜单的事件 ！！！！
+								                	$grid.find("div.op-menu").each(function(){
+								                		var $menu = $(this);
+								                		var rowindex=$menu.id;
+								                		$menu.hide();
+								                		$menu.find(".edit").click(function(){
+															isAdd = false;
+															var index = $(this).parent().attr('id');
+											                showDialog('修改',index);//显示dialog
+														});
+								                		
+								                		$menu.find(".delete").click(function(){
+															var index = $(this).parent().attr('id');
+															doAsk('确定删除吗？' , delit , index );
+														});
+								                		
+								                	});				
+								               }
+										});
+		
+						//[新增/修改]dialog初始化
+						var dialog = $("#dialog-form").omDialog({
+							width : 400,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"取消" : function() {
+									$("#dialog-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						$('#add').bind('click', function() {
+			                isAdd = true;
+			                showDialog('新增',null);//显示dialog
+			            });
+						
+						//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+						var showDialog = function(title, idd) {
+							validator.resetForm();
+							if(idd!=null){
+								//edit info;
+								var uri = "/SysUserDept/Get/"+idd;
+								$.get(uri,function(response){
+						            if(response!=null){
+										$("input[name='idx']", dialog).val(response.idx);
+										
+											$("input[name='idx']", dialog).val(response.idx);
+										
+											$("input[name='uid']", dialog).val(response.uid);
+										
+											$("input[name='did']", dialog).val(response.did);
+										
+											$("input[name='state']", dialog).val(response.state);
+										
+											$("input[name='deptcode']", dialog).val(response.deptcode);
+										
+											$("input[name='addtime']", dialog).val(response.addtime);
+										
+						         }
+								});
+							}
+							dialog.omDialog("option", "title", title);
+							dialog.omDialog("open");//显示dialog 
+						};
+						
+						//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+						var submitDialog = function() {
+							if (validator.form()) {
+								var submitData = {
+									operation : isAdd ? 'add' : 'modify',
+									idx : $("input[name='idx']",dialog).val(),
+									
+										
+											idx : $("input[name='idx']", dialog).val()	
+										
+										
+									
+										
+										
+											,uid : $("input[name='uid']", dialog).val()
+										
+									
+										
+										
+											,did : $("input[name='did']", dialog).val()
+										
+									
+										
+										
+											,state : $("input[name='state']", dialog).val()
+										
+									
+										
+										
+											,deptcode : $("input[name='deptcode']", dialog).val()
+										
+									
+										
+										
+											,addtime : $("input[name='addtime']", dialog).val()
+										
+									
+								};
+
+								$.post('/SysUserDept/Modify', submitData, function() {
+									if (isAdd) {
+										$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "添加数据成功",
+											timeout : 1500
+										});
+									} else {
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "修改数据成功",
+											timeout : 1500
+										});
+									}
+									$("#dialog-form").omDialog("close"); //关闭dialog
+								});
+							}
+						};
+
+						// 对增加/修改表单的校验设置 ！！！！
+						var validator = $('#ipForm').validate({
+							rules : {
+								
+									
+									
+								
+									
+										uid : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+									
+								
+									
+									
+										,
+										did : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+										,
+										state : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+										,
+										deptcode : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : true,
+		                        			maxlength : 20
+										}
+									
+								
+							},
+							messages : {
+								
+									
+									
+								
+									
+										uid : {
+											required : "uid 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+									
+								
+									
+									
+										,
+										did : {
+											required : "did 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+										,
+										state : {
+											required : "state 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+										,
+										deptcode : {
+											required : "deptcode 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+									
+									
+										,
+										addtime : {
+											required : "addtime 不能为空",
+											maxlength : '长度不能超过20个字符'
+										}
+									
+								
+							}
+						});
+						
+						//其他iframe 对话框 初始化-->
+						$( "#dialog-modal").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+						
+				        $( "#user_auth_form").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+				        
+				        $("#user_add_form").omDialog({
+				        	autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+						});	
+						
+						//搜索按钮加图片
+						var searchPanel = $("#search-panel").omPanel({
+				            	title : "工具栏",collapsible:true
+				            });
+						 $('span#button-search').omButton({
+			          	    icons : {left : '/public/images/search.png'},width : 70
+			       	 	    });
+						 $('span#button-noSearch').omButton({
+				          	    icons : {left : '/public/images/searchNo.png'},width : 70
+				       	 	});
+						 $('span#add').omButton({
+				          	    icons : {},width : 70
+				       	 	});
+						 $('span#button-export').omButton({
+				          	   	width : 90
+				       	 });
+						 
+						//下载Excel格式
+				       	$('span#button-export').bind('click', function(e){
+				       		var searchStr='';
+			                
+								searchStr += 'idx='+encodeURI($("input[name='idx']", searchPanel).val())+"&";
+							
+								searchStr += 'uid='+encodeURI($("input[name='uid']", searchPanel).val())+"&";
+							
+								searchStr += 'did='+encodeURI($("input[name='did']", searchPanel).val())+"&";
+							
+								searchStr += 'state='+encodeURI($("input[name='state']", searchPanel).val())+"&";
+							
+								searchStr += 'deptcode='+encodeURI($("input[name='deptcode']", searchPanel).val())+"&";
+							
+								searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+			                var url = '/SysUserDept/List?export=1&'+searchStr;
+			                window.location.href = url;
+				        });	
+						
+						//搜索绑定 =》grid ！！！！
+			       	 	$('span#button-search').bind('click', function(e) {
+			                var searchStr='';
+			                
+								searchStr += 'idx='+encodeURI($("input[name='idx']", searchPanel).val())+"&";
+							
+								searchStr += 'uid='+encodeURI($("input[name='uid']", searchPanel).val())+"&";
+							
+								searchStr += 'did='+encodeURI($("input[name='did']", searchPanel).val())+"&";
+							
+								searchStr += 'state='+encodeURI($("input[name='state']", searchPanel).val())+"&";
+							
+								searchStr += 'deptcode='+encodeURI($("input[name='deptcode']", searchPanel).val())+"&";
+							
+								searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+							
+			                $('#mygrid').omGrid("setData", '/SysUserDept/List?'+searchStr );
+			            });
+			       	 
+						
+			 			
+			 				$("input[name='idx']", searchPanel).omCombo({
+				            	 dataSource : '/SysUserDept/All',
+					                optionField : function(data, index) {
+					                    return data.idx;
+					                },
+					                valueField : 'idx',
+					                inputField : 'idx'
+				            });
+			 			
+			 			
+						
+			 			
+			 			
+						
+			 			
+			 			
+						
+			 			
+			 			
+						
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='addtime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+						
+			       	    
+						//不搜索 =》grid
+			       	 	$('span#button-noSearch').bind('click', function(e) {
+		                    $('#mygrid').omGrid("setData", '/SysUserDept/List?key=');
+			            });	
+			            
+			             // 点击页面其他地方的时候隐藏表格里面的菜单
+			            $("body").click(function(){
+							$("#mygrid").find("div.op-menu:visible").hide();
+			            });		
+	
+					});	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/SysUserDept/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+
+		
+		<span class="label">idx：</span> 
+		<input name="idx" id="idx" />
+		
+		<span class="label">uid：</span> 
+		<input name="uid" id="uid" />
+		
+		<span class="label">did：</span> 
+		<input name="did" id="did" />
+		
+		<span class="label">state：</span> 
+		<input name="state" id="state" />
+		
+		<span class="label">deptcode：</span> 
+		<input name="deptcode" id="deptcode" />
+		
+		<span class="label">addtime：</span> 
+		<input name="addtime" id="addtime" />
+		
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<span id="add">新增</span>
+		<span id="button-export">下载Excel格式</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idx" value="" />
+		<table>
+			
+			
+			
+			
+			<tr>
+				<td>uid：</td>
+				<td><input name="uid" /></td>
+			</tr>
+			
+			
+			
+			<tr>
+				<td>did：</td>
+				<td><input name="did" /></td>
+			</tr>
+			
+			
+			
+			<tr>
+				<td>state：</td>
+				<td><input name="state" /></td>
+			</tr>
+			
+			
+			
+			<tr>
+				<td>deptcode：</td>
+				<td><input name="deptcode" /></td>
+			</tr>
+			
+			
+			
+			
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

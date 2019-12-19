@@ -1,0 +1,74 @@
+10
+
+dir
+1721
+http://vip.svnspot.com/xuanwenchao.intelligentLockERP/trunk/IntelligentLockERP/app/util/http
+http://vip.svnspot.com/xuanwenchao.intelligentLockERP
+
+
+
+2019-06-03T01:07:16.427293Z
+389
+maolx
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+821f2b5f-0e54-46f2-85b8-3c41456a46e9
+
+HttpClientUtil.java
+file
+
+
+
+
+2019-06-12T02:56:12.219000Z
+3137f15634a93e7a8e88f4aa2359952c
+2019-06-03T01:07:16.427293Z
+389
+maolx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19591
+
+builder
+dir
+
+common
+dir
+
+evictor
+dir
+
+exception
+dir
+

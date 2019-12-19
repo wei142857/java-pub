@@ -1,0 +1,66 @@
+import java.lang.reflect.Method;
+
+import net.ListenServer;
+import nets.ListenServerS;
+import play.GlobalSettings;
+import play.Logger;
+import play.mvc.Action;
+import worker.SubPayOrdersOverWorker;
+import worker.exchange.CancleOrderThread;
+import worker.exchange.CleanOverdueBvalueThread;
+import worker.exchange.MonitorProcessThread;
+import worker.exchange.OrderProcessThread;
+import worker.exchange.PreProcessThread;
+import worker.exchange.SendOutBvalueThread;
+
+public class Global extends GlobalSettings {
+
+	public void onStart(play.Application arg0) {
+		
+		startThread();
+		ListenServer ls =new ListenServer(9001);
+		ListenServerS lss =new ListenServerS(9002);
+	}
+	
+	
+	public void startThread(){
+		new PreProcessThread();
+		new OrderProcessThread();
+		new MonitorProcessThread();
+		new CleanOverdueBvalueThread();
+		new CancleOrderThread();
+		new SendOutBvalueThread();
+		new SubPayOrdersOverWorker();
+	}
+
+	public void onStop(play.Application arg0) {
+		
+	}
+	
+	public Action<?> onRequest(play.mvc.Http.Request request, Method method)
+    {
+		 Logger.info("request url..." + request.uri());  
+		 
+		 return super.onRequest(request, method);
+    }
+	
+//	@Override
+//	public play.libs.F.Promise<SimpleResult> onHandlerNotFound(RequestHeader arg0) {
+//		if( arg0.uri()!=null && !arg0.uri().equalsIgnoreCase("/wap") )
+//			Logger.info("onHandlerNotFound"+"==========" + arg0.uri());
+//		return Promise.<SimpleResult>pure( Login.GO_HOME  );
+//	}
+//	
+//
+//	@Override
+//	public play.libs.F.Promise<SimpleResult> onBadRequest(RequestHeader arg0, String arg1) {
+//		return Promise.<SimpleResult>pure( Login.GO_HOME  );
+//	}
+//	@Override
+//	public play.libs.F.Promise<SimpleResult> onError(RequestHeader arg0, java.lang.Throwable arg1) {
+//		Logger.info("onError"+"==========" + arg0.uri()+" : "+arg1.toString());
+//		return Promise.<SimpleResult>pure( Login.GO_HOME );
+//	}
+	
+	
+}

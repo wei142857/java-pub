@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/xuanwenchao.intelligentLockERP/!svn/ver/1298/trunk/IntelligentLockERP/app/pay/properties
+END
+AliPayProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xuanwenchao.intelligentLockERP/!svn/ver/943/trunk/IntelligentLockERP/app/pay/properties/AliPayProperties.java
+END
+WxPayProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xuanwenchao.intelligentLockERP/!svn/ver/1126/trunk/IntelligentLockERP/app/pay/properties/WxPayProperties.java
+END
+WxGzhWapPayProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/xuanwenchao.intelligentLockERP/!svn/ver/1298/trunk/IntelligentLockERP/app/pay/properties/WxGzhWapPayProperties.java
+END
+WxWapPayProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xuanwenchao.intelligentLockERP/!svn/ver/1126/trunk/IntelligentLockERP/app/pay/properties/WxWapPayProperties.java
+END
+WxOAuthPayProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/xuanwenchao.intelligentLockERP/!svn/ver/974/trunk/IntelligentLockERP/app/pay/properties/WxOAuthPayProperties.java
+END

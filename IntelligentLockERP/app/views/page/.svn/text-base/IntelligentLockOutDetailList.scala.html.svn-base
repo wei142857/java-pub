@@ -1,0 +1,825 @@
+
+@htmlhead("出库单明细 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+				height : 505,
+				dataType : "json",
+				dataSource : '/IntelligentLockOutDetail/List',
+				showIndex : false,
+				limit : 13,									
+				errorMsg : "获取数据出错",
+				emptyMsg : "没有数据",
+				
+				//Grid的header配置   ！！！！
+				colModel : [
+						
+						{
+							header : 'idd',
+							name : 'idd',
+							
+								width : 60,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '出库单ID',
+							name : 'outid',
+							
+								width : 60,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '产品ID',
+							name : 'productid',
+							
+								width : 60,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '产品名称',
+							name : 'title',
+							
+								width : 150,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '型号',
+							name : 'model',
+							
+								width : 100,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '规格',
+							name : 'spec',
+							
+								width : 100,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '单价',
+							name : 'price',
+							
+								width : 60,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '总数',
+							name : 'amount',
+							
+								width : 60,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '总价',
+							name : 'totalprice',
+							
+								width : 60,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '出货渠道',
+							name : 'channel',
+							
+								width : 80,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+
+						{
+							header : '类型',
+							name : 'type',
+							
+								width : 60,
+							
+							align : 'center',
+							sort:'clientSide',
+							renderer : function(colValue,rowData, rowIndex){   
+								return colValue=="正常发货"?"<span style='color: green;'>"+colValue+"</span>":"<span style='color: #FF7F00;'>"+colValue+"</span>";
+							}
+						},
+						
+						{
+							header : '外部销售平台订单号',
+							name : 'salenumber',
+							
+								width : 140,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '备注',
+							name : 'remark',
+							
+								width : 100,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '添加时间',
+							name : 'addtime',
+							
+								width : 180,
+							
+							align : 'center',
+							sort:'clientSide'
+							
+							,renderer : function(colValue) {   
+                                 return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+                            }
+						},
+						
+						{
+							header : '操作人',
+							name : 'operator',
+							
+								width : 100,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						{
+							header : '操作号',
+							name : 'operatornumber',
+							
+								width : 150,
+							
+							align : 'center',
+							sort:'clientSide'
+						},
+						
+						/* {header : '操作', name : 'operation',width:'autoExpand', align:'center', 
+				     		 renderer:function(colValue, rowData, rowIndex){
+				     			 // 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+				     			 var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div><div class='delete'>删除</div></div>";
+				     			 var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+				     			 return menu + btn;
+					         }}  */
+					         
+						{
+					        header : '操作',
+					     	name : 'operation',
+					     	width:'autoExpand',
+					     	align:'center', 
+			     		 	renderer:function(colValue, rowData, rowIndex){
+				     			// 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+				     			var menu = "<div id='"+rowData.idd+"' class='op-menu'><div class='edit'>编辑</div></div>";
+				     			var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+				     			return menu + btn;
+				         	}
+					    }],
+						onRefresh: function(nowPage, pageRecords,event){
+	                		var $grid = $('#mygrid'); 
+	                	    $grid.find("a.op-btn").each(function(){
+	                		var $btn = $(this); 
+	                		
+	                		// 初始化表格里面的操作按钮 
+	                		$btn.omButton({
+	                			icons : {left : '/public/images/op-btn-icon.png'},
+	                			width : 75,
+	                			onClick : function(event){                				
+	                				var v = $grid.find("div.op-menu:visible");
+	                				var $opMenu = $(event.currentTarget.previousSibling);
+	                				// 重新计算菜单的位置
+	                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+	                				if($opMenu.css("display") == "none"){
+	                					$opMenu.show().css({left:left});
+	                				} else{
+	                					$opMenu.hide();
+	                				}
+	                				v.hide();
+	                				event.stopPropagation();
+	                				return false;
+	                			}
+	                		});
+	                	});
+
+	                	// 绑定表格操作按钮菜单的事件 ！！！！
+	                	$grid.find("div.op-menu").each(function(){
+	                		var $menu = $(this);
+	                		var rowindex=$menu.id;
+	                		$menu.hide();
+	                		$menu.find(".edit").click(function(){
+								isAdd = false;
+								var index = $(this).parent().attr('id');
+				                showDialog('修改',index);//显示dialog
+							});
+	                		
+	                		/* $menu.find(".delete").click(function(){
+								var index = $(this).parent().attr('id');
+								doAsk('确定删除吗？' , delit , index );
+							}); */
+	                		
+	                	});				
+	               }
+			});
+			//[修改]dialog初始化
+			var dialog = $("#dialog-form").omDialog({
+				width : 460,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"取消" : function() {
+						$("#dialog-form").omDialog("close");//关闭dialog
+					}
+				}
+			});
+			
+			//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+			var showDialog = function(title, idd) {
+				if(idd!=null){
+					//edit info;
+					var uri = "/IntelligentLockOutDetail/Get/"+idd;
+					$.get(uri,function(response){
+			            if(response!=null){
+							
+							$("input[name='idd']", dialog).val(response.idd);
+							
+							$("input[name='operatornumber']", dialog).val(response.operatornumber);
+							
+							$("input[name='productid']", dialog).val(response.productid);
+						
+							$("input[name='title']", dialog).val(response.title);
+						
+							$("input[name='model']", dialog).val(response.model);
+						
+							$("input[name='spec']", dialog).val(response.spec);
+							
+							$("input[name='amount']", dialog).val(response.amount);
+						
+							$("input[name='price']", dialog).val(response.price);
+						
+							$("input[name='totalprice']", dialog).val(response.totalprice);
+							
+							$("input[name='channel']", dialog).val(response.channel);
+							
+							$("input[name='type']", dialog).val(response.type);
+						
+							$("input[name='salenumber']", dialog).val(response.salenumber);
+						
+							$("input[name='remark']", dialog).val(response.remark);
+						
+							//$("input[name='addtime']", dialog).val(response.addtime);
+							
+							$("input[name='addtime']", dialog).val(fmtDate(new Date(response.addtime),"yyyy-MM-dd"));
+						
+							$("input[name='operator']", dialog).val(response.operator);
+							
+							$("input[name='outid']", dialog).val(response.outid);
+							
+							//除备注以外的所有信息不允许修改
+							$("input[name='operatornumber']", dialog).attr("readonly","readonly");
+							
+							$("input[name='productid']", dialog).attr("readonly","readonly");
+						
+							$("input[name='title']", dialog).attr("readonly","readonly");
+						
+							$("input[name='model']", dialog).attr("readonly","readonly");
+						
+							$("input[name='spec']", dialog).attr("readonly","readonly");
+							
+							$("input[name='amount']", dialog).attr("readonly","readonly");
+						
+							$("input[name='price']", dialog).attr("readonly","readonly");
+						
+							$("input[name='totalprice']", dialog).attr("readonly","readonly");
+							
+							$("input[name='channel']", dialog).attr("readonly","readonly");
+							
+							$("input[name='type']", dialog).attr("readonly","readonly");
+						
+							$("input[name='salenumber']", dialog).attr("readonly","readonly");
+						
+							$("input[name='addtime']", dialog).attr("readonly","readonly");
+						
+							$("input[name='operator']", dialog).attr("readonly","readonly");
+							
+							$("input[name='outid']", dialog).attr("readonly","readonly");
+			         	}
+					});
+				}
+				dialog.omDialog("option", "title", title);
+				dialog.omDialog("open");//显示dialog 
+			};
+			
+			//[修改]dialog中点提交按钮时将数据提交到后台并执行modify操作  ！！！！
+			var submitDialog = function() {
+				var submitData = {
+					idd : $("input[name='idd']", dialog).val()	
+					,remark : $("input[name='remark']", dialog).val()
+				};
+				$.post('/IntelligentLockOutDetail/Modify', submitData, function() {
+					$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+					$.omMessageTip.show({
+						title : "操作成功",
+						content : "修改数据成功",
+						timeout : 1500
+					});
+					$("#dialog-form").omDialog("close"); //关闭dialog
+				});
+			};
+			
+			//其他iframe 对话框 初始化-->
+			$( "#dialog-modal").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+			
+	        $( "#user_auth_form").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+	        
+	        $("#user_add_form").omDialog({
+	        	autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+			});	
+	        
+	       /*  $.post('/IntelligentLockOut/Upload',  function() {
+				$('#mygrid').omGrid('reload', 1);//如果出库单中点击导入Excel按钮后就会重新加载列表
+			} */
+			
+	       /*  var uploadDialog = $("#upload-form").omDialog({
+				width : 500,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitUploadDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"关闭" : function() {
+						$("#upload-form").omDialog("close");//关闭dialog
+					}
+				}
+			});
+			
+			var submitUploadDialog = function(){
+				$("#upload-form").omDialog("close");
+				//var uploadidd = $("input[name='uploadidd']").val();
+				var uploadidd = '';
+				var url = "/IntelligentLockOutDetail/Upload";
+		        $.ajaxFileUpload({  
+		            url:url,  
+		            secureuri:false,  
+		            fileElementId:'file_excel',//file标签的id  
+		            dataType: 'json',//返回数据的类型  
+		            data:{'uploadidd':uploadidd},//一同上传的数据  
+		            success: function (data, status) { 
+		            	console.log(data);
+		            	$.omMessageTip.show({
+							title : "操作成功",
+							content : "成功导入"+data+"条",
+							timeout : 1500
+						}); 
+		            },  
+		            error: function (data, status, e) {  
+		                alert(e);  
+		            }  
+		        });  
+			}; */
+			
+			/* $('#import').bind('click', function() {
+				$("#uploadForm")[0].reset();
+				
+             			//对应于指定目标的上传
+             			var index = $(this).parent().attr('id');
+             			$("input[name='uploadidd']").val(index); 
+             			
+             			uploadDialog.omDialog("option", "title", "导入（excel）");
+             			uploadDialog.omDialog("open");
+            }); */
+			
+			//搜索按钮加图片
+			var searchPanel = $("#search-panel").omPanel({
+	            	title : "工具栏",collapsible:true
+	            });
+			 $('span#button-search').omButton({
+          	    icons : {left : '/public/images/search.png'},width : 70
+       	 	    });
+			 $('span#button-noSearch').omButton({
+	          	    icons : {left : '/public/images/searchNo.png'},width : 70
+	       	 	});
+			 /* $('span#add').omButton({
+	          	    icons : {},width : 70
+	       	 	}); */
+			 
+			 /* $('span#import').omButton({
+	          	    icons : {},width : 110
+	       	 	}); */
+			 
+			 $('span#button-export').omButton({
+	          	   	width : 90
+	       	 });
+			 
+			//下载Excel格式
+	       	$('span#button-export').bind('click', function(e){
+	       		var searchStr='';
+                
+					searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+				
+					searchStr += 'operatornumber='+encodeURI($("input[name='operatornumber']", searchPanel).val())+"&";
+				
+					searchStr += 'productid='+encodeURI($("input[name='productid']", searchPanel).val())+"&";
+				
+					searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+				
+					searchStr += 'model='+encodeURI($("input[name='model']", searchPanel).val())+"&";
+				
+					searchStr += 'spec='+encodeURI($("input[name='spec']", searchPanel).val())+"&";
+				
+					searchStr += 'amount='+encodeURI($("input[name='amount']", searchPanel).val())+"&";
+				
+					searchStr += 'price='+encodeURI($("input[name='price']", searchPanel).val())+"&";
+				
+					searchStr += 'totalprice='+encodeURI($("input[name='totalprice']", searchPanel).val())+"&";
+					
+					searchStr += 'channel='+encodeURI($("input[name='channel']", searchPanel).val())+"&";
+					
+					searchStr += 'type='+encodeURI($("select[name='type']", searchPanel).val())+"&";
+				
+					searchStr += 'salenumber='+encodeURI($("input[name='salenumber']", searchPanel).val())+"&";
+				
+					searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+				
+					searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+				
+					searchStr += 'operator='+encodeURI($("input[name='operator']", searchPanel).val())+"&";
+				
+					searchStr += 'outid='+encodeURI($("input[name='outid']", searchPanel).val())+"&";
+				
+                var url = '/IntelligentLockOutDetail/List?export=1&'+searchStr;
+                window.location.href = url;
+	        });	
+			
+	      	//点击按钮 将下拉选变为可以选择
+	       	/* $('span#xianshi').bind('click', function(e){
+	       		$("#type").attr("disabled", false);
+       	 	}); */						
+			
+			//搜索绑定 =》grid ！！！！
+       	 	$('span#button-search').bind('click', function(e) {
+                var searchStr='';
+                
+					searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+				
+					//searchStr += 'operatornumber='+encodeURI($("input[name='operatornumber']", searchPanel).val())+"&";
+				
+					searchStr += 'productid='+encodeURI($("input[name='productid']", searchPanel).val())+"&";
+				
+					searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+				
+					searchStr += 'model='+encodeURI($("input[name='model']", searchPanel).val())+"&";
+				
+					searchStr += 'spec='+encodeURI($("input[name='spec']", searchPanel).val())+"&";
+				
+					//searchStr += 'amount='+encodeURI($("input[name='amount']", searchPanel).val())+"&";
+				
+					//searchStr += 'price='+encodeURI($("input[name='price']", searchPanel).val())+"&";
+				
+					//searchStr += 'totalprice='+encodeURI($("input[name='totalprice']", searchPanel).val())+"&";
+					
+					searchStr += 'channel='+encodeURI($("input[name='channel']", searchPanel).val())+"&";
+		
+					/* var typeAttr = $("#type").attr("disabled");
+					if(typeAttr==false){
+						searchStr += 'type='+encodeURI($("select[name='type']", searchPanel).val())+"&";
+					} */
+					
+					searchStr += 'type='+encodeURI($("select[name='type']", searchPanel).val())+"&";
+		
+					searchStr += 'salenumber='+encodeURI($("input[name='salenumber']", searchPanel).val())+"&";
+				
+					searchStr += 'remark='+encodeURI($("input[name='remark']", searchPanel).val())+"&";
+				
+					//searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+				
+					searchStr += 'operator='+encodeURI($("input[name='operator']", searchPanel).val())+"&";
+				
+					searchStr += 'outid='+encodeURI($("input[name='outid']", searchPanel).val())+"&";
+				
+                $('#mygrid').omGrid("setData", '/IntelligentLockOutDetail/List?'+searchStr );
+            });
+       	 
+			/*
+			$("input[name='idd']", searchPanel).omCombo({
+           	 dataSource : '/IntelligentLockOutDetail/All',
+                optionField : function(data, index) {
+                    return data.idd;
+                },
+                valueField : 'idd',
+                inputField : 'idd'
+            });
+			*/
+		
+			/* $("input[name='addtime']", searchPanel).omCalendar({
+                dateFormat : "yy-mm-dd"
+            });
+			$("input[name='addtime']", dialog).omCalendar({
+                dateFormat : "yy-mm-dd"
+            }); */
+ 			
+       	    
+			//不搜索 =》grid
+       	 	$('span#button-noSearch').bind('click', function(e) {
+                   $('#mygrid').omGrid("setData", '/IntelligentLockOutDetail/List?key=');
+            });	
+            
+             // 点击页面其他地方的时候隐藏表格里面的菜单
+            $("body").click(function(){
+				$("#mygrid").find("div.op-menu:visible").hide();
+            });		
+
+		});	
+	
+       //删除 -- ajax提交
+       /* function delit( val ) {
+    	    var uri = "/IntelligentLockOutDetail/Delete/"+val;
+			$.get(uri,function(responseText){
+            	if(responseText=="操作成功"){
+            		$('#mygrid').omGrid('reload');
+            		$.omMessageTip.show({
+						title : "操作成功",
+						content : "删除数据成功",
+						timeout : 1500
+					});
+            	}
+            	else
+            		alert(responseText);
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   } */
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+		
+		<!-- <span class="label">操作号：</span> 
+		<input name="operatornumber" id="operatornumber" /> -->
+		
+		<span class="label">产品ID：</span> 
+		<input name="productid" id="productid" />
+		
+		<span class="label">产品名称：</span> 
+		<input name="title" id="title" />
+		
+		<span class="label">型号：</span> 
+		<input name="model" id="model" />
+		
+		<span class="label">规格：</span> 
+		<input name="spec" id="spec" />
+		
+		<!-- <span class="label">总数：</span> -->
+		<input name="amount" id="amount" style="display:none" />
+		
+		<!-- <span class="label">单价：</span> -->
+		<input name="price" id="price" style="display:none" />
+		
+		<!-- <span class="label">总价：</span> -->
+		<input name="totalprice" id="totalprice" style="display:none" /> 
+		
+		<span class="label">出货渠道：</span> 
+		<input name="channel" id="channel" />
+		
+		<span class="label">类型：</span>
+		<select name = "type" id = "type" >	<!-- disabled = "disabled" -->
+			<option value ="0">全部</option>
+		 	<option value ="正常发货">正常发货</option>
+		  	<option value ="换货发货">换货发货</option>
+		  	<option value ="山西代售">山西代售</option>
+		  	<option value ="质检">质检</option>
+		  	<option value ="拍照">拍照</option>
+		</select> 
+		<!-- <span id="xianshi">显示下拉框</span> -->
+		
+		<span class="label">外部销售平台订单号：</span> 
+		<input name="salenumber" id="salenumber" />
+		
+		<span class="label">备注：</span> 
+		<input name="remark" id="remark" />
+		
+		<!-- <span class="label">添加时间：</span> 
+		<input name="addtime" id="addtime" /> -->
+		
+		<span class="label">操作人：</span> 
+		<input name="operator" id="operator" />
+		
+		<span class="label">出库单ID：</span> 
+		<input name="outid" id="outid" />
+		
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<!-- <span id="add">新增</span> -->
+		<!-- <span id="import">导入（Excel97）</span> -->
+		<span id="button-export">下载Excel格式</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+<!-- <div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+	<table>
+		<tr>
+			<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+		</tr>
+		
+	</table>
+	</form>
+</div> -->
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作号：</td>
+				<td><input name="operatornumber" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产品ID：</td>
+				<td><input name="productid" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产品名称：</td>
+				<td><input name="title" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型号：</td>
+				<td><input name="model" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;规格：</td>
+				<td><input name="spec" /></td>
+			</tr>
+		
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总数：</td>
+				<td><input name="amount" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单价：</td>
+				<td><input name="price" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总价：</td>
+				<td><input name="totalprice" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;出货渠道：</td>
+				<td><input name="channel" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型：</td>
+				<td><input name="type" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;外部销售平台订单号：</td>
+				<td><input name="salenumber" /></td>
+			</tr>
+		
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注：</td>
+				<td><input name="remark" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加时间：</td>
+				<td><input name="addtime" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作人：</td>
+				<td><input name="operator" /></td>
+			</tr>
+		
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;出库单ID：</td>
+				<td><input name="outid" /></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

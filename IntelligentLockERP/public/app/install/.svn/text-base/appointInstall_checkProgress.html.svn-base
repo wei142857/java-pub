@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>司铠智能</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		 .row_top{
+			margin-bottom: 80px;
+		}
+		.measure_fanhui{
+			border-bottom: 1px solid #ccc;
+			background-color: #f8f8f8;
+			position: absolute;
+			font-size: 16px;
+			font-weight: bold;
+			background-color: #f8f8f8;
+			width: 100%;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+			left: 0px;
+		}
+		.fanhui_img{
+		    position: absolute;
+		    width: 36px;
+		    height: 36px;
+		    left: 8px;
+		    top: 5px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.ul_style{				/* 无序列表的样式 */
+			padding-left: 15px;
+    		border-left: 1px dashed #ccc;
+    		margin-bottom: 0px;
+    		height: auto;
+    		width: 95%;
+    		color: #ccc;
+		}
+		.first_logo{				/* 第一个li 的红色圆点 */
+			position: absolute;
+	       	width: 21px;
+	        height: 21px;
+			left: -36px;
+			top: 20px;
+		}
+		.li_style{				/* ul下的 其余li 的复用样式 */
+			position: relative;
+			font-size: 40px;
+    		left: 10px;
+    		top: -24px;
+		}
+		.time_div{				/* ul下的 时间的样式 */
+			color: #ccc;
+			font-size: 16px;
+			height: 50px;
+		}
+		.time_span{				/* ul下的 时间的SPAN样式 */	
+		    position: relative;
+		    top: -6px;
+		}
+		.txt_div_black{				/* ul下的 文本的样式(黑色字体) */
+			color: black; 
+			font-size: 13px;
+			padding-bottom: 15px;
+		}
+		.txt_div_ccc{				/* ul下的 文本的样式(灰色字体) */
+			font-size: 13px;
+			padding-bottom: 15px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container" id="progress_div">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<img alt="logo" src="/public/app/install/images/fanhui.png" class="fanhui_img">
+				<span>查看进度</span>
+			</div>
+		</div>
+		<div class="row" v-for="(site,index) in sites">
+			<div class="col-xs-12 col-md-12">
+				<ul class="ul_style">
+					<li class="li_style">
+						<div v-if="index=='0'">
+							<img src="/public/app/install/images/dq.png" class="first_logo" />
+						</div>
+						<div class="time_div">
+							<span class="time_span">{{site.addtime}}</span>
+						</div>
+						<div class="txt_div_black" v-if="index=='0'">
+							<span>{{site.content}}</span>
+						</div>
+						<div class="txt_div_ccc" v-else>
+							<span>{{site.content}}</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<script type="text/javascript">
+		//从url中获取参数
+	    var getQuery = function(name) {
+	    	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	    	var r = window.location.search.substr(1).match(reg);
+	    	if (r != null)
+	    		return (r[2]);
+	    	return null;
+	    };
+	    var vm=new Vue({
+		    el: "#progress_div",
+		    data: {
+		        sites: []
+		    },
+		    mounted:function(){
+		        //需要执行的方法可以在mounted中进行触发，其获取的数据可以赋到data中后，可以放在前面进行渲染
+		        this.showData();
+		    },
+		    methods:{
+		    	showData:function () {
+		            jQuery.ajax({
+		                url: "/v1/appointSelInsOrderPro",
+		                data: {state: getQuery("state"),oid: getQuery("idd")},
+		                type: 'get',
+		              	dataType:"json",
+		              	success: function (res){
+		              		console.log(res);
+		              		if(res.code=="0"){
+		              			for(var i=0;i<res.data.length;i++){
+				                  	vm.sites.push(res.data[i]);
+				                  	vm.sites[i].addtime = formatDate(vm.sites[i].addtime,'YYYY-MM-DD H:m:s');
+				              	}
+		              		}else if(res.code=="1"||res.code=="2"){
+		              			window.location.href="/public/app/install/appointInstall_login.html";
+		              		}
+		               }
+		           })
+		        }
+		    }
+	    })
+		//将时间戳转换为 指定格式的字符串
+	    function formatDate(time, formatStr) {
+	        let date = new Date(time);
+	        let Y = date.getFullYear();
+	        let M = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+	        let D = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate();
+	        let h = date.getHours() < 10 ? '0' + (date.getHours()) : date.getHours();
+	        let m = date.getMinutes() <10 ? '0' + (date.getMinutes()) : date.getMinutes();
+	        let s = date.getSeconds() <10 ? '0' + (date.getSeconds()) : date.getSeconds();
+	        formatStr = formatStr || 'YYYY-MM-DD H:m:s';
+	        return formatStr.replace(/YYYY|MM|DD|H|m|s/ig, function (matches) {
+	            return ({
+	                YYYY: Y,
+	                MM: M,
+	                DD: D,
+	                H: h,
+	                m: m,
+	                s: s
+	            })[matches];
+	        });
+	    }
+		window.onload=function(){
+			$(".fanhui_img").click(function(){
+				if(getQuery("state")=="102"){
+					window.location.href="/public/app/install/appointInstall_installOrder.html";
+				}else if(getQuery("state")=="103"){
+					window.location.href="/public/app/install/appointMeasure_measureOrder.html";
+				}
+			});
+		}
+	</script>
+</body>
+</html>

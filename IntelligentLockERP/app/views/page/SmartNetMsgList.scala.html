@@ -1,0 +1,1428 @@
+
+@(functionItem:List[FunctionItem]) @htmlhead("网络消息 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(	function() {
+		//枚举初始化
+		
+			
+		
+			
+				var netmsg_tagMap = {};
+				$.get( "/SysDict/Map/netmsg_tag" ,function(responseText){ 
+					netmsg_tagMap =  responseText; 
+		   		});
+			
+		
+			
+				var netmsg_typeMap = {};
+				$.get( "/SysDict/Map/netmsg_type" ,function(responseText){ 
+					netmsg_typeMap =  responseText; 
+		   		});
+			
+		
+			
+		
+			
+				var common_boolMap = {};
+				$.get( "/SysDict/Map/common_bool" ,function(responseText){ 
+					common_boolMap =  responseText; 
+		   		});
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+		
+			
+				var common_boolMap = {};
+				$.get( "/SysDict/Map/common_bool" ,function(responseText){ 
+					common_boolMap =  responseText; 
+		   		});
+			
+		
+			
+		
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+											height : 505,
+											dataType : "json",
+											dataSource : '/SmartNetMsg/List',
+											showIndex : false,
+											limit : 13,									
+											errorMsg : "获取数据出错",
+											emptyMsg : "没有数据",
+											
+											//Grid的header配置   ！！！！
+											colModel : [
+													
+													{
+														header : 'ID',
+														name : 'idd',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '通信标识',
+														name : 'tag',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+															,renderer : function(colValue) {   
+					                                    		return netmsg_tagMap[colValue];
+					                                 		}
+														
+													},
+													
+													{
+														header : '类型',
+														name : 'type',
+														width : 60,
+														align : 'center',
+														sort:'clientSide'
+													},
+													
+													{
+														header : '时间',
+														name : 'dt',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '是否处理',
+														name : 'dealed',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+															,renderer : function(colValue) {   
+					                                    		return common_boolMap[colValue];
+					                                 		}
+														
+													},
+													
+													{
+														header : '接收时间',
+														name : 'dealtime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '锁',
+														name : 'lockid',
+														
+														
+														
+															width : 130,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '长度',
+														name : 'len',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '传输ID',
+														name : 'mid',
+														
+														
+															width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '内容',
+														name : 'msg',
+														
+														
+														
+														width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													{
+														header : '说明',
+														name : 'ext',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													},
+													
+													{
+														header : '回复时间',
+														name : 'replytime',
+														
+															width : 130,
+														
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+															,renderer : function(colValue) {   
+					                                    		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+					                                 		}
+														
+														
+													},
+													
+													{
+														header : '已回复',
+														name : 'reply',
+														
+														
+														width : 60,
+														
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+															,renderer : function(colValue) {   
+					                                    		return common_boolMap[colValue];
+					                                 		}
+														
+													},
+													
+													{
+														header : '回复的消息',
+														name : 'replymsg',
+														
+														
+														
+															width : 100,
+														
+														
+														align : 'center',
+														sort:'clientSide'
+														
+														
+													} ],
+											         
+													onRefresh: function(nowPage, pageRecords,event){
+								                		var $grid = $('#mygrid'); 
+								                	    $grid.find("a.op-btn").each(function(){
+								                		var $btn = $(this); 
+								                		
+								                		// 初始化表格里面的操作按钮 
+								                		$btn.omButton({
+								                			icons : {left : '/public/images/op-btn-icon.png'},
+								                			width : 75,
+								                			onClick : function(event){                				
+								                				var v = $grid.find("div.op-menu:visible");
+								                				var $opMenu = $(event.currentTarget.previousSibling);
+								                				// 重新计算菜单的位置
+								                				var left = $btn.offset().left - $grid.offset().left - 80 + "px";
+								                				if($opMenu.css("display") == "none"){
+								                					$opMenu.show().css({left:left});
+								                				} else{
+								                					$opMenu.hide();
+								                				}
+								                				v.hide();
+								                				event.stopPropagation();
+								                				return false;
+								                			}
+								                		});
+								                	});
+
+								                	// 绑定表格操作按钮菜单的事件 ！！！！
+								                	$grid.find("div.op-menu").each(function(){
+								                		var $menu = $(this);
+								                		var rowindex=$menu.id;
+								                		$menu.hide();
+								                		$menu.find(".edit").click(function(){
+															isAdd = false;
+															var index = $(this).parent().attr('id');
+											                showDialog('修改',index);//显示dialog
+														});
+								                		
+								                		$menu.find(".delete").click(function(){
+															var index = $(this).parent().attr('id');
+															doAsk('确定删除吗？' , delit , index );
+														});
+								                		
+								                	});				
+								               }
+										});
+		
+						//[新增/修改]dialog初始化
+						var dialog = $("#dialog-form").omDialog({
+							width : 460,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"取消" : function() {
+									$("#dialog-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						$('#add').bind('click', function() {
+			                isAdd = true;
+			                showDialog('新增',null);//显示dialog
+			            });
+						
+						//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+						var showDialog = function(title, idd) {
+							validator.resetForm();
+							if(idd!=null){
+								//edit info;
+								var uri = "/SmartNetMsg/Get/"+idd;
+								$.get(uri,function(response){
+						            if(response!=null){
+										$("input[name='idd']", dialog).val(response.idd);
+										
+											$("input[name='idd']", dialog).val(response.idd);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='tag']", dialog).val(response.tag);
+											
+											
+											
+											
+												$("input[name='tag']", dialog).omCombo("value",response.tag);
+											
+											
+											
+										
+											$("input[name='type']", dialog).val(response.type);
+											
+											
+											
+											
+												$("input[name='type']", dialog).omCombo("value",response.type);
+											
+											
+											
+										
+											$("input[name='dt']", dialog).val(response.dt);
+											
+											
+												$("input[name='dt']", dialog).val(fmtDate(new Date(response.dt),"yyyy-MM-dd"));
+											
+											
+											
+											
+											
+										
+											$("input[name='dealed']", dialog).val(response.dealed);
+											
+											
+											
+											
+												$("input[name='dealed']", dialog).omCombo("value",response.dealed);
+											
+											
+											
+										
+											$("input[name='dealtime']", dialog).val(response.dealtime);
+											
+											
+												$("input[name='dealtime']", dialog).val(fmtDate(new Date(response.dealtime),"yyyy-MM-dd"));
+											
+											
+											
+											
+											
+										
+											$("input[name='lockid']", dialog).val(response.lockid);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='len']", dialog).val(response.len);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='mid']", dialog).val(response.mid);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='msg']", dialog).val(response.msg);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='ext']", dialog).val(response.ext);
+											
+											
+											
+											
+											
+											
+										
+											$("input[name='replytime']", dialog).val(response.replytime);
+											
+											
+												$("input[name='replytime']", dialog).val(fmtDate(new Date(response.replytime),"yyyy-MM-dd"));
+											
+											
+											
+											
+											
+										
+											$("input[name='reply']", dialog).val(response.reply);
+											
+											
+											
+											
+												$("input[name='reply']", dialog).omCombo("value",response.reply);
+											
+											
+											
+										
+											$("input[name='replymsg']", dialog).val(response.replymsg);
+											
+											
+											
+											
+											
+											
+										
+						         }
+								});
+							}
+							dialog.omDialog("option", "title", title);
+							dialog.omDialog("open");//显示dialog 
+						};
+						
+						//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+						var submitDialog = function() {
+							if (validator.form()) {
+								var submitData = {
+									operation : isAdd ? 'add' : 'modify',
+									idd : $("input[name='idd']",dialog).val(),
+									
+										
+											
+												idd : $("input[name='idd']", dialog).val()	
+											
+											
+										
+									
+										
+											
+											
+												,tag : $("input[name='tag']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,type : $("input[name='type']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,dt : $("input[name='dt']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,dealed : $("input[name='dealed']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,dealtime : $("input[name='dealtime']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,lockid : $("input[name='lockid']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,len : $("input[name='len']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,mid : $("input[name='mid']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,msg : $("input[name='msg']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,ext : $("input[name='ext']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,replytime : $("input[name='replytime']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,reply : $("input[name='reply']", dialog).val()
+											
+										
+									
+										
+											
+											
+												,replymsg : $("input[name='replymsg']", dialog).val()
+											
+										
+									
+								};
+
+								$.post('/SmartNetMsg/Modify', submitData, function() {
+									if (isAdd) {
+										$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "添加数据成功",
+											timeout : 1500
+										});
+									} else {
+										$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+										$.omMessageTip.show({
+											title : "操作成功",
+											content : "修改数据成功",
+											timeout : 1500
+										});
+									}
+									$("#dialog-form").omDialog("close"); //关闭dialog
+								});
+							}
+						};
+
+						// 对增加/修改表单的校验设置 ！！！！
+						var validator = $('#ipForm').validate({
+							rules : {
+								
+									
+									
+								
+									
+										tag : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+									
+								
+									
+									
+										,
+										type : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										dt : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										dealed : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										dealtime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										lockid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										len : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										mid : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										msg : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										ext : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										replytime : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										reply : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+									
+									
+										,
+										replymsg : {
+											required : true,
+		                        			maxlength : 100
+										}
+									
+								
+							},
+							messages : {
+								
+									
+									
+								
+									
+										tag : {
+											required : "通信标识不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+									
+								
+									
+									
+										,
+										type : {
+											required : "类型不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										dt : {
+											required : "时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										dealed : {
+											required : "是否处理不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										dealtime : {
+											required : "注册时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										lockid : {
+											required : "锁不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										len : {
+											required : "长度不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										mid : {
+											required : "传输ID不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										msg : {
+											required : "内容不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										ext : {
+											required : "说明不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										replytime : {
+											required : "回复时间不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										reply : {
+											required : "回复的结果不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+									
+									
+										,
+										replymsg : {
+											required : "回复的消息不能为空",
+											maxlength : '长度不能超过100个字符'
+										}
+									
+								
+							}
+						});
+						
+						//其他iframe 对话框 初始化-->
+						$( "#dialog-modal").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+						
+				        $( "#user_auth_form").omDialog({
+				            autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+				        });
+				        
+				        $("#user_add_form").omDialog({
+				        	autoOpen: false,
+				            width:535,
+				            height: 465,
+				            modal: true
+						});	
+				        
+				        var uploadDialog = $("#upload-form").omDialog({
+							width : 500,
+							autoOpen : false,
+							modal : true,
+							resizable : false,
+							buttons : {
+								"提交" : function() {
+									submitUploadDialog();
+									return false; //阻止form的默认提交动作
+								},
+								"关闭" : function() {
+									$("#upload-form").omDialog("close");//关闭dialog
+								}
+							}
+						});
+						
+						var submitUploadDialog = function(){
+							$("#upload-form").omDialog("close");
+							//var uploadidd = $("input[name='uploadidd']").val();
+							var uploadidd = '';
+							var url = "/SmartNetMsg/Upload";
+					        $.ajaxFileUpload({  
+					            url:url,  
+					            secureuri:false,  
+					            fileElementId:'file_excel',//file标签的id  
+					            dataType: 'json',//返回数据的类型  
+					            data:{uploadidd:uploadidd},//一同上传的数据  
+					            success: function (data, status) { 
+					            	console.log(data);
+					            	$.omMessageTip.show({
+										title : "操作成功",
+										content : "成功导入"+data+"条",
+										timeout : 1500
+									}); 
+					            },  
+					            error: function (data, status, e) {  
+					                alert(e);  
+					            }  
+					        });  
+						};
+						
+						$('#import').bind('click', function() {
+							$("#uploadForm")[0].reset();
+                			/*对应于指定目标的上传
+                			var index = $(this).parent().attr('id');
+                			$("input[name='uploadidd']").val(index); 
+                			*/
+                			uploadDialog.omDialog("option", "title", "导入（excel）");
+                			uploadDialog.omDialog("open");
+			            });
+						
+						//搜索按钮加图片
+						var searchPanel = $("#search-panel").omPanel({
+				            	title : "工具栏",collapsible:true
+				            });
+						 $('span#button-search').omButton({
+			          	    icons : {left : '/public/images/search.png'},width : 70
+			       	 	    });
+						 $('span#button-noSearch').omButton({
+				          	    icons : {left : '/public/images/searchNo.png'},width : 70
+				       	 	});
+						 $('span#add').omButton({
+				          	    icons : {},width : 70
+				       	 	});
+						 
+						 $('span#import').omButton({
+				          	    icons : {},width : 110
+				       	 	});
+						 
+						 $('span#button-export').omButton({
+				          	   	width : 90
+				       	 });
+						 
+						//下载Excel格式
+				       	$('span#button-export').bind('click', function(e){
+				       		var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'tag='+encodeURI($("input[name='tag']", searchPanel).val())+"&";
+							
+								searchStr += 'type='+encodeURI($("input[name='type']", searchPanel).val())+"&";
+							
+								searchStr += 'dt='+encodeURI($("input[name='dt']", searchPanel).val())+"&";
+							
+								searchStr += 'dealed='+encodeURI($("input[name='dealed']", searchPanel).val())+"&";
+							
+								searchStr += 'dealtime='+encodeURI($("input[name='dealtime']", searchPanel).val())+"&";
+							
+								searchStr += 'lockid='+encodeURI($("input[name='lockid']", searchPanel).val())+"&";
+							
+								searchStr += 'len='+encodeURI($("input[name='len']", searchPanel).val())+"&";
+							
+								searchStr += 'mid='+encodeURI($("input[name='mid']", searchPanel).val())+"&";
+							
+								searchStr += 'msg='+encodeURI($("input[name='msg']", searchPanel).val())+"&";
+							
+								searchStr += 'ext='+encodeURI($("input[name='ext']", searchPanel).val())+"&";
+							
+								searchStr += 'replytime='+encodeURI($("input[name='replytime']", searchPanel).val())+"&";
+							
+								searchStr += 'reply='+encodeURI($("input[name='reply']", searchPanel).val())+"&";
+							
+								searchStr += 'replymsg='+encodeURI($("input[name='replymsg']", searchPanel).val())+"&";
+							
+			                var url = '/SmartNetMsg/List?export=1&'+searchStr;
+			                window.location.href = url;
+				        });	
+						
+						//搜索绑定 =》grid ！！！！
+			       	 	$('span#button-search').bind('click', function(e) {
+			                var searchStr='';
+			                
+								searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+							
+								searchStr += 'tag='+encodeURI($("input[name='tag']", searchPanel).val())+"&";
+							
+								searchStr += 'type='+encodeURI($("input[name='type']", searchPanel).val())+"&";
+							
+								searchStr += 'dt='+encodeURI($("input[name='dt']", searchPanel).val())+"&";
+							
+								searchStr += 'dealed='+encodeURI($("input[name='dealed']", searchPanel).val())+"&";
+							
+								searchStr += 'dealtime='+encodeURI($("input[name='dealtime']", searchPanel).val())+"&";
+							
+								searchStr += 'lockid='+encodeURI($("input[name='lockid']", searchPanel).val())+"&";
+							
+								searchStr += 'len='+encodeURI($("input[name='len']", searchPanel).val())+"&";
+							
+								searchStr += 'mid='+encodeURI($("input[name='mid']", searchPanel).val())+"&";
+							
+								searchStr += 'msg='+encodeURI($("input[name='msg']", searchPanel).val())+"&";
+							
+								searchStr += 'ext='+encodeURI($("input[name='ext']", searchPanel).val())+"&";
+							
+								searchStr += 'replytime='+encodeURI($("input[name='replytime']", searchPanel).val())+"&";
+							
+								searchStr += 'reply='+encodeURI($("input[name='reply']", searchPanel).val())+"&";
+							
+								searchStr += 'replymsg='+encodeURI($("input[name='replymsg']", searchPanel).val())+"&";
+							
+			                $('#mygrid').omGrid("setData", '/SmartNetMsg/List?'+searchStr );
+			            });
+			       	 
+						
+			 			
+			 				/*
+			 				$("input[name='idd']", searchPanel).omCombo({
+				            	 dataSource : '/SmartNetMsg/All',
+					                optionField : function(data, index) {
+					                    return data.idd;
+					                },
+					                valueField : 'idd',
+					                inputField : 'idd'
+				            });
+			 				*/
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+		 					$("input[name='tag']", dialog).omCombo({
+				            	 dataSource : '/SysDict/GetDicts/netmsg_tag',
+				            	 optionField : function(data, index) {
+					                    return data.dictName;
+					                },
+					             valueField : 'dictId',
+				            });
+						
+						
+			 			
+			 			
+			 			
+		 					$("input[name='type']", dialog).omCombo({
+				            	 dataSource : '/SysDict/GetDicts/netmsg_type',
+				            	 optionField : function(data, index) {
+					                    return data.dictName;
+					                },
+					             valueField : 'dictId',
+				            });
+						
+						
+			 			
+			 			
+			 				$("input[name='dt']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='dt']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+		 					$("input[name='dealed']", dialog).omCombo({
+				            	 dataSource : '/SysDict/GetDicts/common_bool',
+				            	 optionField : function(data, index) {
+					                    return data.dictName;
+					                },
+					             valueField : 'dictId',
+				            });
+						
+						
+			 			
+			 			
+			 				$("input[name='dealtime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='dealtime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+						
+			 			
+			 			
+			 				$("input[name='replytime']", searchPanel).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 				$("input[name='replytime']", dialog).omCalendar({
+			 	                dateFormat : "yy-mm-dd"
+			 	            });
+			 			
+			 			
+						
+			 			
+			 			
+			 			
+		 					$("input[name='reply']", dialog).omCombo({
+				            	 dataSource : '/SysDict/GetDicts/common_bool',
+				            	 optionField : function(data, index) {
+					                    return data.dictName;
+					                },
+					             valueField : 'dictId',
+				            });
+						
+						
+			 			
+			 			
+			 			
+						
+			       	    
+						//不搜索 =》grid
+			       	 	$('span#button-noSearch').bind('click', function(e) {
+		                    $('#mygrid').omGrid("setData", '/SmartNetMsg/List?key=');
+			            });	
+			            
+			             // 点击页面其他地方的时候隐藏表格里面的菜单
+			            $("body").click(function(){
+							$("#mygrid").find("div.op-menu:visible").hide();
+			            });		
+	
+					});	
+	
+       //删除 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/SmartNetMsg/Delete/"+val;
+			$.get(uri,function(responseText){
+	            	if(responseText=="操作成功"){
+	            		$('#mygrid').omGrid('reload');
+	            		$.omMessageTip.show({
+							title : "操作成功",
+							content : "删除数据成功",
+							timeout : 1500
+						});
+	            	}
+	            	else
+	            		alert(responseText);
+				
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+       	
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+
+		<span class="label">通信标识：</span> 
+		<input name="tag" id="tag" />
+		
+		<span class="label">类型：</span> 
+		<input name="type" id="type" />
+		
+		
+		<span class="label">锁deviceID：</span> 
+		<input name="lockid" id="lockid" />
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<span id="add">新增</span>
+	</div>
+</div>
+
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+
+<div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+	<table>
+		<tr>
+			<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+		</tr>
+		
+	</table>
+	</form>
+</div>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			
+			
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通信标识：</td>
+					<td><input name="tag" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型：</td>
+					<td><input name="type" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时间：</td>
+					<td><input name="dt" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否处理：</td>
+					<td><input name="dealed" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册时间：</td>
+					<td><input name="dealtime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;锁：</td>
+					<td><input name="lockid" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长度：</td>
+					<td><input name="len" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;传输ID：</td>
+					<td><input name="mid" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;内容：</td>
+					<td><input name="msg" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明：</td>
+					<td><input name="ext" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回复时间：</td>
+					<td><input name="replytime" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回复的结果：</td>
+					<td><input name="reply" /></td>
+				</tr>
+				
+			
+			
+			
+				
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回复的消息：</td>
+					<td><input name="replymsg" /></td>
+				</tr>
+				
+			
+			
+		</table>
+	</form>
+</div>
+
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

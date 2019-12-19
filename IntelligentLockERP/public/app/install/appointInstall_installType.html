@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>司铠智能</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script type="text/javascript" src="/public/app/js/weixin-1.4.0.js"></script>
+    <style type="text/css">
+        .row_top{
+			margin-bottom: 60px;
+		}
+		.measure_fanhui{
+			position: fixed;
+			font-size: 16px;
+			font-weight: bold;
+			background-color: #f8f8f8;
+			width: 100%;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+			left: 0px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.row_title{		/* 提示信息：选择支付方式 */
+			height: 40px;
+			line-height: 40px;
+			
+		}
+		.insType_img{		/* 选择安装类型的图片 */
+			width: 24px;
+			height: 24px;
+			margin-right: 10px;
+		}
+		.insType_txt{		/* 免费安装文字 */
+			margin-right: 20px;
+		}
+		.row_bottom{		/* 扫描兑换码文字 */
+			position: absolute;
+			left: 0px;
+			border-top: 1px solid #ccc;
+			border-bottom:  1px solid #ccc;
+			padding-left: 30px;
+			margin-top: 20px;
+			color: #9e9e9e;
+		}
+		#submitBut{
+	        background-color:#ff6052;
+	        width: 100%;
+	        border: 0px;
+	        text-align: center;
+	        height: 46px;
+	        color: white;
+	        font-size: 16px;
+	        padding: 0px;
+	        margin-top: 100px;
+        }
+    </style>
+	<script type="text/javascript">
+		window.onload=function(){
+			var getQuery = function(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null)
+					return (r[2]);
+				return null;
+			};
+			let index = 0;
+			let oid = getQuery("oid");
+			$("#submitBut").click(function(){
+				if(index==0){
+					WX.scanQRCode({
+						needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+						scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+						success: function (res) {
+							var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+							//校验兑换码
+							$.ajax({
+								url : '/v1/buySubscribe_pass',
+								type : 'get',
+								data:{oid:oid,pass:result},
+								dataType : 'json',
+								cache : false,
+								success : function(rsp) {
+									if(rsp.code==0){
+										window.location.href = "/public/app/install/appointInstall_installOrder.html";
+									}else{
+										alert(rsp.message);
+									}
+									
+								}
+							});
+						}
+					});
+				}else{
+					$.ajax({
+						url : '/v1/buySubInstall_Wx_Web',
+						type : 'get',
+						data:{oid:oid},
+						dataType : 'json',
+						cache : false,
+						success : function(rsp) {
+							if(rsp){
+								if(rsp.code==0){
+									WX.chooseWXPay({
+									  timestamp: rsp.data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+									  nonceStr: rsp.data.nonceStr, // 支付签名随机串，不长于 32 位
+									  package: rsp.data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+									  signType: rsp.data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+									  paySign: rsp.data.paySign, // 支付签名
+									  success: function (res) {
+									   	window.location.href = "/public/app/install/appointInstall_installOrder.html";
+									  }
+									});
+								}else{
+									alert(rsp.message)
+								}
+							}
+							
+						}
+					})
+				}
+				
+			});
+			
+			$(".insType_img").click(function(){
+				$(this).attr("src","/public/app/install/images/xz.png");
+				$(this).siblings("img").attr("src","/public/app/install/images/wxz.png");
+				index = $(this).index();
+				if(index==0){
+					$("#submitBut").val("扫一扫");
+					$("#description").html("请扫描兑换卡的条形码");
+				}else{
+					$("#submitBut").val("支付安装费用￥200");
+					$("#description").html("支付安装费用￥200");
+				}
+				
+			});
+		}	
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="row  row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<span>预约安装</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 row_title">
+				<label>选择支付方式</label>
+			</div>
+			<div class="col-xs-12 col-md-12 row_title">
+				<img alt="图片加载失败" src="/public/app/install/images/xz.png" class="insType_img"><label class="insType_txt">免费安装</label>
+				<img alt="图片加载失败" src="/public/app/install/images/wxz.png" class="insType_img"><label>付费安装</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 row_title row_bottom">
+				<span id="description">请扫描兑换卡的条形码</span>
+			</div>
+		</div>
+		<div class="row" id="">
+            <div class="col-xs-12 col-md-12">
+            	<input type="submit" id="submitBut" value="扫一扫">
+            </div>
+        </div>
+	</div>
+</body>
+</html>

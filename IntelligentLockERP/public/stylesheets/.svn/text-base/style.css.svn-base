@@ -1,0 +1,91 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*预设*/
+*{font-family:"Microsoft YaHei";}
+body,input,textarea,select{	font-size:12px;behavior:url("iehoverfix.htc");}
+body,h1,h3,h4,p,ul,ol{margin:0;}
+ul,ol{padding-left:0;	list-style-type:none;}
+a img{border:0;}
+a{cursor:pointer;}
+.fr{float:right;}
+.fl{float:left;}
+.clear{clear:both;_height:0px;}
+.clear2:after{
+	display:block;
+	clear:both;
+	content:".";
+	visibility:hidden;
+	height:0;
+}
+.scroll{overflow-y:auto;overflow-x:hidden;}
+.ver{vertical-align:middle;}
+.rela{position:relative;}
+.abso{position:absolute;}
+.wei{font-weight:bold;}
+h4{margin-top:10px;}
+.dis_b{display:block;}
+.dis_ib{display:inline-block;}
+.dis_i{display:inline;}
+
+body{
+	/* background:url("../images/bg_index.gif") repeat-x 0 0; */
+}
+.wrap{
+	width:268px;
+	height:143px;
+	position:absolute;
+	left:50%;
+	top:50%;
+}
+.login{
+	width:536px;
+	height:287px;
+	position:absolute;
+	left:-268px;
+	top:-143px;
+	background:url("../images/login.gif") no-repeat;
+}
+.login_content{
+	margin:100px auto auto auto;
+	width:326px;
+}
+.login_content ul li{
+	padding:5px 15px;
+	height:25px;
+	line-height:25px;
+}
+.font1{
+	font-size:15px;
+	color:#FFF;
+}
+.input{
+	border:#d9d9d9 1px solid;
+	background-color:#FFF;
+	height:21px;
+	line-height:21px;
+	font-size:15px;
+	text-indent:5px;
+	vertical-align:middle;
+}
+.inp_1{
+	width:205px;
+}
+.inp_2{
+	width:128px;
+}
+.btn{
+	width:103px;
+	height:31px;
+	background:url("../images/login_btn.gif") no-repeat 0 0;
+	border:0px;
+	margin-top:10px;
+	cursor:pointer;
+}
+.red{
+	color:red;
+}
+.space{
+	letter-spacing:7.5px;
+	_margin-right:2.5px;
+}

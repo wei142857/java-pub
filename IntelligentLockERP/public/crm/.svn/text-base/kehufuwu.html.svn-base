@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>流量银行后台管理</title>
+<link href="css/layout.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="right_main">
+	<div class="right_main_nav"></div>
+	<div class="search_box">
+    	<b>手机号</b>
+        <input name="" type="text" value="" class="input_text">
+        <input name="" type="button" value="查询" class="input_but">
+    </div>
+    <div class="yonghu_information">
+    	<div class="yonghu_nav"><b>用户信息</b></div>
+        <div class="yonghu_table">
+        	<table>
+              <tr class="back">
+                <td>ID</td>
+                <td>手机</td>
+                <td>姓名</td>
+                <td>省</td>
+                <td>运营商</td>
+                <td>来自</td>
+                <td>状态</td>
+                <td>注册时间</td>
+                <td>余额</td>
+                <td>设备id</td>
+                <td>计算</td>
+                <td>收入</td>
+                <td>支出</td>
+              </tr>
+              <tr>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>18610436734</td>
+                <td>北京</td>
+                <td>联通</td>
+                <td>手机注册-app</td>
+                <td>正常</td>
+                <td>2015-03-12 12:59:46</td>
+                <td>531</td>
+                <td>864645020983679</td>
+                <td>531</td>
+                <td>1031</td>
+                <td>500</td>
+              </tr>
+            </table>
+
+        
+        </div>
+        
+    
+    
+    </div>
+    <div class="yonghu_information">
+    	<div class="yonghu_nav"><b>入账记录</b></div>
+        <div class="yonghu_table">
+        	<table>
+              <tr class="back">
+                <td>ID</td>
+                <td>用户ID</td>
+                <td>手机</td>
+                <td>金额</td>
+                <td>时间</td>
+                <td>类型</td>
+                <td>说明</td>
+                <td>说明1</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+            </table>
+        </div>
+    </div>
+    <div class="yonghu_information">
+    	<div class="yonghu_nav"><b>出账记录</b></div>
+        <div class="yonghu_table">
+        	<table>
+              <tr class="back">
+                <td>ID</td>
+                <td>用户ID</td>
+                <td>手机</td>
+                <td>金额</td>
+                <td>时间</td>
+                <td>类型</td>
+                <td>说明</td>
+                <td>说明1</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+              <tr>
+                <td>10538879</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>500</td>
+                <td>2015-03-12 13:01:58</td>
+                <td>后台充值</td>
+                <td>客服赠送</td>
+                <td>来自：中国联通</td>
+              </tr>
+            </table>
+        </div>
+    </div>
+    <div class="yonghu_information">
+    	<div class="yonghu_nav"><b>充值日志</b></div>
+        <div class="yonghu_table">
+        	<table>
+              <tr class="back">
+                <td>ID</td>            
+                <td>用户ID</td>
+                <td>手机</td>
+                <td>流量</td>
+                <td>时间</td>
+                <td>充值时间</td>
+                <td>返回</td>
+                <td>注册时间状态</td>
+                <td>错误值</td>
+                <td>接口错误值</td>
+                <td>ip</td>
+                <td>重试次数</td>
+              </tr>
+              <tr>
+                <td>602952</td>
+                <td>2757253</td>
+                <td>18610436734</td>
+                <td>50M</td>
+                <td>2015-03-12 13:17:50</td>
+                <td>2015-03-12 13:12:57</td>
+                <td>null</td>
+                <td>1</td>
+                <td>null</td>
+                <td>null</td>
+                <td>111.203.151.252</td>
+                <td>1</td>
+              </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

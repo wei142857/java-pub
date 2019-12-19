@@ -1,0 +1,201 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>@title</title>                
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/jquery.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-core.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-combo.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-mouse.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-position.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-resizable.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-dialog.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-validate.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-ajaxsubmit.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-messagebox.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-draggable.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-droppable.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-fileupload.js"></script>
+	    
+	    <script type="text/javascript" src="/public/javascripts/common/common.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/common/IsOnLine.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-panel.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-button.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-borderlayout.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-tabs.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-tree.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-menu.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid-sort.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid-headergroup.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-messagetip.js"></script>
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid-roweditor.js"></script>	
+		<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-calendar.js"></script>
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-numberfield.js"></script>    	    
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/rules.js"></script>    
+	    <script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-grid-rowexpander.js"></script>    
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-sortable.js"></script>
+	    <script src="/public/javascripts/operamasks-ui-1.2/development-bundle/ui/om-itemselector.js"></script>	
+	        
+		<!-- <script type="text/javascript" src="/public/images/themeloader.js"></script> -->
+	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/apusic/om-all.css" />
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-base.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-theme.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid-headergroup.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-button.css" />    -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-menu.css" />
+<!-- 	     <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-dialog.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-messagetip.css" /> 	 -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-resizable.css" />    -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid-sort.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-borderlayout.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-panel.css" />	     -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-messagebox.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/javascripts/operamasks-ui-1.2/development-bundle/themes/default/om-grid-roweditor.css" /> -->
+<!-- 	    <link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css" /> -->
+	    <script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	//格式化时间方法
+	function fmtDate(date, format) {
+		var o = {
+			"M+" : date.getMonth() + 1, // month
+			"d+" : date.getDate(), // day
+			"h+" : date.getHours(), // hour
+			"m+" : date.getMinutes(), // minute
+			"s+" : date.getSeconds(), // second
+			"S" : date.getMilliseconds()// millisecond
+		};
+
+		if (/(y+)/.test(format)) {
+			format = format.replace(RegExp.$1, (date.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		}
+
+		for ( var k in o) {
+			if (new RegExp("(" + k + ")").test(format)) {
+				format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k]
+						: ("00" + o[k]).substr(("" + o[k]).length));
+			}
+		}
+		return format;
+	}
+	</script>
+    </head>
+    
+<style>
+#mygrid .om-btn-icon {
+	padding-left: 34px;
+}
+
+#mygrid .op-menu {
+	position: absolute;
+	display: none;
+	background-color: #E6ECF5;
+	border: 1px solid #99A8BC;
+	padding: 0;
+	width: 75px;
+}
+
+#mygrid .op-menu div {
+	cursor: pointer;
+	padding-left: 20px;
+}
+
+#mygrid .op-menu div:hover {
+	background-color: #4E76AD;
+	color: #FFFFFF;
+}
+
+#mygrid .op-menu .edit {
+	background: url("/public/images/op-edit.png") no-repeat scroll 7px 5px;
+}
+
+#mygrid .op-menu .delete {
+	background: url("/public/images/op-delete.png") no-repeat scroll 7px 5px;
+}
+
+#mygrid .op-menu .addec {
+}
+
+#mygrid .op-menu .userAuth {
+}
+
+#mygrid .op-menu .adduser {
+}
+
+#myform {
+	padding: 20px 0 0 20px;
+	line-height: 30px;
+}
+
+.om-dialog .om-dialog-content {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+#search-panel span.label{
+	margin-left: 10px;
+}
+
+.body-box {
+    border: 1px solid #99BBE8;
+}
+
+
+.errorMsg {
+	    background:  url("/public/images/alert.png") center no-repeat white;
+		background-position: 5px 50%;
+		text-align: left;
+		padding: 2px 20px 2px 25px;
+		border: 1px solid red;
+		display: none;
+		width: 120px;
+		margin-left: 10px;
+		position: absolute;
+		border-radius: 4px;
+	}
+	.errorImg{
+	    background: url("/public/images/invalid.png") no-repeat scroll 0 0 transparent;
+	    height: 16px;
+	    width: 16px;
+	    cursor: pointer;
+	    vertical-align: inherit;
+	}
+
+#search-panel .input-text {
+  border: 1px solid #6D869E;
+  height: 18px;
+  vertical-align: middle;
+  width: 500px;
+}
+
+#search-panel span.om-combo,#search-panel span.om-calendar{
+	vertical-align: middle;
+}
+
+ body {font-size:12px;}
+        .om-button {font-size:12px;}
+        #nav_cont{width:580px;margin-left:auto;margin-right:auto;}
+        input {border: 1px solid #A1B9DF; vertical-align: middle;}
+        input:focus{border: 1px solid #3A76C2;}
+        .input_slelct {width: 81%;}
+        .textarea_text {border: 1px solid #A1B9DF; height: 40px;width: 445px;}
+        table.grid_layout tr td {font-weight: normal; height: 15px; padding: 5px 0; vertical-align: middle;}
+        .color_red { color: red; }
+        .toolbar { padding: 12px 0 5px;text-align: center; }
+        .birthplace ,.address {width:445px;}
+        .om-span-field input:focus {border:none;}
+        .errorImg{background: url("/public/images/msg_bg.png") no-repeat scroll 0 0 transparent;height: 16px;width: 16px;cursor: pointer;}
+        input.error,textarea.error{border: 1px solid red;}
+        .errorMsg{border: 1px solid gray;background-color: #FCEFE3;display: none;position: absolute;margin-top: -18px;margin-left: 10px;}
+
+</style>
+
+    <body onclick="onclickbody()">
+        @content
+    </body>
+</html>

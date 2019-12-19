@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>登录</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="./css/common.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script src="./js/common.js"></script>
+  	<script type="text/javascript">
+		window.onload = function(){
+			var getQuery = function(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null)
+					return (r[2]);
+				return null;
+			};
+			
+	  		var state = getQuery("state");
+		  	var count = 240;
+			var timeout;
+			function timer(){
+				if(count==0){
+					$("#second").removeAttr("disabled");
+					$("#second").html("获取验证码");
+					count=240;
+					clearTimeout(timeout);
+				}else{
+					count--;
+					$("#second").html("("+count+"s)重新发送");
+					setTimeout(timer, 1000);
+				}
+			}
+			
+			//获取短信验证码
+			$("#second").click(function(){
+				var phone = $("#phone").val();
+				if(!phone){
+					$("#phone").focus();
+					return;
+				}
+				if(phone.length!=11){
+					$("#phone").focus();
+					return;
+				}
+				var thisDisabled = $("#second").attr("disabled")
+				if(!thisDisabled){
+					$("#second").attr("disabled","disabled");
+					timer();
+					$("#sms").focus();
+					$.ajax({
+						type : 'get',
+						dataType : 'json',
+						async : true,
+						url : "/gzh/v1/getSMSByPhone",
+						cache:false,
+						data : {phone:phone,type:1},
+						success : function(rsp) {
+							if(rsp){
+								if(rsp.code==0){
+									console.log('success code');
+								}
+							}
+						}
+					});
+				}
+				
+			});
+			
+			
+			$("#login").click(function(){
+				var phone = $("#phone").val();
+				var code =  $("#sms").val();
+				if(!phone){
+					$("#phone").focus();
+					return;
+				}
+				if(phone.length!=11){
+					$("#phone").focus();
+					return;
+				}
+				if(!code){
+					$("#sms").focus();
+					return;
+				}
+				if(code.length!=6){
+					$("#sms").focus();
+					return;
+				}
+				
+				$.ajax({
+					type : 'get',
+					dataType : 'json',
+					async : true,
+					cache : false,
+					url : "/gzh/v1/login",
+					data: {phone:phone,smscode:code},
+					success : function(rsp) {
+						if(rsp){
+							if(rsp.code==0){
+								if(state==302)
+									window.location.href="/public/app/gzh/vipcenter.html";
+							}else{
+								alert(rsp.message);
+							}
+						}
+					}
+				});
+				
+			});
+		}
+  	</script>
+	<style type="text/css">
+		.imgBox{
+			text-align: center;
+ 		 	margin: 10% auto;
+ 		 	margin-bottom: 90px;
+		}
+		.imgBox img{
+			width: 90px;
+			height: 90px;
+		}
+		#login{
+			background-color:#ff6052;
+			width: 100%;
+			border: 0px;
+			text-align: center;
+			height: 50px;
+			color: white;
+			font-size: 16px;
+		}
+	    #phone_input{
+	    	width: 300px;
+    		margin: 0 auto;
+	    }
+	    #sms_input{
+	    	width: 300px;
+		 	margin: 0 auto;
+	    }
+	    #sms_input_box{
+		    width: 150px;
+	    	display: inline-block;
+	    }
+	    #sms_input_box input{
+		   /* border: 1px; */
+	    }
+	    #sms_button_box{
+	    	display: inline-block;
+    		width: 135px;
+    		padding: 0px 0px 4px 11px;
+    		margin-left: 10px;
+	    }
+	    #sms_button_box button{
+	    	border: 1px solid #da4242;
+	    	color: #da4242;
+	    	background: white;
+	    	height: 34px;
+			min-width: 120px;
+			width: auto;
+			padding: 0px;
+	    }
+	    #login_button{
+	    	width: 300px;
+    		margin: 0 auto;
+    		margin-top: 15px;
+	    }
+	    #msg{
+	    	margin: 0 auto;
+		    width: 340px;
+		    margin-top: 10px;
+	    }
+	    .row{
+	    	padding: 0px;
+	    	margin: 0px;
+	    }
+	</style>
+</head>
+<body>
+	<div class="container col-xs-12 col-md-6 col-md-offset-3"  style="padding: 80px 15px 0px 15px;">
+		<div class="row">
+			<p class="imgBox">
+				<img alt="logo" src="./images/logo.png">
+			</p>
+		</div>
+		<div class="row">
+			<div class="row">
+				<div id="phone_input">
+					<div class="form-group">
+						<input type="text" id="phone" class="form-control" name="phone" @blur="blur()"  placeholder="请输入手机号码">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div id="sms_input">
+					<div id="sms_input_box">
+						<input type="text" class="form-control" id="sms" name="sms" @blur="blur()" placeholder="请输入短信验证码" maxlength="6">
+					</div>
+					<div id="sms_button_box">
+						<button type="button" id="second">获取验证码</button>
+					</div>
+					
+				</div>
+			</div>
+			<div class="row"><!-- 登录按钮 -->
+				<div id="login_button">
+					<input type="submit" id="login" value="立即登录">
+				</div>
+				<div id="msg">
+					<p>注：为方便您的使用，请填写已绑定设备的手机号登陆</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript">
+		var login = new Vue({
+			el:'.container',
+			data:{},
+			methods:{
+				blur() {
+		     		setTimeout(function () {//防止输入框失去焦点时 Iphone的页面背景卡住
+						var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+						window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+					}, 100)
+		    	}
+			}
+		})
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+	</script>
+</body>
+</html>

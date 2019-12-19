@@ -1,0 +1,206 @@
+
+@htmlhead("出库明细扩展 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	
+	$(document).ready(function(){
+		//枚举初始化
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+			height : 505,
+			dataType : "json",
+			dataSource : '/IntelligentLockOutDetailCodeExtend/List',
+			showIndex : false,
+			limit : 13,									
+			errorMsg : "获取数据出错",
+			emptyMsg : "没有数据",
+			
+			//Grid的header配置   ！！！！
+			colModel : [
+				{
+					header : '出库明细ID',
+					name : 'outdetailid',
+						width : 100,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '产品编码表ID',
+					name : 'codeid',
+						width : 120,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '设备号',
+					name : 'deviceid',
+						width : 200,
+					align : 'center',
+					sort:'clientSide'
+				},
+				{
+					header : '产品编码',
+					name : 'code',
+						width : 120,
+					align : 'center',
+					sort:'clientSide'
+				}
+			]
+		});
+		
+		//其他iframe 对话框 初始化-->
+		$( "#dialog-modal").omDialog({
+            autoOpen: false,
+            width:535,
+            height: 465,
+            modal: true
+        });
+		
+        $( "#user_auth_form").omDialog({
+            autoOpen: false,
+            width:535,
+            height: 465,
+            modal: true
+        });
+			
+		//搜索按钮加图片
+		var searchPanel = $("#search-panel").omPanel({
+        	title : "工具栏",collapsible:true
+        });
+		$('span#button-search').omButton({
+         	   	icons : {left : '/public/images/search.png'},width : 70
+      	 	});
+		$('span#button-noSearch').omButton({
+        	icons : {left : '/public/images/searchNo.png'},width : 70
+       	});
+		 $('span#button-export').omButton({
+          	   	width : 90
+       	 });
+			 
+		//下载表数据
+       	$('span#button-export').bind('click', function(e){
+       		var searchStr='';
+			searchStr += 'outdetailid='+encodeURI($("input[name='outdetailid']", searchPanel).val())+"&";
+		
+			searchStr += 'codeid='+encodeURI($("input[name='codeid']", searchPanel).val())+"&";
+		
+			searchStr += 'deviceid='+encodeURI($("input[name='deviceid']", searchPanel).val())+"&";
+		
+			searchStr += 'code='+encodeURI($("input[name='code']", searchPanel).val())+"&";
+			
+               var url = '/IntelligentLockOutDetailCodeExtend/List?export=1&'+searchStr;
+               window.location.href = url;
+        });	
+			
+		//搜索绑定 =》grid ！！！！
+     	$('span#button-search').bind('click', function(e){
+	        var searchStr='';
+	              
+			searchStr += 'outdetailid='+encodeURI($("input[name='outdetailid']", searchPanel).val())+"&";
+		
+			searchStr += 'codeid='+encodeURI($("input[name='codeid']", searchPanel).val())+"&";
+		
+			searchStr += 'deviceid='+encodeURI($("input[name='deviceid']", searchPanel).val())+"&";
+		
+			searchStr += 'code='+encodeURI($("input[name='code']", searchPanel).val())+"&";
+		
+	        $('#mygrid').omGrid("setData", '/IntelligentLockOutDetailCodeExtend/List?'+searchStr );
+       	});
+ 				
+		/*$("input[name='idd']", searchPanel).omCombo({
+          	 dataSource : '/IntelligentLockOutDetailCodeExtend/All',
+               optionField : function(data, index) {
+                   return data.idd;
+               },
+               valueField : 'idd',
+               inputField : 'idd'
+        });*/
+ 				
+		//不搜索 =》grid
+   	 	$('span#button-noSearch').bind('click', function(e) {
+        	$('#mygrid').omGrid("setData", '/IntelligentLockOutDetailCodeExtend/List?key=');
+        });	
+        
+        // 点击页面其他地方的时候隐藏表格里面的菜单
+		$("body").click(function(){
+			$("#mygrid").find("div.op-menu:visible").hide();
+		});		
+	});	
+	
+    //通用对话框 -- 提问是否 
+    function doAsk( title , function_call , data){
+ 	  	$.omMessageBox.confirm({
+            title:'提问',
+            content:title,
+            onClose:function(v){
+            if(v)
+           		function_call(data);
+        	}
+     	});
+    }
+       
+    //通用对话框 -- 警告提示 
+    function showMessage( title )
+    {
+ 	   $.omMessageBox.alert({ content:title });
+    }
+
+    //通用对话框  -- 获取输入提示 
+    function doPrompt( title , function_call , data )
+    {
+ 	   $.omMessageBox.prompt({
+            title:'输入',
+            content:title,
+            onClose:function(v){
+                if(v===false){
+                    return;
+                }
+                if(v==''){
+                    alert('输入不能为空！');
+                    return false;
+                }
+                function_call(v,data);             
+            }
+        });
+    }
+</script>
+	<!-- 搜索DIV -->
+	<div id="search-panel">
+		<div style="width: 100%; font-size: 12px;">
+			<span class="label">出库明细ID：</span> 
+			<input name="outdetailid" id="outdetailid" />
+			
+			<span class="label">产品编码ID：</span> 
+			<input name="codeid" id="codeid" />
+			
+			<span class="label">设备号：</span> 
+			<input name="deviceid" id="deviceid" />
+			
+			<span class="label">产品编码：</span> 
+			<input name="code" id="code" /><br>
+			 
+			<span id="button-search">搜索</span>
+			<span id="button-noSearch">看全部</span>
+			<span id="button-export">下载表数据</span>
+		</div>
+	</div>
+	
+	<!-- GRID 组件 -->
+	<table id="mygrid"></table>
+	
+	<!-- 其他iframe 对话框 -->
+	<div id="dialog-modal" title="管理EC">
+		<iframe id="ec_dialog" frameborder="0"
+			style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+			marginwidth='0' marginheight='0'></iframe>
+	</div>
+	<div id="user_auth_form" title="权限分配">
+		<iframe id="func_dialog" frameborder="0"
+			style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+			marginwidth='0' marginheight='0'></iframe>
+	</div>
+}

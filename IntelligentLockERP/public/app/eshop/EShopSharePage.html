@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>分享有礼</title>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="/public/app/js/weixin.js"></script>
+<style type="text/css">
+	.container {
+		padding-right: 0px;
+	    padding-left: 0px;
+	    margin-right: 0px;
+	    margin-left: 0px;
+	}
+	.sharePage_top{
+		background-image: url("images/banner.jpg");
+		background-repeat: no-repeat;
+		/* background-color: red; */
+		background-size:100% auto;
+		height: 225px;
+		width: 100%;
+	}
+	.sharePage_top_div{
+		background-image: url("images/fxbz.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: auto 100%;
+	    position: absolute;
+		/* background-color: blue; */
+		height: 24%;
+		max-height: 100px;
+		width: 93%;
+		bottom:6%;
+	}
+	.sharePage_middle{
+		margin-top: 10px;
+	}
+	.sharePage_middle span{
+	    font-size: 12px;
+		/* font-weight: bold; */
+	}
+	.sharePage_middle_first_span {
+        display: block;     /*设置为块级元素会独占一行形成上下居中的效果*/
+        position: relative;   /*定位横线（当横线的父元素）*/ 
+        text-align: center;
+    }
+    .sharePage_middle_first_span:before, .sharePage_middle_first_span:after {
+        content: '';                 /*CSS伪类用法*/
+        position: absolute;         /*定位背景横线的位置*/
+        top: 52%;
+        background: #555;       /*宽和高做出来的背景横线*/
+        width: 30%;
+        height: 1px;
+    }
+    .sharePage_middle_first_span:before{
+        left: 0%;        /*调整背景横线的左右距离*/
+    }
+    .sharePage_middle_first_span:after {
+        right: 0%;
+    }
+    
+    .sharePage_bottom{
+    	padding:0px;
+    	cursor: pointer;
+    	margin-top: 30px;
+    }
+    /* 分享弹窗 */
+    #wqzMkShareAlertBox{
+    	width: 100%;
+		height: 100%;
+		visibility: hidden;
+		position: fixed;
+		bottom: 0px;
+		left: 0px;
+		background-color: #00000042;
+    }
+    .touchBackground{
+    	width: 100%;
+		height: calc(100% - 230px);
+		position: fixed;
+		top: 0px;
+		left: 0px;
+    }
+    .shareAlertByWqz{
+		width: 100%;
+		height: 230px;
+		position: fixed;
+		bottom: 0px;
+		left: 0px;
+		background-color: white;
+	}
+	.shareAlertTopByWqz{
+		width: 100%;
+		height: 50px;
+	}
+	.shareAlertTitleByWqz{
+		text-align: center;
+		line-height: 30px;
+	}
+	#shareListByWqz{
+		width: 100%;
+		height: 130px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.shareItemByWqz{
+		width: 60px;
+    	height: 80px;
+		margin: 10px;
+		cursor: pointer;
+	}
+	.shareItemByWqz p{
+		text-align: center;
+		cursor: pointer;
+	}
+	.slogoByWqz{
+		width: 60px;
+		height: 60px;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: auto 100%;
+		cursor: pointer;
+	}
+	.bottomClose{
+		width: 100%;
+		height: 50px;
+		cursor: pointer;
+	}
+	.closeText{
+		text-align: center;
+		color: #ff9334;
+	}
+	#modal-overlay{
+        visibility: hidden;
+        position: fixed;   /* 使用绝对定位或固定定位  */
+        left: 0px;
+        bottom: 0px;
+        width:100%;
+        height:100%;
+    	background: url(/public/app/eshop/images/jt.png) no-repeat right 15px top;
+        background-size: 35% auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+    }
+      #alertModel{
+      	display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    visibility: hidden;
+	    position: fixed;
+	    left: 0px;
+	    bottom: 0px;
+	    width: 100%;
+	    height: 100%;
+	    text-align: center;
+	    z-index: 1000;
+	    background-color: rgba(0, 0, 0, 0.5);	
+        border-radius: 5px;
+    }
+    .modal-data{
+        width:300px;
+        background-color: white;
+        border:0px;
+        padding:15px;
+        text-align:center;
+        padding: 0px;
+ 	    padding-top: 15px;
+	    border-radius: 5px;
+     }
+</style>
+</head>
+<body>
+	<!-- banner.jpg -->
+	<div class="container" id="share">
+		<div class="sharePage_top col-sm-12 col-xs-12 ">
+			<div class="sharePage_top_div"></div>
+		</div>
+		<div class="sharePage_middle col-sm-12 col-xs-12 ">
+			<span class="sharePage_middle_first_span">分享有礼步骤</span><br>
+			<span>一、分享好友</span><br>
+			<span>任意商品页面点击分享或者点击页面下方分享按钮</span><br>
+			<span>&nbsp;</span><br>
+			<span>二、好友下单</span><br>
+			<span>好友通过您分享的链接购买任意商品</span><br>
+			<span>&nbsp;</span><br>
+			<span>三、好友确认收货</span><br>
+			<span>好友在自下单之日后第二天零时算起10天内未发起退货,即视为确认收货</span><br>
+			<span>&nbsp;</span><br>
+			<span>四、K币到账</span><br>
+			<span>好友确认收货后24小时内,K币将发送到您当前账号上,K币有效期为12个月</span><br>
+		</div>
+		<div id="alertModel" class="col-xs-9 col-md-3">
+	      <div class="modal-data">
+		        <span style="color: black;font-size: 15px;">提示</span>
+			  	<p><small id="alertMsg" style="line-height: 75px;"></small></p>
+	      </div>
+	    </div>
+		<div id="modal-overlay" class="col-xs-9 col-md-3" @click="close()"><!-- 提示用户右上角分享的图片 -->
+			
+		</div>
+		<div class="sharePage_bottom col-sm-12 col-xs-12 " @click="shareIt()">
+			<img class="col-sm-12 col-xs-12" src="images/fxhy.jpg">
+		</div>
+		
+	</div>
+	
+	<div id="wqzMkShareAlertBox">
+	
+		<section class="touchBackground" @click="close()">
+	    </section>
+	    
+		<section class="shareAlertByWqz">
+	    	<section class="shareAlertTopByWqz"><!-- 顶部 -->
+		    	<h4 class="shareAlertTitleByWqz">分享到</h4><!-- title -->
+	    	</section>
+	    	
+			<section id="shareListByWqz"><!-- 分享图标 -->
+				<section class="shareItemByWqz" @click="toShare(1)"><!-- 微信 -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_wechat@2x.png);"></section><!-- 图标 -->
+					<p>微信</p>
+				</section>
+				<section class="shareItemByWqz" @click="toShare(2)"><!-- 朋友圈 -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_wechattimeline@2x.png);"></section><!-- 图标 -->
+					<p>朋友圈</p>
+				</section>
+				<section class="shareItemByWqz" @click="toShare(3)"><!-- QQ -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_qqfriends@2x.png);"></section><!-- 图标 -->
+					<p>QQ</p>
+				</section>
+				<section class="shareItemByWqz" @click="toShare(4)"><!-- QQ空间 -->
+					<section class="slogoByWqz" style="background-image: url(/public/app/eshop/images/share_platform_qzone@2x.png);"></section><!-- 图标 -->
+					<p>QQ空间</p>
+				</section>
+		    </section>
+		    
+	    	<section class="bottomClose"><!-- 底部 -->
+		    	<h4 class="closeText" @click="close()">取消</h4><!-- title -->
+	    	</section>
+	    </section>
+	    
+
+	</div>
+    
+	<script type="text/javascript">
+		var share = new Vue({
+			el: '#share',
+			data: {
+				title: '',
+				desc: '',
+				imgurl: '',
+				linkurl: '',
+				shareType: ''
+			},
+			methods: {
+				shareIt(){//用户点击分享
+					debugger
+					//判断是否是微信浏览器分享
+					if(wx){//是微信浏览器 只让他在右上角分享
+						//显示图片
+						$("#modal-overlay").css({'visibility': 'visible'})
+						return 
+					}else if(!sknapp){
+						alert2("目前不支持非APP分享")
+						return ;
+					}
+					$("#wqzMkShareAlertBox").css({'visibility': 'visible'})
+				}
+			}
+		})
+		var sharebox = new Vue({
+			el: '#wqzMkShareAlertBox',
+			data: {
+				
+			},
+			methods:{
+				close(){
+					$("#wqzMkShareAlertBox").css({'visibility': 'hidden'})
+					$("#modal-overlay").css({'visibility': 'hidden'})
+				},
+				toShare(type){
+					window.location.href="skn://shareforshop?title="+encodeURIComponent(share.title)+"&desc="+encodeURIComponent(share.desc)+"&imgurl="+encodeURIComponent(share.imgurl)+"&linkurl="+encodeURIComponent(share.linkurl)+"&type="+type;
+				}
+			}
+		})
+		function initShare(){
+			$.ajax({
+				url: '/v1/shareEShopMainInfo',
+				data: 
+				{
+					token:GetRequest()['token']
+				},
+				type: 'GET',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					linkurl = "";
+					if(typeof(data.data.linkurl)!="undefined")
+						linkurl = data.data.linkurl
+					imgurl = "";
+					if(typeof(data.data.imgurl)!="undefined")
+						imgurl = data.data.imgurl
+					WX.ready({
+						title: share.title = data.data.title, // 分享标题
+
+						desc: share.desc = data.data.desc, // 分享描述
+						link: share.linkurl =linkurl.indexOf("http")!=0?("http://www.sknhome.com/"+linkurl):linkurl,  // 分享链接
+						imgUrl: share.imgurl = imgurl.indexOf('http')!=0?("http://www.sknhome.com/"+imgurl):imgurl, // 分享图标
+						success: function () {
+							
+						}	
+					});
+				},
+				error: function(err){
+					console.log(err)
+				}
+			})
+		}
+		var alertSt = true;
+		function alert2(msg) {
+            if (alertSt) {
+            	$("#alertModel").css({'visibility': 'visible'})
+            	$("#alertMsg").html(msg)
+            	alertSt = false;
+            } else {
+            	$("#alertModel").css({'visibility': 'hidden'})
+            	alertSt = true;
+                return;
+            }
+            setTimeout(function() { alert2(msg) },1500) //每1000毫秒执行一次
+        }
+		function close(){
+			$("#wqzMkShareAlertBox").css({'visibility': 'hidden'})
+			$("#modal-overlay").css({'visibility': 'hidden'})
+		}
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+		var sknapp = (function(){
+			return navigator.userAgent.toLowerCase().indexOf('sknhome') !== -1
+		})();
+		var wx= (function(){
+			return navigator.userAgent.toLowerCase().indexOf('micromessenger') !== -1
+		})();
+		window.onload = function(){
+			initShare()
+		}
+	</script>
+</body>
+</html>

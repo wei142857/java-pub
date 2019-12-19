@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>司铠智能</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+		.container{
+			background-color:#f8f8f8;
+			position: absolute;
+			width: 100%;
+			left: 0px;
+			font-size: 14px;
+		}
+		.row_top{
+			margin-bottom: 48px;
+		}
+		.measure_fanhui{
+			position: absolute;
+			font-size: 16px;
+			font-weight: bold;
+			height: 48px;
+			border-bottom: 1px solid #ccc;
+			/* width: 100%; */
+			/* left: 0px; */
+		}
+		.fanhui_img{
+		    position: absolute;
+		    width: 36px;
+		    height: 36px;
+		    left: 8px;
+		    top: 5px;
+		}
+		.fanhui_span{
+			text-align: center;
+			line-height: 48px;
+		}
+		.info_unify_style{	/* 复用样式 */
+			padding-left: 18px;
+			background-color: white;
+			color: #ccc;
+		}
+		.titleInfo_span{		/* 统一标题 */
+			height: 35px;
+			line-height: 35px;
+			border-bottom: 1px solid #ccc;
+		}
+		.userInfo_p{			/* 联系人地址信息 */
+			background-color: white;
+			padding:15px 18px 15px 18px;
+   			height: auto;
+   			line-height: 30px;
+		}
+		.title_space{			/* 预约时间的标题 和 测量支付费用标题 留出的间距*/
+			margin-top: 15px;
+		}
+		.appointInfo{			/* 预约时间信息 和 测量支付费用信息*/
+			background-color: white;
+			padding-left: 18px;
+			height: 46px;
+			line-height: 46px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container" id="detail_div">
+		<div class="row row_top">
+			<div class="col-xs-12 col-md-12 fanhui_span measure_fanhui">
+				<img alt="logo" src="/public/app/install/images/fanhui.png" class="fanhui_img">
+				<span>订单详情</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 titleInfo_span info_unify_style">
+				<span>联系人信息</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 userInfo_p">
+				<div>
+					<span>姓名：{{site.measurename}}</span>
+				</div>
+				<div>
+					<span>手机号：{{site.measurephone}}</span>
+				</div>
+				<div>
+					<span>地址：{{site.measurearea}} {{site.measureaddress}}</span>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-12 titleInfo_span info_unify_style title_space">
+				<span>预约时间</span>
+			</div>
+			<div class="col-xs-12 col-md-12 appointInfo">
+				<span>预约时间：{{site.measuretime}}</span>
+			</div>
+			<div class="col-xs-12 col-md-12 titleInfo_span info_unify_style title_space">
+				<span>预约测量费用</span>
+			</div>
+			<div class="col-xs-12 col-md-12 appointInfo">
+				<span>已支付测量费用：￥{{site.money}}</span>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<script type="text/javascript">
+		//从url中获取参数
+	    var getQuery = function(name) {
+	    	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	    	var r = window.location.search.substr(1).match(reg);
+	    	if (r != null)
+	    		return (r[2]);
+	    	return null;
+	    };
+	    var vm=new Vue({
+		    el: "#detail_div",
+		    data(){
+		        return {
+		            site: {
+		            	measurename: "",
+		            	measurearea: "",
+		            	measureaddress: "",
+		            	measurephone: "",
+		            	addtime: "",
+		            	money: ""
+		            }
+		        }
+		   	},
+		    mounted:function(){
+		        //需要执行的方法可以在mounted中进行触发，其获取的数据可以赋到data中后，可以放在前面进行渲染
+		        this.showData();
+		    },
+		    methods:{
+		    	showData:function () {
+		            jQuery.ajax({
+		                url: "/v1/appointSelMeaOrderDetail",
+		                data: {oid : getQuery("idd")},
+		                type: 'get',
+		              	dataType:"json",
+		              	success: function (res){
+		              		if(res.code=="0"){
+				                vm.site=res.data;
+		              		}else if(res.code=="1"||res.code=="2"){
+		              			window.location.href="/public/app/install/appointInstall_login.html";
+		              		}
+		               }
+		           })
+		        }
+		    }
+	    })
+		window.onload=function(){
+			$(".fanhui_img").click(function(){
+				window.location.href="/public/app/install/appointMeasure_measureOrder.html";
+			});
+		}
+	</Script>
+</body>
+</html>

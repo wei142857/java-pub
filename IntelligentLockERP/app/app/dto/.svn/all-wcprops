@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/xuanwenchao.intelligentLockERP/!svn/ver/1653/trunk/IntelligentLockERP/app/app/dto
+END
+LockDeviceLogsDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/xuanwenchao.intelligentLockERP/!svn/ver/227/trunk/IntelligentLockERP/app/app/dto/LockDeviceLogsDto.java
+END
+LockDevicePswListDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xuanwenchao.intelligentLockERP/!svn/ver/1653/trunk/IntelligentLockERP/app/app/dto/LockDevicePswListDto.java
+END
+LockDeviceDescDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/xuanwenchao.intelligentLockERP/!svn/ver/186/trunk/IntelligentLockERP/app/app/dto/LockDeviceDescDto.java
+END
+ShareEShopProductDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xuanwenchao.intelligentLockERP/!svn/ver/1176/trunk/IntelligentLockERP/app/app/dto/ShareEShopProductDto.java
+END
+SysMessageListDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xuanwenchao.intelligentLockERP/!svn/ver/91/trunk/IntelligentLockERP/app/app/dto/SysMessageListDto.java
+END
+EShopAddressDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/xuanwenchao.intelligentLockERP/!svn/ver/894/trunk/IntelligentLockERP/app/app/dto/EShopAddressDto.java
+END
+EShopDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/xuanwenchao.intelligentLockERP/!svn/ver/894/trunk/IntelligentLockERP/app/app/dto/EShopDto.java
+END
+BountyMessageDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xuanwenchao.intelligentLockERP/!svn/ver/367/trunk/IntelligentLockERP/app/app/dto/BountyMessageDto.java
+END
+VipDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/xuanwenchao.intelligentLockERP/!svn/ver/1372/trunk/IntelligentLockERP/app/app/dto/VipDto.java
+END
+AppointInitOrderDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/xuanwenchao.intelligentLockERP/!svn/ver/1395/trunk/IntelligentLockERP/app/app/dto/AppointInitOrderDto.java
+END
+LockDeviceListDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xuanwenchao.intelligentLockERP/!svn/ver/1368/trunk/IntelligentLockERP/app/app/dto/LockDeviceListDto.java
+END
+ExchangeListDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/xuanwenchao.intelligentLockERP/!svn/ver/386/trunk/IntelligentLockERP/app/app/dto/ExchangeListDto.java
+END
+GetBountyDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/xuanwenchao.intelligentLockERP/!svn/ver/365/trunk/IntelligentLockERP/app/app/dto/GetBountyDto.java
+END
+ShareEShopMainInfoDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/xuanwenchao.intelligentLockERP/!svn/ver/1169/trunk/IntelligentLockERP/app/app/dto/ShareEShopMainInfoDto.java
+END
+ReturnJson.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/xuanwenchao.intelligentLockERP/!svn/ver/91/trunk/IntelligentLockERP/app/app/dto/ReturnJson.java
+END
+LockDeviceFingerListDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xuanwenchao.intelligentLockERP/!svn/ver/166/trunk/IntelligentLockERP/app/app/dto/LockDeviceFingerListDto.java
+END
+AppointBackFillAddressDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/xuanwenchao.intelligentLockERP/!svn/ver/1301/trunk/IntelligentLockERP/app/app/dto/AppointBackFillAddressDto.java
+END
+GetBuyVipResultDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xuanwenchao.intelligentLockERP/!svn/ver/540/trunk/IntelligentLockERP/app/app/dto/GetBuyVipResultDto.java
+END
+LockDeviceICCardDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xuanwenchao.intelligentLockERP/!svn/ver/208/trunk/IntelligentLockERP/app/app/dto/LockDeviceICCardDto.java
+END
+UserDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/xuanwenchao.intelligentLockERP/!svn/ver/228/trunk/IntelligentLockERP/app/app/dto/UserDto.java
+END
+ProductListDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/xuanwenchao.intelligentLockERP/!svn/ver/381/trunk/IntelligentLockERP/app/app/dto/ProductListDto.java
+END

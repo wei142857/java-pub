@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/xuanwenchao.intelligentLockERP/!svn/ver/1705/trunk/IntelligentLockERP/app/pay/weixin/api/oauth
+END
+SnsAccessToken.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/xuanwenchao.intelligentLockERP/!svn/ver/948/trunk/IntelligentLockERP/app/pay/weixin/api/oauth/SnsAccessToken.java
+END
+ReturnCode.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/xuanwenchao.intelligentLockERP/!svn/ver/943/trunk/IntelligentLockERP/app/pay/weixin/api/oauth/ReturnCode.java
+END
+SnsAccessTokenApi.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/xuanwenchao.intelligentLockERP/!svn/ver/1080/trunk/IntelligentLockERP/app/pay/weixin/api/oauth/SnsAccessTokenApi.java
+END
+ApiConfig.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/xuanwenchao.intelligentLockERP/!svn/ver/974/trunk/IntelligentLockERP/app/pay/weixin/api/oauth/ApiConfig.java
+END
+ApiConfigKit.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/xuanwenchao.intelligentLockERP/!svn/ver/974/trunk/IntelligentLockERP/app/pay/weixin/api/oauth/ApiConfigKit.java
+END
+CallBackUrl.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/xuanwenchao.intelligentLockERP/!svn/ver/1705/trunk/IntelligentLockERP/app/pay/weixin/api/oauth/CallBackUrl.java
+END

@@ -1,0 +1,1208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>订单支付</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<style type="text/css">
+  		input[type=button], input[type=submit], input[type=file], button ,input[type=text],input[type=checkbox]{
+			cursor: pointer;
+			-webkit-appearance: none; 
+            -webkit-tap-highlight-color:rgba(0,0,0,0);
+		}
+		input[type=checkbox],input[type=text]{
+			border-radius: 0;
+			webkit-tap-highlight-color:rgba(0,0,0,0);
+		}
+  		body {
+			background-color: #f7f7f7;
+			padding-bottom: 60px;
+			padding-left: 0px;
+		}
+  		.pro_img{
+		    height: 120px;
+		    width: 135px;
+		    margin-top: 1%;
+		    padding: 0px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: auto 85%;
+		}
+		.pro_detail{
+			display: flex;
+   		 	align-items: center;
+			min-height: 135px;
+			height:auto !important;
+		}
+		.buy_number{
+			float: right;
+			font-weight: 700;
+			margin-top: 8px;
+		}
+		.r_pro_info{
+			float: left;
+   	 		padding-top: 20px;
+   	 		padding-left: 0px;
+    		padding-right: 0px;
+		}
+		.pro_name{
+    		font-size: 16px;
+		}
+		.pro_spec{
+			color: #ababab;
+		}
+		.price{
+			color: #ff6a6a;
+    		font-size: 17px;
+		}
+		.item_info{
+			line-height: 165%;
+		}
+		.addr_info{
+			cursor: pointer;
+			width: 100%;
+			height: 80px;
+		}
+		.index_logo{
+		    width: 30px;
+		    height: 27px;
+		    background-image: url(/public/app/eshop/images/dz_icon.png);
+		    background-position: center;
+		    background-repeat: no-repeat;
+		    background-size: 100% 100%;
+		    margin-left: 13px;
+		}
+		.edit_addr{
+			width: 30px;
+			height: 30px;
+			float:right;
+			background-image: url(/public/app/eshop/images/y_icon.png);
+			background-position: center;
+		    background-repeat: no-repeat;
+		    background-size: 100% 100%;
+		}
+		.l_text{
+			position:absolute;
+			width: 90%;
+			height: 80px;
+			float: right;
+			display: flex;/* 弹性布局 */
+		    justify-content: flex-start;/* 左右位于最左边 */
+		    align-items: center;/* 上下位于最中间 */
+		}
+		.r_text{
+			width: 10%;
+			height: 80px;
+			float: right;
+			display: flex;/* 弹性布局 */
+		    justify-content: flex-end;/* 左右位于最左边 */
+		    align-items: center;/* 上下位于最中间 */
+		    margin-right: 5px;
+		}
+		.container{
+			padding: 0px;
+			padding-bottom: 50px;
+		}
+		.user_detail{
+			margin-left: 10px;
+			font-size: 17px;
+			line-height: 10px;
+		}
+		.user_detail small{
+		    font-size: 85%;
+   			margin-left: 10px;
+		}
+		.address{
+			font-size: 12px;
+			line-height: 13px;
+			color:#848484;
+		}
+		.buy_num{
+			width: 100%;
+		    height: 55px;
+		}
+		.left_text{
+			line-height: 55px;
+    		margin-left: 10px;
+		}
+		.left_text_box{
+			display: inline-block;
+		}
+		.left_text_box_append{
+			border-top: 1px solid #eee;
+		}
+		.buy_num_r{
+		    display: inline-block;
+    		float: right;
+    		margin-top: 10px;
+    		padding-top: 3px;
+		}
+		.edit_num_box li{
+			float: left;
+		}
+		ul,li {
+            list-style: none;
+        }
+        .span_jia{
+       	    font-size: 30px;
+       	    display: inline-block;
+       	    background-image: url(/public/app/eshop/images/jia.png);
+       	    background-position: center;
+       	    background-repeat: no-repeat;
+       	    background-size: 40% 40%;
+		    width: 30px;
+		    height: 30px;
+		    line-height: 25px;
+		    text-align: center;
+		    cursor: pointer;
+		    border: 1px solid #e6e6e6;
+		    border-right-color: #a7a7a7;
+		    border-top-color: #a7a7a7;
+		    border-bottom-color: #a7a7a7;
+        }
+        .span_jian{
+        	background-image: url(/public/app/eshop/images/jian.png);
+       	    background-position: center;
+       	    background-repeat: no-repeat;
+       	    background-size: 40% 40%;
+       	    font-size: 30px;
+		    width: 30px;
+		    height: 30px;
+		    line-height: 25px;
+		    text-align: center;
+		    cursor: pointer;
+		    border: 1px solid #e6e6e6;
+		    display: inline-block;
+		    border-left-color: #a7a7a7;
+		    border-top-color: #a7a7a7;
+		    border-bottom-color: #a7a7a7;
+        }
+        .input_num{
+        	width: 60px;
+            height: 30px;
+            color: #333;
+            text-align: center;
+            border: 1px solid #e6e6e6;
+            border-top-color: #a7a7a7;
+            border-bottom-color: #a7a7a7;
+        }
+        .count{
+        	overflow: hidden;
+        	padding:0px;
+   			margin: 0 16px 0 -20px;		
+        }
+        .right_img{
+      	    float: right;
+		    width: 75px;
+		    height: 55px;
+		    display: flex;
+		    justify-content: flex-end;
+		    align-items: center;
+		    padding-right: 15px;
+		    font-size: 17px;
+        }
+        .right_box{
+      	    float: right;
+		    width: 35%;
+		    height: 55px;
+		    display: flex;
+		    justify-content: flex-end;
+		    align-items: center;
+		    padding-right: 15px;
+		    font-size: 17px;
+        }
+        .discount_r_img{
+        	width: 60px;
+        	height: 55px;
+        	background-image: url(/public/app/eshop/images/off.png);
+        	background-position: center;
+        	background-repeat: no-repeat;
+        	background-size: 100% auto;
+        	cursor: pointer;
+        }
+        .container>div{
+        	background-color: white;
+    		margin-top: 10px;
+        }
+        .l_price_box{
+  			float: left;
+  			width: calc(100% - 170px);
+  			height: 50px;
+	    	font-size: 20px;
+  			background-color: white;
+  			display: flex;
+  			justify-content: flex-start;
+  			align-items: center;
+  			margin-left: 15px;
+  		}
+  		.r_nowBuy{
+			float: right;
+  			width: 150px;
+  			cursor: pointer;
+  			height: 50px;
+  			background-image: url(/public/app/eshop/images/zf.jpg);
+  			background-position: right;
+  			background-repeat: no-repeat;
+  			background-size: auto 100%;
+  		}
+  		.r_sold_out{
+			float: right;
+  			width: 150px;
+  			height: 50px;
+  			background-image: url(/public/app/eshop/images/kcbz.jpg);
+  			background-position: right;
+  			background-repeat: no-repeat;
+  			background-size: auto 100%;
+  		}
+  		.total_price{
+  			position: fixed;
+  			bottom: 0px;
+  			height: 50px;
+  			padding: 0px;
+		    width: 100%;
+  			margin: 0px;
+  			background-color: white;
+  		}
+  		/*隐藏掉我们模型的checkbox*/
+	    .checkbox{
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            display: none;
+            margin-top: 0px;
+        }
+	    /*未选中时*/        
+	    .checkbox{
+           width: 23px;
+           height: 23px;
+           border: 0px;
+           display: inline-block;
+           background: url(/public/app/eshop/images/wxz.png) no-repeat;
+           background-size: cover;
+        }
+	    /*选中checkbox时,修改背景图片的位置*/            
+	    .checkbox:checked{
+	   	   background: url(/public/app/eshop/images/xz.png) no-repeat;
+	   	   background-size: cover;
+        }
+  		.pay_box{
+  			width: 100%;
+  			height: 70px;
+  		}
+  		.wx_logo{
+  			display: inline-block;
+		    float: left;
+  			width: 40px;
+  			height: 40px;
+  			background-image: url(/public/app/eshop/images/wx.png);
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			background-size: auto 100%;
+  			margin-left: 10px;
+  		}
+  		.ali_logo{
+		    display: inline-block;
+		    float: left;
+  			width: 40px;
+  			height: 40px;
+  			background-image: url(/public/app/eshop/images/zfb.png);
+  			background-position: center;
+  			background-repeat: no-repeat;
+  			background-size: auto 100%;
+  			margin-left: 10px;
+  		}
+  		.wx_l{
+		    display: inline-flex;
+		    height: 100%;
+  			align-items: center;
+  		}
+  		.wx_r{
+  			width: 70px;
+  			height: 70px;
+  			float: right;
+  			display: flex;
+  			justify-content: flex-end;
+  			align-items: center;
+  			margin-right: 15px;
+  		}
+  		.pay_title_box{
+  		    float: left;
+  			width: 80px;
+  			height: 50px;
+  			display: flex;
+  			justify-content: flex-start;
+  			align-items: center;
+  			margin-left: 10px;
+  			font-size: 16px;
+  		}
+  		.ali_l{
+  			display: inline-flex;
+		    height: 100%;
+  			align-items: center;
+  		}
+  		.ali_r{
+  			float: right;
+  			width: 70px;
+  			height: 70px;
+  			display: flex;
+  			justify-content: flex-end;
+  			align-items: center;
+  			margin-right: 15px;
+  		}
+  		#bounty{
+  		   appearance: none;
+           -webkit-appearance: none;
+           outline: none;
+           display: none;
+  		}
+	    #bounty{
+           width: 100%;
+           height: 100%;
+           margin-top: 0px;
+           border: 0px;
+           display: inline-block;
+           background-image: url(/public/app/eshop/images/off.png);
+           background-position: left;
+ 		   background-repeat: no-repeat;
+ 		   background-size: auto 60%;
+        }
+	    #bounty:checked{
+	       background-color: #00000000;
+	   	   background-image: url(/public/app/eshop/images/on.png);
+	   	   background-position: left;
+ 		   background-repeat: no-repeat;
+ 		   background-size: auto 60%;
+        }
+        #loading{
+			display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    position: fixed;
+		    bottom: 0px;
+		    left: 0px;
+		    background-color: white;
+		    width: 100%;
+		    height: 100%;
+		    background-position: center;
+		    background-repeat: no-repeat;
+		    background-size: 120px 20px;
+		}
+		#modal-overlay{
+           display:flex;
+           align-items:center;
+           justify-content:center;
+           visibility: hidden;
+           position: fixed;   /* 使用绝对定位或固定定位  */
+           left: 0px;
+           bottom: 0px;
+           width:100%;
+           height:100%;
+           text-align:center;
+           z-index: 1000;
+           background-color: rgba(0, 0, 0, 0.5);
+      }
+      /* 模态框样式 */
+      .modal-data{
+           width:300px;
+           background-color: white;
+           border:0px;
+           padding:15px;
+           text-align:center;
+           padding: 0px;
+    	   padding-top: 15px;
+   	       border-radius: 5px;
+      }
+      .q_box{
+      	height: 60px; 
+      }
+      .q_box span{
+      	line-height: 50px;
+      }
+      .q_box_a{
+      	float: left;
+      	width: 50%;
+		height: 50px;
+		cursor:pointer;
+		margin-top: 10px;
+		border-top: 1px solid #00000012;
+		border-right: 1px solid #00000012;
+		font-size: 17px;
+      }
+      .q_box_b{
+      	float: right;
+      	width: 50%;
+		cursor:pointer;
+		height: 50px;
+		color: #5b8cff;
+		margin-top: 10px;
+		border-top: 1px solid #00000012;
+		font-size: 17px;
+      }
+      .sms_inp{
+      	display: inline-block;
+      	width: 100%;
+      }
+      .sms_inp input{
+   	    width: 130px;
+   	    float: left;
+   	    margin-left: 10px;
+   	    height: 26px;
+      }
+      .sms_inp button{
+   	    width: 140px;
+    	margin-right: 10px;
+   	    float: right;
+   	    height: 26px;
+      }
+      #alertModel{
+      	display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    visibility: hidden;
+	    position: fixed;
+	    left: 0px;
+	    bottom: 0px;
+	    width: 100%;
+	    height: 100%;
+	    text-align: center;
+	    z-index: 1000;
+	    background-color: rgba(0, 0, 0, 0.5);	
+        border-radius: 5px;
+      }
+  	</style>
+</head>
+<body>
+	<div class="container"  id="pp1">
+		<div class="addr_info" @click="addrPage()"><!-- 地址信息div -->
+			<div class="l_text">
+				<div>
+					<div class="index_logo"></div><!-- 左部图标div -->
+				</div>
+				<div v-if="addr==null"><!-- 右侧地址信息及用户信息div -->
+					<span style="margin-left: 10px;font-size: 15px;line-height: 7px;">请添加收货地址</span>
+				</div>
+				<div v-else><!-- 右侧地址信息及用户信息div -->
+					<p class="user_detail">{{addr['name']}}<small>{{addr['phone']}}</small></p>
+					<div style="padding-left: 10px;">
+						<span class="address">{{addr['area']}}{{addr['address']}}</span>
+					</div>
+				</div>
+			</div>
+			<div class="r_text">
+				<div class="edit_addr"></div>
+			</div>
+		</div>
+		<div class="pro_detail"><!-- 商品信息 -->
+			<div class="pro_img col-xs-5 col-md-2" :style="{'background-image':'url('+pro.smallimgurl+')'}"><!-- 左侧图片div -->
+			
+			</div>
+			<div class="r_pro_info col-xs-7 col-md-10"><!-- 右侧商品信息div 商品名称+商品规格+商品价格+购买数量 -->
+				<p style="margin-bottom: 5px;">
+					<span class="pro_name">{{pro.title}}</span><br><!-- 名称 -->
+				</p>
+				<p style="margin-bottom: 5px;">
+					<span class="pro_spec">{{pro.subtitle}}</span><br><!-- 规格 -->
+				</p>
+				<p>
+					<span class="price">￥</span>
+					<span class="price" v-if="vip" >{{(pro.vipprice).toFixed(2)}}</span><!-- 会员价 -->
+					<span class="price" v-else >{{(pro.saleprice).toFixed(2)}}</span><!-- 原价 -->
+				</p>
+			</div>
+		</div>
+		<div class="buy_num"><!-- 购买数量div -->
+			<div class="left_text_box"><!-- 左侧“购买数量” -->
+				<span class="left_text">购买数量</span>
+			</div>
+			<div class="buy_num_r">
+				
+				<ul class="edit_num_box">
+					<li>
+						<ul class="count">
+							<li><span style="line-height: 30px;color: rgb(181, 181, 181);">库存剩余:{{stock}}&nbsp&nbsp&nbsp</span></li>
+							<li><span class="span_jian" id="jian_count" @click="reduce()"></span></li>
+							<li><input type="text" style="border-left: 0px;border-right: 0px;" id="count_val" class="input_num" v-model="pro_num" @blur="blur()" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></li>
+							<li><span class="span_jia" id="jia_count" @click="add()"></span></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="discount"><!-- K币div -->
+			<div class="left_text_box"><!-- 左侧”购买数量“ -->
+				<span class="left_text">K币</span>
+				<span class="left_text" v-if="bounty_count>0" style="font-size: 13px;margin-left: 10px;color: #b5b5b5;">共<span id="dis_count">{{bounty_count}}</span>个K币，最多可抵￥<span id="can_dis_price">{{getUseBountyPrice()}}</span></span>
+				<span class="left_text" v-else style="font-size: 13px;margin-left: 10px;color: #b5b5b5;">账户K币余额为0</span>
+			</div>
+			<div class="right_img"><!-- K币右侧按钮 -->
+				<input type="checkbox" v-if="bounty_count>0&&stock>0" id="bounty" style="webkit-tap-highlight-color:rgba(255,0,0,0);" v-model="use_bounty">
+				<!-- <input type="checkbox" v-else id="bounty" style="webkit-tap-highlight-color:rgba(255,0,0,0);" v-model="use_bounty" readonly="readonly"> -->
+			</div>
+		</div>
+		<div class="items_price"><!-- 商品总额div -->
+			<div>
+				<div class="left_text_box"><!-- 左侧”购买数量“ -->
+					<span class="left_text">商品总额</span>
+				</div>
+				<div class="right_box"><!-- K币右侧div -->
+					<span>￥</span>
+					<span id="before_discount_total_price" v-if="vip">{{(pro.vipprice*pro_num).toFixed(2)}}</span>
+					<span id="before_discount_total_price" v-else>{{(pro.saleprice*pro_num).toFixed(2)}}</span>
+				</div>
+			</div>
+			<div class="left_text_box_append" id="use_dis" v-if="use_bounty&&bounty_count>0">
+				<div class="left_text_box"><!-- 左侧”购买数量“ -->
+					<span class="left_text">K币</span>
+				</div>
+				<div class="right_box"><!-- K币右侧div -->
+					<span>-￥</span><span id="dis_price">{{getUseBountyPrice()}}</span>
+				</div>
+			</div>
+			
+		</div>
+		<div id="pay"><!-- 支付div -->
+			<div class="pay_box"><!-- 微信支付div -->
+				<div class="wx_l">
+					<div class="wx_logo"></div><!-- 微信图标 -->
+					<div class="pay_title_box">
+						<span class="pay_title">微信支付</span>
+					</div>
+				</div>
+				<div class="wx_r">
+					<input style="outline:none;" type='radio' name='checkbox' value='off' class='checkbox' checked='checked' @click="updatePayType(1)">
+				</div>
+			</div>
+			<div class="pay_box ali_pay_box" style="border-top: 1px solid #eee;"><!-- 支付宝支付div -->
+				<div  class="ali_l">
+					<div class="ali_logo"></div><!-- 支付宝图标 -->
+					<div class="pay_title_box">
+						<span class="pay_title">支付宝支付</span>
+					</div>
+				</div>
+				<div class="ali_r">
+					<input style="outline:none;" type='radio' name='checkbox' value='off' class='checkbox' @click="updatePayType(2)">
+				</div>
+			</div>
+		</div>
+		<!-- 模态框DIV -->
+	   	<div id="modal-overlay" class="col-xs-9 col-md-3">
+	      <div class="modal-data">
+	        <div>
+		        <span style="color: black;font-size: 15px;">安全验证</span>
+			  	<p><small>使用K币，请验证身份</small></p>
+	        </div>
+		  	
+		  	<div class="sms_inp">
+				<input type="text" style="padding-left: 2px;width: 150px;float: left;margin-left: 10px;height: 40px;" v-model="smsCode" class="form-control" placeholder="请输入短信验证码">
+				<button type="button" id="sms_input" @click="getSms()" class="btn btn-default" style="padding: 0px;width: 120px;background: #ff7070;color: white;border-radius: 0px;border: 0px;height: 40px;">获取验证码</button>
+			</div>
+			
+		  	<div class="q_box">
+		  	  <div class="q_box_a" @click="close()">
+		  	     <span>取消</span>
+		  	   </div>
+		  	   <div class="q_box_b" @click="pay()">
+		  	  	 <span>确定</span>
+		  	   </div>
+		  	  </div>
+	          <!-- <p>点击 <a href="#" onclick="overlay()">这里</a>关闭</p> -->
+	      </div>
+	    </div>
+		<!-- alert模态框 -->
+	   	<div id="alertModel" class="col-xs-9 col-md-3">
+	      <div class="modal-data">
+		        <span style="color: black;font-size: 15px;">提示</span>
+			  	<p><small id="alertMsg" style="line-height: 75px;"></small></p>
+	      </div>
+	    </div>
+	</div>
+	<div class="total_price" id="pp2"><!-- 合计付款div -->
+		<div class="l_price_box"><!-- 左边价格 会员价+非会员价 -->
+			<span>合计:￥</span>
+			<span id="after_total_price">{{total_price}}</span>
+	  	</div>
+	  	<div class="r_nowBuy" v-if="stock>0" @click="showBox()"></div><!-- 右边立即购买框 -->
+	  	<div class="r_sold_out" v-else></div><!-- 库存不足 -->
+	</div>
+	
+	<div id="loading" style="visibility: hidden;">
+		
+	</div>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<!-- <script type="text/javascript" src="./js/test.js"></script> -->
+	<script type="text/javascript">
+		var sknapp = (function(){
+			return navigator.userAgent.toLowerCase().indexOf('sknhome') !== -1
+		})();
+		var wx= (function(){
+			return navigator.userAgent.toLowerCase().indexOf('micromessenger') !== -1
+		})();
+			
+		if(wx){
+       		$(".ali_pay_box").css({"display":"none"});
+	    }
+		/* 订单页面总信息 */
+  		var order = new Vue({
+  			el: '#pp1',
+  			data: {
+  				pro:null,/* 页面商品信息 */
+  				addr:null,/* 页面地址信息 */
+  				vip:false,/* 用户是否是会员 */
+  				pro_num:1,/* 购买的数量 */
+  				bounty_count:0,/* K币数量 */
+  				bounty_user_count:0,/* 使用K币数量 */
+  				smsCode:"",
+  				stock:0,/* 库存剩余 */
+  				smsSta: false,
+  				use_bounty: false,/* 是否启用K币 */
+  				payType: 1//默认微信
+  			},
+  			methods:{
+  				pay(){
+  					if(this.smsCode!=""){
+	  					result.pay()
+  					}else{
+  						alert2("请输入短信验证码")
+  					}
+  				},
+  				close(){
+  					$("#modal-overlay").css({'visibility': 'hidden'});
+  				},
+  				getSms(){
+  					$.ajax({
+  						url: '/v1/getEShopPayCode',
+  						data: '',
+  						type: 'GET',
+  						dataType: 'json',
+  						/* dataType: 'jsonp',
+  						xhrFields: {
+			                withCredentials: false,
+			            },
+			            headers: {
+			                Accept: 'application/javascript; charset=utf-8',
+			                'Content-Type': 'application/javascript; charset=utf-8',
+			                'Access-Control-Allow-Origin': '*',
+			            },  */
+  						success : function(data){
+  							if(data.code==202){
+  		  						window.location.href="/public/app/eshop/EShopLogin.html";
+  		  					}
+  						},
+  						error: function(err){
+  							console.log(err)
+  						}
+  					})
+  					setTime($("#sms_input")) 
+  				},
+  				getUseBountyPrice(){//展示用户可使用最大K币
+  					//计算用户可使用最大K币数量 并将其返回
+  					var totalPrice = (this.pro_num*(this.vip?this.pro.vipprice:this.pro.saleprice)).toFixed(2);
+  					var bountyPrice = this.bounty_count*0.1;//用户K币折合成人民币价格
+  					if(bountyPrice>=totalPrice){//K币总额大于商品价格
+  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+  						return (this.bounty_user_count/10).toFixed(2);//最多可抵折扣价
+  					}else{//没有超出限额
+  						this.bounty_user_count = this.bounty_count;//最大使用K币数量
+  						return (this.bounty_user_count/10).toFixed(2);//最多可抵折扣价
+  					}
+  				},
+  				updatePayType(val){
+  					this.payType = val;
+  				},
+  				add(){
+  					debugger
+  					if(this.pro_num<result.stock){
+  						this.pro_num++
+  						
+  						var totalPrice = (this.pro_num*(this.vip?this.pro.vipprice:this.pro.saleprice)).toFixed(2);
+  	  					var bountyPrice = this.bounty_count*0.1;
+  	  					var t1 = 0;
+  	  					var t2 = 0;
+  						if(this.vip){//如果用户是VIP
+  							if(this.use_bounty){//用户启用K币
+	  							/* result.total_price = ((this.pro.vipprice*this.pro_num)-this.bounty_user_count/10).toFixed(2); */
+  								if(bountyPrice>=totalPrice){//K币总额大于商品价格
+  			  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+  			  						$("#pay").css({'visibility': 'hidden'})
+  			  						result.total_price = ((this.pro.vipprice*this.pro_num)-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  			  					}else{//没有超出限额
+  			  						$("#pay").css({'visibility': 'visible'})
+  			  						this.bounty_user_count = this.bounty_count;//最大使用K币数量
+  			  						result.total_price = ((this.pro.vipprice*this.pro_num)-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  			  					}
+	  							
+  							}else{//用户未使用K币
+	  							result.total_price = (this.pro.vipprice*this.pro_num).toFixed(2);
+  							}
+  						
+		  				}else{//用户不是VIP
+		  					
+  							if(this.use_bounty){//用户启用K币
+  	 		  					if(bountyPrice>=totalPrice){//K币总额大于商品价格
+  	 		  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+  	 		  						$("#pay").css({'visibility': 'hidden'})
+  		 							result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}else{
+  	 		  						$("#pay").css({'visibility': 'visible'})
+  	 		  						this.bounty_user_count = this.bounty_count;//有多少使用多少
+  	 		  						result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}
+  			  					
+  							}else{//没有超出限额
+	  							result.total_price = (this.pro.saleprice*this.pro_num).toFixed(2);
+  							}
+		  				}
+  					}
+  				},
+  				reduce(){
+  					debugger
+  					if(this.pro_num>1){
+  						this.pro_num--
+  						
+  						var totalPrice = (this.pro_num*(this.vip?this.pro.vipprice:this.pro.saleprice)).toFixed(2);
+  	  					var bountyPrice = this.bounty_count*0.1;
+  	  					
+  						if(this.vip){
+  							if(this.use_bounty){//用户启用K币
+  	 		  					if(bountyPrice>=totalPrice){//K币总额大于商品价格
+  	 		  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+  	 		  						$("#pay").css({'visibility': 'hidden'})
+  		 							result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}else{
+  	 		  						$("#pay").css({'visibility': 'visible'})
+  	 		  						this.bounty_user_count = this.bounty_count;//有多少使用多少
+  	 		  						result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}
+	  							
+  							}else{//没有启用K币
+	  							result.total_price = (this.pro.vipprice*this.pro_num).toFixed(2);
+  							}
+		  				}else{
+		  					if(this.use_bounty){//用户启用K币
+  	 		  					if(bountyPrice>=totalPrice){//K币总额大于商品价格
+  	 		  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+  	 		  						$("#pay").css({'visibility': 'hidden'})
+  		 							result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}else{
+  	 		  						$("#pay").css({'visibility': 'visible'})
+  	 		  						this.bounty_user_count = this.bounty_count;//有多少使用多少
+  	 		  						result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}
+  							}else{//没有启用K币
+	  							result.total_price = (this.pro.saleprice*this.pro_num).toFixed(2);
+  							}
+		  				}
+  					}
+  				},
+  				addrPage(){
+  					if(this.addr==null){
+  						window.location.href="/public/app/eshop/EShopAddAddress.html";
+  						
+  					}else{
+  						window.location.href="/public/app/eshop/EShopAddresses.html?pid="+this.pro.idd;
+  					}
+  				}
+  			},
+  			watch : {
+ 					pro_num : function(count){
+ 						debugger
+ 						count = count.toString().replace(/[^\d.]/g,'');
+	  					if(count==""||count==0){/* 判断input是否没填写数据 */
+	  		  				$("#count_val").val(this.pro_num=count=1);
+	  		  			}
+	  		  			if(count>result.stock){/* 判断input填写的数据书否大于999 */
+	  		  				$("#count_val").val(this.pro_num=count=result.stock);
+	  		  			}
+  		  				this.pro_num=count
+  		  				
+  		  				var totalPrice = (this.pro_num*(this.vip?this.pro.vipprice:this.pro.saleprice)).toFixed(2);
+  	  					var bountyPrice = this.bounty_count*0.1;
+	  		  			if(this.vip){
+	  		  				if(this.use_bounty){//用户启用K币
+	 		  					if(bountyPrice>=totalPrice){//K币总额大于商品价格
+	 		  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+	 		  						$("#pay").css({'visibility': 'hidden'})
+		 							result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+	 		  					}else{
+	 		  						$("#pay").css({'visibility': 'visible'})
+	 		  						this.bounty_user_count = this.bounty_count;//有多少使用多少
+	 		  						result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+	 		  					}
+  							
+							}else{//没有启用K币
+  								result.total_price = (this.pro.vipprice*this.pro_num).toFixed(2);
+							}
+		  				}else{
+		  					if(this.use_bounty){//用户启用K币
+  	 		  					if(bountyPrice>=totalPrice){//K币总额大于商品价格
+  	 		  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+  	 		  						$("#pay").css({'visibility': 'hidden'})
+  		 							result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}else{
+  	 		  						$("#pay").css({'visibility': 'visible'})
+  	 		  						this.bounty_user_count = this.bounty_count;//有多少使用多少
+  	 		  						result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+  	 		  					}
+  							}else{//没有启用K币
+	  							result.total_price = (this.pro.saleprice*this.pro_num).toFixed(2);
+  							}
+		  				}
+ 					},
+ 					
+ 					use_bounty : function(use){
+ 						if(use){//使用K币
+ 							var totalPrice = (this.pro_num*(this.vip?this.pro.vipprice:this.pro.saleprice)).toFixed(2);
+ 		  					var bountyPrice = this.bounty_count*0.1;
+ 		  					if(bountyPrice>=totalPrice){//K币总额大于商品价格
+ 		  						this.bounty_user_count = totalPrice*10;//最大使用K币数量
+ 		  						$("#pay").css({'visibility': 'hidden'})
+	 							result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+ 		  					}else{
+ 		  						$("#pay").css({'visibility': 'visible'})
+ 		  						this.bounty_user_count = this.bounty_count;//有多少使用多少
+ 		  						result.total_price = (totalPrice-(this.bounty_user_count/10).toFixed(2)).toFixed(2);
+ 		  					}
+ 		  					
+ 						}else{
+ 							$("#pay").css({'visibility': 'visible'})
+ 							if(this.vip){
+ 			  					result.total_price = (this.pro.vipprice*this.pro_num).toFixed(2);
+ 			  				}else{
+ 			  					result.total_price = (this.pro.saleprice*this.pro_num).toFixed(2);
+ 			  				}
+ 						}
+ 					}
+ 				}
+  		})
+  		/* 订单结果信息 */
+  		var result = new Vue({
+  			el: '#pp2',
+  			data: {
+  				total_price:0,/* 总价 */
+  				stock:0/* 当前库存 */
+  			},
+  			methods:{
+  				showBox(){
+  					if(order.use_bounty){
+	  					$("#modal-overlay").css({'visibility': 'visible'})
+  					}else{
+	  					this.pay()
+  					}
+  				},
+  				pay(){
+  					debugger
+  					$("#modal-overlay").css({'visibility': 'hidden'})
+  					if(order.addr==null){
+  						alert2("请添加地址")
+  						return;
+  					}
+  					var request = GetRequest();
+  					var totalPrice = order.pro_num*(order.vip?order.pro.vipprice:order.pro.saleprice);
+  					var bountyPrice = order.bounty_count*0.1;
+  					if(order.use_bounty&&bountyPrice>=totalPrice){
+						$.ajax({
+  							type : 'get',
+  							dataType : 'json',
+  							async : false,
+  							url : '/v1/buyEShopProduct_Wx_Wap',
+  							data: 
+  							{
+  								timestamp:new Date().getTime(),
+  	  							pid:GetRequest()['idd'],
+  	  							amount:order.pro_num,
+  	  							bvalue:order.use_bounty?(Math.ceil(order.bounty_user_count)):0,
+  	  							consigneeId:order.addr['idd'],
+  	  							smsCode:order.smsCode
+  							},
+  							success : function(rsp) {
+  								if(rsp){
+  									if(rsp.code==0){
+  										window.location.href = "/public/app/eshop/EShopPayResult.html?orderid="+rsp.data.orderid;
+  									}else{
+  	  									alert2(rsp.message)
+  	  								}
+  								}
+  							}
+  						});
+					}else if(is_weixin()){/* 微信浏览器中发起的支付 */
+  						$.ajax({
+  	  						type : 'get',
+  	  						dataType : 'json',
+  	  						async : false,
+  	  						url : '/v1/buyEShopProduct_Wx_Web',
+  	  						data: 
+  	  						{
+  	  							timestamp:new Date().getTime(),
+  	  							pid:GetRequest()['idd'],
+  	  							amount:order.pro_num,
+  	  							bvalue:order.use_bounty?(Math.ceil(order.bounty_user_count)):0,
+  	  							consigneeId:order.addr['idd'],
+  	  							smsCode:order.smsCode
+  							},
+  	  						success : function(rsp) {
+  	  							if(rsp){
+  	  								if(rsp.code==0){
+  	  									function onBridgeReady(){
+  	  									   WeixinJSBridge.invoke(
+  	  										  'getBrandWCPayRequest', 
+  	  										  {
+  											      "appId":rsp.data.appId,
+  	   											  "timeStamp":rsp.data.timeStamp,
+  	   											  "nonceStr":rsp.data.nonceStr,
+  	   											  "package":rsp.data.package,
+  	   											  "signType":rsp.data.signType,
+  	   											  "paySign":rsp.data.paySign
+  	  										  },
+  	  										  function(res){
+  	  											  if(res.err_msg == "get_brand_wcpay_request:ok" ){
+  										  		  	// 使用以上方式判断前端返回,微信团队郑重提示：
+  												  	//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+  	  											    window.location.href = "/public/app/eshop/EShopPayResult.html?orderid="+rsp.data.orderid;
+  	  											  } 
+  	  										   }); 
+  	  									}
+  	  									if (typeof WeixinJSBridge == "undefined"){
+  	  									   if( document.addEventListener ){
+  	  										   document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+  	  									   }else if (document.attachEvent){
+  	  										   document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+  	  										   document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+  	  									   }
+  	  									}else{
+  	  									   onBridgeReady();
+  	  									}
+  	  								}else if(rsp.code==3){
+  	  									window.location.href = "/wx/toOAuth";	
+  	  								}else{
+  	  									alert2(rsp.message)
+  	  								}
+  	  							}
+  	  						}
+  	  					});
+  					}else if(sknapp){/* sknapp内发起的支付 */
+  						if(order.use_bounty){//判断是否启用K币
+	  						window.location.href = 'skn://payforshop?pid='+(GetRequest()['idd'])+'&amount='+(order.pro_num)+'&consigneeid='+(order.addr['idd'])+'&bvalue='+(order.use_bounty?(Math.ceil(order.bounty_user_count)):0)+'&paychannel='+(order.payType)+"&smscode="+order.smsCode;
+  						}else{
+	  						window.location.href = 'skn://payforshop?pid='+(GetRequest()['idd'])+'&amount='+(order.pro_num)+'&consigneeid='+(order.addr['idd'])+'&bvalue='+(order.use_bounty?(Math.ceil(order.bounty_user_count)):0)+'&paychannel='+(order.payType);
+  						}
+  					}else{/* 非微信网页支付 */
+  						if(order.payType==1){//微信支付
+	  						$.ajax({
+	  							type : 'get',
+	  							dataType : 'json',
+	  							async : false,
+	  							url : '/v1/buyEShopProduct_Wx_Wap',
+	  							data: 
+	  							{
+	  								timestamp:new Date().getTime(),
+	  	  							pid:GetRequest()['idd'],
+	  	  							amount:order.pro_num,
+	  	  							bvalue:order.use_bounty?(Math.ceil(order.bounty_user_count)):0,
+	  	  							consigneeId:order.addr['idd'],
+	  	  							smsCode:order.smsCode
+	  							},
+	  							success : function(rsp) {
+	  								if(rsp){
+	  									if(rsp.code==0){
+	  										/* var suc = rsp.data.mweb_url+"&redirect_url="+encodeURIComponent("http://www.sknhome.com/public/app/eshop/EShopPayResult.html?orderid="+rsp.data.orderid+"orderStatus=0");
+	  										var fai = rsp.data.mweb_url+"&redirect_url="+encodeURIComponent("http://www.sknhome.com/public/app/eshop/EShopPayResult.html?orderid="+rsp.data.orderid+"orderStatus=1");
+	  										doLoad(suc,fai,rsp.data.orderid) */
+		  									if(rsp.data.mweb_url){
+		  										window.location.href = rsp.data.mweb_url+"&redirect_url="+encodeURIComponent("http://www.sknhome.com/public/app/eshop/EShopPayResult.html?orderid="+rsp.data.orderid);
+		  									}else{
+		  										window.location.href = "/public/app/eshop/EShopPayResult.html?orderid="+rsp.data.orderid;
+		  									}
+	  									}else{
+	  	  									alert2(rsp.message)
+	  	  								}
+	  								}
+	  							}
+	  						});
+  						}else if(order.payType==2){//支付宝支付
+  							/* window.location.href = '/v1/buyEShopProduct_Ali_Wap?pid='+(GetRequest()['idd'])+'&amount='+(order.pro_num)+'&consigneeId='+(order.addr['idd'])+'&bvalue='+(order.use_bounty?order.bounty_count:0)+'&paychannel='+(order.payType); */
+							$.ajax({
+								type : 'get',
+								dataType : 'json',
+								async : false,
+								url : '/v1/buyEShopProduct_Ali_Wap',
+								data: 
+	  							{
+	  								timestamp:new Date().getTime(),
+	  	  							pid:GetRequest()['idd'],
+	  	  							amount:order.pro_num,
+	  	  							bvalue:order.use_bounty?(Math.ceil(order.bounty_user_count)):0,
+	  	  							consigneeId:order.addr['idd'],
+	  	  							smsCode:order.smsCode
+	  							},
+								success : function(rsp) {
+									if(rsp){
+										if(rsp.code==0){
+											document.write(rsp.data.form);
+										}else{
+											alert2(rsp.message)
+										}
+									}
+								}
+							});
+
+  						}
+
+  					}
+  					
+  				}
+  			}
+  		})
+	  	window.onload=function(){
+	  		var idd = GetRequest()['idd'];
+	  		/* 初始化页面信息 */
+	  		$.ajax({
+  				url: '/v1/findProInfo',
+  				data: {idd:idd},
+  				type: 'POST',
+  				dataType: 'json',
+  				cache: false,
+  				async: false,
+  				success: function(data){
+  					order.pro = data;
+  					result.stock=order.stock=data.stock;
+  					
+  				},
+  				error: function(err){
+  					console.log(err)
+  				}
+  			})
+  			/* 判断用户是否是会员 */
+	  		$.ajax({
+  				url: '/v1/checkVip',
+  				data: {},
+  				type: 'GET',
+  				dataType: 'json',
+  				cache: false,
+  				async: false,
+  				success: function(data){
+  					if(data.data==1){
+  						order.vip=true
+	  					result.total_price = ((order.pro.vipprice)*order.pro_num).toFixed(2);
+  					}else{
+	  					result.total_price = ((order.pro.saleprice)*order.pro_num).toFixed(2);
+  					}
+  				},
+  				error: function(err){
+  					console.log(err)
+  				}
+  			})
+  			/* 获取用户K币数量 */
+	  		$.ajax({
+  				url: '/v1/getBountyCount',
+  				data: {},
+  				type: 'GET',
+  				dataType: 'json',
+  				cache: false,
+  				async: false,
+  				success: function(data){
+  					order.bounty_count = data.data
+  				},
+  				error: function(err){
+  					console.log(err)
+  				}
+  			})
+  			
+  			/* 获取用户地址信息 */
+	  		$.ajax({
+  				url: '/v1/findAddr',
+  				data: {},
+  				type: 'POST',
+  				dataType: 'json',
+  				cache: false,
+  				async: false,
+  				success: function(data){
+  					var arr = data.data;
+  					if(data.code==202){
+  						window.location.href="/public/app/eshop/EShopLogin.html";
+  					}
+  					if(arr.length==0){
+	  					console.log("用户需要先添加地址")
+  					}else{
+  						var flag = true;
+  						arr.forEach((item,index,arr)=> {
+  						    var addr = arr[index];
+  						    if(typeof(GetRequest()['addrid']) == 'undefined'){/* 判断是都是地址选择携带的地址 */
+	  						    if(addr['isdefault']==1){
+	  						    	order.addr = addr;
+									flag=false;
+	  						    }
+  						    }else{
+  						    	if(addr['idd']==GetRequest()['addrid']){
+	  						    	order.addr = addr;
+									flag=false;
+	  						    }
+  						    }
+  						})
+  						if(flag){/* 说明用户没有默认地址  则获取第一位*/
+  							order.addr = arr[0];
+  						}
+  					}
+  				},
+  				error: function(err){
+  					console.log(err)
+  				}
+  			})
+	  	}
+		
+		//判断是否是微信浏览器
+ 		function is_weixin(){
+  			var ua = navigator.userAgent.toLowerCase();
+  			if(ua.match(/MicroMessenger/i)=="micromessenger"){
+  				return true;
+  			}else{
+  				return false;
+  			}
+  		}
+ 		//60s倒计时实现逻辑
+        var countdown = 60;
+ 		function setTime(obj) {
+            if (countdown == 0) {
+                obj.prop('disabled', false);
+                obj.text("点击获取验证码");
+                countdown = 60;//60秒过后button上的文字初始化,计时器初始化;
+                return;
+            } else {
+                obj.prop('disabled', true);
+                obj.text("("+countdown+"s)后重新发送") ;
+                countdown--;
+            }
+            setTimeout(function() { setTime(obj) },1000) //每1000毫秒执行一次
+        }
+ 		//自制弹窗
+ 		var alertSt = true;
+ 		function alert2(msg) {
+            if (alertSt) {
+            	$("#alertModel").css({'visibility': 'visible'})
+            	$("#alertMsg").html(msg)
+            	alertSt = false;
+            } else {
+            	$("#alertModel").css({'visibility': 'hidden'})
+            	alertSt = true;
+                return;
+            }
+            setTimeout(function() { alert2(msg) },1500) //每1000毫秒执行一次
+        }
+ 			/* 获取连接中携带的参数 */
+		function GetRequest() {
+	  		var url = location.search; //获取url中"?"符后的字串
+	  		var theRequest = new Object();
+	  		if (url.indexOf("?") != -1) {
+		  		var str = url.substr(1);
+		  		strs = str.split("&");
+		  		for(var i = 0; i < strs.length; i ++) {
+		  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		  		}
+	  		}
+	  		return theRequest;
+		}
+  	</script>
+</body>
+</html>

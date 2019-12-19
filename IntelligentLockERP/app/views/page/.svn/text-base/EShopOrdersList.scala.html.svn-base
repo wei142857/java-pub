@@ -1,0 +1,1292 @@
+
+@htmlhead("APP商城订单 列表"){
+<script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+	function onclickbody(){
+		$("#mygrid").find("div.op-menu:visible").hide();
+	}
+	$(document).ready(	function() {
+		//枚举初始化
+		
+		//Grid 初始化
+		$('#mygrid').omGrid({
+			height : 505,
+			dataType : "json",
+			dataSource : '/EShopOrders/List',
+			showIndex : false,
+			limit : 13,									
+			errorMsg : "获取数据出错",
+			emptyMsg : "没有数据",
+			
+			//Grid的header配置   ！！！！
+			colModel : [
+					{
+						header : 'ID',
+						name : 'idd',
+							width : 40,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '用户ID',
+						name : 'userid',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '省',
+						name : 'province',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '市',
+						name : 'city',
+							width : 80,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '产品ID',
+						name : 'pidd',
+							width : 40,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '标题',
+						name : 'title',
+							width : 80,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '商品描述',
+						name : 'subtitle',
+							width : 120,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '小图',
+						name : 'smallimgurl',
+							width : 120,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(!colValue)
+								return '';
+	                   		return "<img src="+colValue+" width='100''>";
+						}
+					},
+					{
+						header : '购买的数量',
+						name : 'amount',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '添加时间',
+						name : 'addtime',
+							width : 150,
+						align : 'center',
+						sort:'clientSide'
+						,renderer : function(colValue) {   
+                      		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+                   		}
+					},
+					{
+						header : '人民币支付价格(分)',
+						name : 'money',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '奖励金支付数量',
+						name : 'bvalue',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '成本价',
+						name : 'pcsaleprice',
+							width : 60,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '会员状态',
+						name : 'vipstatus',
+							width : 60,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(colValue=="0"){
+								return "<span style='color:red'>"+'会员'+"</span>";
+							}else if(colValue=="1"){
+								return "<span style='color:#ffc107'>"+'会员过期'+"</span>";
+							}else{
+								return "<span>"+'未开通'+"</span>";
+							}
+						}
+					},
+					{
+						header : '支付成功时间',
+						name : 'updatetime',
+							width : 150,
+						align : 'center',
+						sort:'clientSide'
+						,renderer : function(colValue) {   
+                      		return fmtDate(new Date(colValue),"yyyy年MM月dd日hh:mm:ss");
+                   		}
+					},
+					{
+						header : '订单状态',
+						name : 'status',
+							width : 60,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(colValue=="0"){
+								return "<span style='color:green'>"+'成功'+"</span>";
+							}else if(colValue=="1"){
+								return "<span style='color:#ffc107'>"+'待支付'+"</span>";
+							}else{
+								return "<span style='color:red'>"+'超时'+"</span>";
+							}
+						}
+					},
+					{
+						header : '支付订单',
+						name : 'prepayid',
+							width : 80,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '收件人姓名',
+						name : 'consigneename',
+							width : 80,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '收件人地区',
+						name : 'consigneearea',
+							width : 80,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '收件人详细地址',
+						name : 'consigneeaddress',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '收件人手机号',
+						name : 'consigneephone',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '物流名称',
+						name : 'expressname',
+							width : 80,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '物流号',
+						name : 'expressorderid',
+							width : 100,
+						align : 'center',
+						sort:'clientSide'
+					},
+					{
+						header : '物流状态',
+						name : 'expressstatus',
+							width : 60,
+						align : 'center',
+						sort:'clientSide',
+						renderer:function(colValue){
+							if(colValue=="0"){
+								return "<span style='color:green'>"+'已发货'+"</span>";
+							}else if(colValue=="1"){
+								return "<span style='color:#ffc107'>"+'未发货'+"</span>";
+							}else{
+								return "<span style='color:red'>"+'已退货'+"</span>";
+							}
+						}
+					},
+					{
+						header : '操作', 
+						name : 'operation',
+							width:'autoExpand', 
+						align:'center', 
+						renderer:function(colValue, rowData, rowIndex){
+							// 构建表格里面每一行的操作按钮和弹出菜单的html ！！！！。
+			     			var menu = "<div id='"+rowData.idd+"' class='op-menu' style='display:block;width:105px;'><div class='edit' style='width:90px;'>编辑物流信息</div><div class='salesreturn' style='width:90px;background: url(/public/images/op-delete.png) no-repeat scroll 7px 5px;'>退货</div></div>";
+			     			var btn = "<a href='javascript:void(0);' id='op-btn-"+rowIndex+"' class='op-btn'>操作</a>";
+			     			return menu + btn;
+						}
+					}
+				]
+				,onRefresh: function(nowPage, pageRecords,event){
+               		var $grid = $('#mygrid'); 
+               	    $grid.find("a.op-btn").each(function(){
+               			var $btn = $(this);
+	              		// 初始化表格里面的操作按钮 
+	              		$btn.omButton({
+	              			icons : {left : '/public/images/op-btn-icon.png'},
+	              			width : 75,
+	              			onClick : function(event){                				
+	              				var v = $grid.find("div.op-menu:visible");
+	              				var $opMenu = $(event.currentTarget.previousSibling);
+	              				// 重新计算菜单的位置
+	              				var left = $btn.offset().left - $grid.offset().left - 105 + "px";
+	              				if($opMenu.css("display") == "none"){
+	              					$opMenu.show().css({left:left});
+	              				} else{
+	              					$opMenu.hide();
+	              				}
+	              				v.hide();
+	              				event.stopPropagation();
+	              				return false;
+	              			}
+	              		});
+	              	});
+	               	// 绑定表格操作按钮菜单的事件 ！！！！
+	               	$grid.find("div.op-menu").each(function(){
+	               		var $menu = $(this);
+	               		var rowindex=$menu.id;
+	               		$menu.hide();
+	               		$menu.find(".edit").click(function(){
+							isAdd = false;
+							var index = $(this).parent().attr('id');
+			                showDialog('修改',index);//显示dialog
+						});
+	               		$menu.find(".salesreturn").click(function(){
+							var index = $(this).parent().attr('id');
+							doAsk('确定退货吗？' , delit , index );
+						});
+	               	});
+	             }
+			});
+		
+			//[新增/修改]dialog初始化
+			var dialog = $("#dialog-form").omDialog({
+				width : 460,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"取消" : function() {
+						$("#dialog-form").omDialog("close");//关闭dialog
+					}
+				}
+			});
+						
+			/*$('#add').bind('click', function() {
+                isAdd = true;
+                showDialog('新增',null);//显示dialog
+            }); */
+            
+          	//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+			var showDialog = function(title, idd) {
+				validator.resetForm();
+				if(idd!=null){
+					//edit info;
+					var uri = "/EShopOrders/Get/"+idd;
+					$.get(uri,function(response){
+			            if(response!=null){
+			            	$("input[name='idd']", dialog).val(response.idd);
+							$("input[name='expressname']", dialog).val(response.expressname);
+							$("input[name='expressorderid']", dialog).val(response.expressorderid);
+			         	}
+					});
+				}
+				dialog.omDialog("option", "title", title);
+				dialog.omDialog("open");//显示dialog 
+			};
+			
+			//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+			var submitDialog = function() {
+				if (validator.form()) {
+					var submitData = {
+						idd : $("input[name='idd']", dialog).val()	
+						,expressname : $("input[name='expressname']", dialog).val()
+						,expressorderid : $("input[name='expressorderid']", dialog).val()
+					};
+					$.post('/EShopOrders/Modify', submitData, function(returnMessage) {
+						if(returnMessage.code=="0"){
+							$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+							$.omMessageTip.show({
+								title : "操作成功",
+								content : "修改数据成功",
+								timeout : 1500
+							});
+							$("#dialog-form").omDialog("close"); //关闭dialog
+						}else{
+							$.omMessageTip.show({
+								type: "error",
+								title : "操作失败",
+								content : returnMessage.message,
+								timeout : 5000
+							});
+							$("#dialog-form").omDialog("close"); //关闭dialog
+						}
+					});
+				}
+			};
+						
+			//填充 [新增/修改]dialog并初始化里面的输入框的数据  ！！！！
+			/* var showDialog = function(title, idd) {
+				validator.resetForm();
+				if(idd!=null){
+					//edit info;
+					var uri = "/EShopOrders/Get/"+idd;
+					$.get(uri,function(response){
+			            if(response!=null){
+							$("input[name='idd']", dialog).val(response.idd);
+						
+							$("input[name='userid']", dialog).val(response.userid);
+						
+							$("input[name='province']", dialog).val(response.province);
+							
+							$("input[name='city']", dialog).val(response.city);
+						
+							$("input[name='pidd']", dialog).val(response.pidd);
+						
+							$("input[name='title']", dialog).val(response.title);
+						
+							$("input[name='description']", dialog).val(response.description);
+							
+							$("input[name='upload_smallimg_url']", dialog).val(response.smallimgurl);
+						
+							$("input[name='amount']", dialog).val(response.amount);
+						
+							$("input[name='money']", dialog).val(response.money);
+						
+							$("input[name='bvalue']", dialog).val(response.bvalue);
+						
+							$("input[name='pcsaleprice']", dialog).val(response.pcsaleprice);
+						
+							if(response.vipstatus=="0"){
+								$("input[id='hy']").attr("checked","checked");
+							}else if(response.vipstatus=="1"){
+								$("input[id='gq']").attr("checked","checked");
+							}else if(response.vipstatus=="2"){
+								$("input[id='wkt']").attr("checked","checked");
+							}
+						
+							if(response.status=="0"){
+								$("input[id='cg']").attr("checked","checked");
+							}else if(response.status=="1"){
+								$("input[id='dzf']").attr("checked","checked");
+							}else if(response.status=="-1"){
+								$("input[id='cs']").attr("checked","checked");
+							}
+						
+							$("input[name='prepayid']", dialog).val(response.prepayid);
+						
+							$("input[name='consigneename']", dialog).val(response.consigneename);
+						
+							$("input[name='consigneearea']", dialog).val(response.consigneearea);
+						
+							$("input[name='consigneeaddress']", dialog).val(response.consigneeaddress);
+						
+							$("input[name='consigneephone']", dialog).val(response.consigneephone);
+						
+							$("input[name='expressname']", dialog).val(response.expressname);
+							
+							$("input[name='expressorderid']", dialog).val(response.expressorderid);
+						
+							if(response.expressstatus=="0"){
+								$("input[id='yfh']").attr("checked","checked");
+							}else if(response.expressstatus=="1"){
+								$("input[id='wfh']").attr("checked","checked");
+							}
+			         	}
+					});
+				}else{
+					$("input[id='hy']").attr("checked","checked");
+					$("input[id='cg']").attr("checked","checked");
+					$("input[id='yfh']").attr("checked","checked");
+				}
+				dialog.omDialog("option", "title", title);
+				dialog.omDialog("open");//显示dialog 
+			}; */
+						
+			//[新增/修改]dialog中点提交按钮时将数据提交到后台并执行相应的add或modify操作  ！！！！
+			/* var submitDialog = function() {
+				if (validator.form()) {
+					var submitData = {
+						operation : isAdd ? 'add' : 'modify',
+						idd : $("input[name='idd']", dialog).val()	
+						,userid : $("input[name='userid']", dialog).val()
+						,province : $("input[name='province']", dialog).val()
+						,city : $("input[name='city']", dialog).val()
+						,pidd : $("input[name='pidd']", dialog).val()
+						,title : $("input[name='title']", dialog).val()
+						,description : $("input[name='description']", dialog).val()
+						,smallimgurl : $("input[name='upload_smallimg_url']", dialog).val()
+						,amount : $("input[name='amount']", dialog).val()
+						,money : $("input[name='money']", dialog).val()
+						,bvalue : $("input[name='bvalue']", dialog).val()
+						,pcsaleprice : $("input[name='pcsaleprice']", dialog).val()
+						,vipstatus : $("input[name='vipstatus']:checked").val()
+						,status : $("input[name='status']:checked").val()
+						,prepayid : $("input[name='prepayid']", dialog).val()
+						,consigneename : $("input[name='consigneename']", dialog).val()
+						,consigneearea : $("input[name='consigneearea']", dialog).val()
+						,consigneeaddress : $("input[name='consigneeaddress']", dialog).val()
+						,consigneephone : $("input[name='consigneephone']", dialog).val()
+						,expressname : $("input[name='expressname']", dialog).val()
+						,expressorderid : $("input[name='expressorderid']", dialog).val()
+						,expressstatus : $("input[name='expressstatus']:checked").val()
+					};
+					$.post('/EShopOrders/Modify', submitData, function() {
+						if (isAdd) {
+							$('#mygrid').omGrid('reload', 1);//如果是添加则滚动到第一页并刷新
+							$.omMessageTip.show({
+								title : "操作成功",
+								content : "添加数据成功",
+								timeout : 1500
+							});
+						} else {
+							$('#mygrid').omGrid('reload');//如果是修改则刷新当前页
+							$.omMessageTip.show({
+								title : "操作成功",
+								content : "修改数据成功",
+								timeout : 1500
+							});
+						}
+						$("#dialog-form").omDialog("close"); //关闭dialog
+					});
+				}
+			}; */
+			
+			/* 直接上传文件,并判断大小和类型 */
+			/* 上传小图 */
+			/* $('#upload_smallimg').omFileUpload({
+				action:'/EShopOrders/UploadIcon',	//文件上传与后台交互
+				swf : '/public/javascripts/operamasks-ui-1.2/swf/om-fileupload.swf',	//文件上传的位置
+				fileExt:'*.jpg;*.png;*.jpeg',
+				fileDesc:'Resource Files',
+				method: 'POST',
+				sizeLimit : 1024*1024,
+				onComplete:function(ID,fileObj,response,data,event){
+					if(response!=null&&response.length>0){
+						$('#upload_smallimg_url').val(response);
+					}
+				}
+			}); */
+			
+			// 对修改表单的校验设置 ！！！！
+			var validator = $('#ipForm').validate({
+				rules : {
+					expressname : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					expressorderid : {
+						required : true,
+                     	maxlength : 100
+					}
+				},
+				messages : {
+					expressname : {
+						required : "物流名称不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					expressorderid : {
+						required : "物流号不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+				}
+			});
+			// 对增加/修改表单的校验设置 ！！！！
+			/* var validator = $('#ipForm').validate({
+				rules : {
+					userid : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					province : {
+						required : true,
+						maxlength : 100
+					}
+					,
+					city : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					pidd : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					title : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					description : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					smallimgurl : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					amount : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					money : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					bvalue : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					pcsaleprice : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					vipstatus : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					status : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					prepayid : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					consigneename : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					consigneearea : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					consigneeaddress : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					consigneephone : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					expressname : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					expressorderid : {
+						required : true,
+                     	maxlength : 100
+					}
+					,
+					expressstatus : {
+						required : true,
+                     	maxlength : 100
+					}
+				},
+				messages : {
+					userid : {
+						required : "用户编码不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					province : {
+						required : "省不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					city : {
+						required : "市不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					pidd : {
+						required : "产品ID不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					title : {
+						required : "标题不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					description : {
+						required : "商品描述不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					smallimgurl : {
+						required : "小图不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					amount : {
+						required : "购买的数量不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					money : {
+						required : "人民币支付价格(分)不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					bvalue : {
+						required : "奖励金支付数量不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					pcsaleprice : {
+						required : "成本价不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					vipstatus : {
+						required : "会员状态不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					status : {
+						required : "状态不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					prepayid : {
+						required : "支付订单不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					consigneename : {
+						required : "收件人姓名不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					consigneearea : {
+						required : "收件人地区不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					consigneeaddress : {
+						required : "收件人详细地址不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					consigneephone : {
+						required : "收件人手机号不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					expressname : {
+						required : "物流名称不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					expressorderid : {
+						required : "物流号不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+					,
+					expressstatus : {
+						required : "物流状态不能为空",
+						maxlength : '长度不能超过100个字符'
+					}
+				}
+			}); */
+								
+			//其他iframe 对话框 初始化-->
+			$( "#dialog-modal").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+			
+	        $( "#user_auth_form").omDialog({
+	            autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+	        });
+	        
+	        /* $("#user_add_form").omDialog({
+	        	autoOpen: false,
+	            width:535,
+	            height: 465,
+	            modal: true
+			});	 */
+	        
+	        /* var uploadDialog = $("#upload-form").omDialog({
+				width : 500,
+				autoOpen : false,
+				modal : true,
+				resizable : false,
+				buttons : {
+					"提交" : function() {
+						submitUploadDialog();
+						return false; //阻止form的默认提交动作
+					},
+					"关闭" : function() {
+						$("#upload-form").omDialog("close");//关闭dialog
+					}
+				}
+			}); */
+			
+			/* var submitUploadDialog = function(){
+				$("#upload-form").omDialog("close");
+				//var uploadidd = $("input[name='uploadidd']").val();
+				var uploadidd = '';
+				var url = "/EShopOrders/Upload";
+		        $.ajaxFileUpload({  
+		            url:url,  
+		            secureuri:false,  
+		            fileElementId:'file_excel',//file标签的id  
+		            dataType: 'json',//返回数据的类型  
+		            data:{uploadidd:uploadidd},//一同上传的数据  
+		            success: function (data, status) { 
+		            	console.log(data);
+		            	$.omMessageTip.show({
+							title : "操作成功",
+							content : "成功导入"+data+"条",
+							timeout : 1500
+						}); 
+		            },  
+		            error: function (data, status, e) {  
+		                alert(e);  
+		            }  
+		        });  
+			}; */
+			
+			/* $('#import').bind('click', function() {
+				$("#uploadForm")[0].reset(); */
+       			/*对应于指定目标的上传
+       			var index = $(this).parent().attr('id');
+       			$("input[name='uploadidd']").val(index); 
+       			*/
+       			/* uploadDialog.omDialog("option", "title", "导入（excel）");
+       			uploadDialog.omDialog("open");
+            }); */
+			
+			/* //给下载Excel样板按钮添加点击事件
+       	 	$('span#button-excel-sample').bind('click', function(e){
+       	 		var url = "/EShopOrders/DownSample";
+       	 		window.location.href = url;
+       			//window.open(url); //在另一个页面打开下载框
+       	 	}); */
+			
+			//搜索按钮加图片
+			var searchPanel = $("#search-panel").omPanel({
+	            	title : "工具栏",collapsible:true
+	            });
+			 $('span#button-search').omButton({
+          	    icons : {left : '/public/images/search.png'},width : 70
+       	 	    });
+			 $('span#button-noSearch').omButton({
+	          	    icons : {left : '/public/images/searchNo.png'},width : 70
+	       	 	});
+			 /* $('span#add').omButton({
+	          	    icons : {},width : 70
+	       	 	}); */
+			 /* $('span#button-excel-sample').omButton({
+				 	icons : {},width : 180
+			 	}); */
+			 /* $('span#import').omButton({
+	          	    icons : {},width : 140
+	       	 	}); */
+			 $('span#button-export').omButton({
+	          	   	width : 140
+	       	 });
+	       	 /* $('.salesreturn').omButton({
+	          	   	icons :{left : '/public/images/searchNo.png'},
+	          	   	width : 70
+	       	 }); */
+			 
+			//下载Excel格式
+	       	$('span#button-export').bind('click', function(e){
+	       		var searchStr='';
+                
+					searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+				
+					searchStr += 'userid='+encodeURI($("input[name='userid']", searchPanel).val())+"&";
+				
+					searchStr += 'province='+encodeURI($("input[name='province']", searchPanel).val())+"&";
+				
+					searchStr += 'city='+encodeURI($("input[name='city']", searchPanel).val())+"&";
+				
+					searchStr += 'pidd='+encodeURI($("input[name='pidd']", searchPanel).val())+"&";
+				
+					searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+				
+					searchStr += 'subtitle='+encodeURI($("input[name='subtitle']", searchPanel).val())+"&";
+				
+					searchStr += 'smallimgurl='+encodeURI($("input[name='smallimgurl']", searchPanel).val())+"&";
+				
+					searchStr += 'amount='+encodeURI($("input[name='amount']", searchPanel).val())+"&";
+				
+					searchStr += 'addtime='+encodeURI($("input[name='addtime']", searchPanel).val())+"&";
+				
+					searchStr += 'money='+encodeURI($("input[name='money']", searchPanel).val())+"&";
+				
+					searchStr += 'bvalue='+encodeURI($("input[name='bvalue']", searchPanel).val())+"&";
+				
+					searchStr += 'pcsaleprice='+encodeURI($("input[name='pcsaleprice']", searchPanel).val())+"&";
+				
+					searchStr += 'vipstatus='+encodeURI($("select[name='vipstatus']", searchPanel).val())+"&";
+				
+					searchStr += 'updatetime='+encodeURI($("input[name='updatetime']", searchPanel).val())+"&";
+				
+					searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+				
+					searchStr += 'prepayid='+encodeURI($("input[name='prepayid']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneename='+encodeURI($("input[name='consigneename']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneearea='+encodeURI($("input[name='consigneearea']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneeaddress='+encodeURI($("input[name='consigneeaddress']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneephone='+encodeURI($("input[name='consigneephone']", searchPanel).val())+"&";
+				
+					searchStr += 'expressname='+encodeURI($("input[name='expressname']", searchPanel).val())+"&";
+				
+					searchStr += 'expressorderid='+encodeURI($("input[name='expressorderid']", searchPanel).val())+"&";
+				
+					searchStr += 'expressstatus='+encodeURI($("select[name='expressstatus']", searchPanel).val())+"&";
+				
+                var url = '/EShopOrders/List?export=1&'+searchStr;
+                window.location.href = url;
+	        });	
+			
+			//搜索绑定 =》grid ！！！！
+       	 	$('span#button-search').bind('click', function(e) {
+                var searchStr='';
+                
+					searchStr += 'idd='+encodeURI($("input[name='idd']", searchPanel).val())+"&";
+				
+					searchStr += 'userid='+encodeURI($("input[name='userid']", searchPanel).val())+"&";
+				
+					searchStr += 'province='+encodeURI($("input[name='province']", searchPanel).val())+"&";
+				
+					searchStr += 'city='+encodeURI($("input[name='city']", searchPanel).val())+"&";
+				
+					searchStr += 'pidd='+encodeURI($("input[name='pidd']", searchPanel).val())+"&";
+				
+					searchStr += 'title='+encodeURI($("input[name='title']", searchPanel).val())+"&";
+				
+					searchStr += 'subtitle='+encodeURI($("input[name='subtitle']", searchPanel).val())+"&";
+				
+					searchStr += 'smallimgurl='+encodeURI($("input[name='smallimgurl']", searchPanel).val())+"&";
+				
+					searchStr += 'amount='+encodeURI($("input[name='amount']", searchPanel).val())+"&";
+				
+					searchStr += 'money='+encodeURI($("input[name='money']", searchPanel).val())+"&";
+				
+					searchStr += 'bvalue='+encodeURI($("input[name='bvalue']", searchPanel).val())+"&";
+				
+					searchStr += 'pcsaleprice='+encodeURI($("input[name='pcsaleprice']", searchPanel).val())+"&";
+				
+					searchStr += 'vipstatus='+encodeURI($("select[name='vipstatus']", searchPanel).val())+"&";
+				
+					searchStr += 'status='+encodeURI($("select[name='status']", searchPanel).val())+"&";
+				
+					searchStr += 'prepayid='+encodeURI($("input[name='prepayid']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneename='+encodeURI($("input[name='consigneename']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneearea='+encodeURI($("input[name='consigneearea']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneeaddress='+encodeURI($("input[name='consigneeaddress']", searchPanel).val())+"&";
+				
+					searchStr += 'consigneephone='+encodeURI($("input[name='consigneephone']", searchPanel).val())+"&";
+				
+					searchStr += 'expressname='+encodeURI($("input[name='expressname']", searchPanel).val())+"&";
+				
+					searchStr += 'expressorderid='+encodeURI($("input[name='expressorderid']", searchPanel).val())+"&";
+				
+					searchStr += 'expressstatus='+encodeURI($("select[name='expressstatus']", searchPanel).val())+"&";
+				
+                $('#mygrid').omGrid("setData", '/EShopOrders/List?'+searchStr );
+            });
+			 			
+			/*
+			$("input[name='idd']", searchPanel).omCombo({
+           	 	dataSource : '/EShopOrders/All',
+                optionField : function(data, index) {
+                    return data.idd;
+                },
+                valueField : 'idd',
+                inputField : 'idd'
+           	});*/
+			 			
+			//不搜索 =》grid
+       	 	$('span#button-noSearch').bind('click', function(e) {
+                   $('#mygrid').omGrid("setData", '/EShopOrders/List?key=');
+            });	
+            
+             // 点击页面其他地方的时候隐藏表格里面的菜单
+            $("body").click(function(){
+				$("#mygrid").find("div.op-menu:visible").hide();
+            });		
+	   });	
+	
+       //修改物流发货状态 -- ajax提交
+       function delit( val ) {
+    	    var uri = "/EShopOrders/SalesReturn/"+val;
+			$.get(uri,function(responseText){
+            	if(responseText=="操作成功"){
+            		$('#mygrid').omGrid('reload');
+            		$.omMessageTip.show({
+						title : "操作成功",
+						content : "成功修改退货状态",
+						timeout : 1500
+					});
+            	}else{
+            		$.omMessageTip.show({
+            			type: "error",
+						title : "操作失败",
+						content : responseText,
+						timeout : 5000
+					});
+            	}
+			});
+     		return false;//返回false,阻止浏览器默认行为
+	   }
+	   
+       //通用对话框 -- 提问是否 
+       function doAsk( title , function_call , data)
+       {
+    	   $.omMessageBox.confirm({
+               title:'提问',
+               content:title,
+               onClose:function(v){
+                 if(v)
+                	 function_call(data);
+               }
+           });
+       }
+       
+       //通用对话框 -- 警告提示 
+       function showMessage( title )
+       {
+    	   $.omMessageBox.alert({ content:title });
+       }
+
+       //通用对话框  -- 获取输入提示 
+       function doPrompt( title , function_call , data )
+       {
+    	   $.omMessageBox.prompt({
+               title:'输入',
+               content:title,
+               onClose:function(v){
+                   if(v===false){
+                       return;
+                   }
+                   if(v==''){
+                       alert('输入不能为空！');
+                       return false;
+                   }
+                   function_call(v,data);             
+               }
+           });
+       }
+</script>
+
+<!-- 搜索DIV -->
+<div id="search-panel">
+	<div style="width: 100%; font-size: 12px;">
+		
+		<span class="label">用户ID：</span> 
+		<input name="userid" id="userid" />
+		
+		<span class="label">省：</span> 
+		<input name="province" id="province" />
+		
+		<span class="label">市：</span> 
+		<input name="city" id="city" />
+		
+		<span class="label">产品ID：</span> 
+		<input name="pidd" id="pidd" />
+		
+		<span class="label">标题：</span> 
+		<input name="title" id="title" /><br>
+		
+		<span class="label">会员状态：</span> 
+		<select name="vipstatus" id="vipstatus" >
+			<option value="-1">全部</option>
+			<option value="0">会员</option>
+			<option value="1">会员过期</option>
+			<option value="2">未开通会员</option>
+		</select>
+		
+		<span class="label">订单状态：</span> 
+		<select name="status" id="status" >
+			<option value="-2">全部</option>
+			<option value="0">成功</option>
+			<option value="1">待支付</option>
+			<option value="-1">超时</option>
+		</select>
+		
+		<span class="label">支付订单：</span> 
+		<input name="prepayid" id="prepayid" />
+		
+		<span class="label">收件人姓名：</span> 
+		<input name="consigneename" id="consigneename" />
+		
+		<span class="label">收件人地区：</span> 
+		<input name="consigneearea" id="consigneearea" /><br>
+		
+		<span class="label">收件人手机号：</span> 
+		<input name="consigneephone" id="consigneephone" />
+		
+		<span class="label">物流名称：</span> 
+		<input name="expressname" id="expressname" />
+		
+		<span class="label">物流号：</span> 
+		<input name="expressorderid" id="expressorderid" />
+		
+		<span class="label">物流状态：</span> 
+		<select name="expressstatus" id="expressstatus" >
+			<option value="-1">全部</option>
+			<option value="0">已发货</option>
+			<option value="1">未发货</option>
+		</select><br>
+		
+		<!-- <span class="label">副标题：</span>  -->
+		<input name="subtitle" id="subtitle" style="display:none"/>
+		
+		<!-- <span class="label">小图：</span>  -->
+		<input name="smallimgurl" id="smallimgurl" style="display:none" />
+		
+		<!-- <span class="label">购买的数量：</span>  -->
+		<input name="amount" id="amount" style="display:none" />
+		
+		<!-- <span class="label">添加时间：</span>  -->
+		<input name="addtime" id="addtime" style="display:none" />
+		
+		<!-- <span class="label">人民币支付价格(分)：</span>  -->
+		<input name="money" id="money" style="display:none" />
+		
+		<!-- <span class="label">奖励金支付数量：</span>  -->
+		<input name="bvalue" id="bvalue" style="display:none" />
+		
+		<!-- <span class="label">成本价：</span>  -->
+		<input name="pcsaleprice" id="pcsaleprice" style="display:none" />
+		
+		<!-- <span class="label">支付成功时间：</span>  -->
+		<input name="updatetime" id="updatetime" style="display:none" />
+		
+		<!-- <span class="label">收件人详细地址：</span>  -->
+		<input name="consigneeaddress" id="consigneeaddress" style="display:none" />
+		 
+		<span id="button-search">搜索</span>
+		<span id="button-noSearch">看全部</span>
+		<!-- <span id="add">新增</span> -->
+		<!-- <span id="import">批量导入商城订单信息</span> -->
+		<span id="button-export">下载商城订单信息</span>
+		<!-- <span id="button-excel-sample">下载商城订单信息样板表</span> -->
+	</div>
+</div>
+<!-- GRID 组件 -->
+<table id="mygrid"></table>
+<!-- <div id="upload-form">
+	<form id="uploadForm" >
+		<input type="hidden" name="uploadidd" value="" />
+		<table>
+			<tr>
+				<td><input type="file" name="file_excel" id="file_excel"  onblur="this.style.border ='1px solid #c9c9c9'" onfocus="this.style.border = '1px solid #00afd5'"  /></td>
+			</tr>
+		</table>
+	</form>
+</div> -->
+
+<div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流名称：</td>
+				<td><input name="expressname" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流号：</td>
+				<td><input name="expressorderid" /></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<!-- 新增修改共用的对话框   ！！！！ -->
+<!-- <div id="dialog-form">
+	<form id="ipForm">
+		<input type="hidden" name="idd" value="" />
+		<table>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户编码：</td>
+				<td><input name="userid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;省：</td>
+				<td><input name="province" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市：</td>
+				<td><input name="city" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产品ID：</td>
+				<td><input name="pidd" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标题：</td>
+				<td><input name="title" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;商品描述：</td>
+				<td><input name="description" /></td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小图路径：</td>
+				<td>
+					<input id="upload_smallimg_url" name="upload_smallimg_url" placeholder="此处显示小图路径" readonly="readonly"/><br>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上传小图：</td>
+				<td>
+					<div>
+						 accept="image/jpg, image/jpeg, image/png"
+						<input id="upload_smallimg" name="upload_smallimg" type="file" style="width:182px;" />
+						<input type="button" value="点击上传" onclick="$('#upload_smallimg').omFileUpload('upload');"/>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;购买的数量：</td>
+				<td><input name="amount" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;人民币支付价格(分)：</td>
+				<td><input name="money" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奖励金支付数量：</td>
+				<td><input name="bvalue" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;成本价：</td>
+				<td><input name="pcsaleprice" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;会员状态：</td>
+				<td>
+					<input name="vipstatus" type="radio" id="hy" value="0" checked="checked" /><label for="hy">会员</label>
+					<input name="vipstatus" type="radio" id="gq" value="1"  /><label for="gq">过期</label>
+					<input name="vipstatus" type="radio" id="wkt" value="2" /><label for="wkt">未开通</label>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单状态：</td>
+				<td>
+					<input name="status" type="radio" id="cg" value="0" checked="checked" /><label for="cg">成功</label>
+					<input name="status" type="radio" id="dzf" value="1"  /><label for="dzf">待支付</label>
+					<input name="status" type="radio" id="cs" value="-1" /><label for="cs">超时</label>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;支付订单：</td>
+				<td><input name="prepayid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;收件人姓名：</td>
+				<td><input name="consigneename" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;收件人地区：</td>
+				<td><input name="consigneearea" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;收件人详细地址：</td>
+				<td><input name="consigneeaddress" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;收件人手机号：</td>
+				<td><input name="consigneephone" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流名称：</td>
+				<td><input name="expressname" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流号：</td>
+				<td><input name="expressorderid" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物流状态：</td>
+				<td>
+					<input name="expressstatus" type="radio" id="yfh" value="0" checked="checked" /><label for="yfh">已发货</label>
+					<input name="expressstatus" type="radio" id="wfh" value="1"  /><label for="wfh">未发货</label>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div> -->
+<!-- 其他iframe 对话框 -->
+<div id="dialog-modal" title="管理EC">
+	<iframe id="ec_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+<!-- <div id="user_add_form" title="分配用户">
+	<iframe id="user_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div> -->
+<div id="user_auth_form" title="权限分配">
+	<iframe id="func_dialog" frameborder="0"
+		style="width: 100%; height: 98%;" src="about:blank" scrolling='no'
+		marginwidth='0' marginheight='0'></iframe>
+</div>
+}

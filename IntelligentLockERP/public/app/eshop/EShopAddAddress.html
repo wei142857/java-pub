@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>添加新地址</title>
+	<meta name="viewport" content="width=device-width,user-scalable=no" />
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<style type="text/css">
+  		body{
+  			padding: 0px;
+  			margin: 0px;
+  			background-color: #f7f7f7;
+  		}
+  		.form-control{
+		    border:0;
+		    webkit-box-shadow:none;
+		    box-shadow:none;
+		}
+  		input{
+			outline: none;
+			color: gray;
+		}
+  		.container{
+  			padding: 0px;
+  		}
+		.active {
+			color: red;
+		}
+  		.form_box{
+  			padding: 0px;
+  			margin-top: 10px;
+  		}
+  		.form{
+			display: flex;
+    		align-items: center;
+    		justify-content: center;
+  		}
+  		.table{
+  			width: 100%;
+  			text-align: left;
+  			background-color: white;
+  			vertical-align:middle;
+  		}
+  		.table tr{
+  			
+  		}
+  		.table>tbody>tr>td{
+		    padding: 8px;
+		    line-height: 1.42857143;
+		    vertical-align: top;
+		    border-top: 1px solid #eee;
+		}
+  		.table span{
+  			line-height: 35px;
+  		}
+  		.table input{
+  			border: 0px;
+  			width: 100%;
+  			line-height: 28px;
+  		}
+  		.table select{
+  			-webkit-appearance: none;/*兼容苹果手机*/
+  			outline: none;
+  			width: 150px;
+		    background-color: white;
+		    height: 35px;
+		    border: 1px solid #eee;
+  		}
+  		.title{
+  			width: 80px;
+  		}
+  		/*隐藏掉我们模型的checkbox*/
+	    .checkbox{
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            display: none;
+            margin-top: 0px;
+        }
+	    /*未选中时*/        
+	    .checkbox{
+           width: 23px;
+           height: 23px;
+           border: 0px;
+           display: inline-block;
+           background: url(/public/app/eshop/images/wxz.png) no-repeat;
+           background-size: cover;
+        }
+	    /*选中checkbox时,修改背景图片的位置*/            
+	    .checkbox:checked{
+	       outline: none;
+	   	   background: url(/public/app/eshop/images/xz.png) no-repeat;
+	   	   background-size: cover;
+        }
+        .def_box{
+      		display: inline-flex;
+      		align-items: center;
+      		justify-content: flex-start;
+      		padding-left: 10px;
+      	}
+      	.defaultAddrText{
+        	padding-left: 6px;
+    		margin-top: 3px;
+        }
+        .bc_box{
+        	margin-top:35px;
+        	height:50px;
+        	width:100%;
+        	cursor: pointer;
+        	text-align: center;
+        	background-image: url(/public/app/eshop/images/bc.jpg);
+        	background-position: center;
+        	background-repeat: no-repeat;
+        	background-size: auto 100%;
+        }
+        .addrBox{/* 整个选择地址的盒子 */
+  			background-color: #fbfbfb;
+  			width: 100%;
+  			height: 500px;
+  			position: fixed;
+  			bottom: 0px;
+  			left: 0px;
+  		}
+  		.addrBoxTop{/* 整个选择地址title的盒子 */
+  			background-color: white;
+  		}
+  		.addrBoxTitle{/* 选择地址的title */
+  			display: inline-block;
+		    width: calc(100% - 40px);
+		    text-align: center;
+		    line-height: 60px;
+		    padding: 0px;
+		    margin: 0px;
+		    height: 50px;
+			padding-left: 40px;
+  		}
+  		.addrBoxClose{/* 选择地址关闭的span */
+  			cursor: pointer;
+			display: inline-block;
+		    height: 40px;
+		    width: 35px;
+		    font-size: 28px;
+		    vertical-align: middle;
+		    color: #757575;
+		    text-align: center;
+  		}
+  		.country_box{
+  			background-color: white;
+  		}
+  		.country{/* 选择中国大陆/海外国家 */
+		    display: inline-block;
+		    width: calc(50% - 2px);
+		    height: 40px;
+		    text-align: center;
+		    line-height: 40px;
+		    background-color: white;
+  		}
+  		.addr_box{
+  			width: 100%;
+  			height: 40px;
+  			background-color: white;
+  		}
+  		.addr_box_title{
+  			/* width: 100%; */
+  			list-style: none;
+		    height: 40px;
+		    padding-left: 25px;
+  		}
+  		.addr_box_title li{
+  			float: left;
+  			width: 33%;
+  			max-width: 200px;
+  			text-align: left;
+  		}
+  		.addr_box_title li span{
+  			white-space: nowrap;
+  		}
+  		.addrs{
+  			line-height: 40px;
+  			cursor: pointer;
+  		}
+  		.address{ 
+	  		overflow:scroll;
+	  		height: 100%;
+  		    padding-bottom: 60px;
+  		}
+  		.address ul{ 
+	  		margin-bottom: 120px;
+  		}
+  		.address li{ 
+	  		height: 35px;
+	  		font-size: 17px;
+	  		list-style: none;
+	  		cursor: pointer;
+  		}
+  		.address li span{ 
+	  		line-height: 30px;
+	  		white-space: nowrap;
+  		}
+  		#alertModel{
+	      	display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    visibility: hidden;
+		    position: fixed;
+		    left: 0px;
+		    bottom: 0px;
+		    width: 100%;
+		    height: 100%;
+		    text-align: center;
+		    z-index: 1000;
+		    background-color: rgba(0, 0, 0, 0.5);	
+	        border-radius: 5px;
+        }
+        .modal-data{
+            width:300px;
+            background-color: white;
+            border:0px;
+            padding:15px;
+            text-align:center;
+            padding: 0px;
+    	    padding-top: 15px;
+   	        border-radius: 5px;
+        }
+  	</style>
+</head>
+<body>
+	<div class="container" id="addr">
+	
+		<div class="form_box col-xs-12 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+			<div class="form">
+				<table class="table">
+					<tr>
+						<td class="title" style="border-top: 0px;">
+						<span>收货人</span>
+						</td><td  style="border-top: 0px;">
+							<input type="text" style="padding-left: 0px;" v-model="name" placeholder="请输入收货人姓名">
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="title">
+						<span>联系方式</span>
+						</td><td>
+						<input type="text" style="padding-left: 0px;" id="phone" v-model="phone" placeholder="请输入收货人手机号码">
+						</td>
+					</tr>
+				      
+					<tr>
+						<td class="title"><span>所在地区</span></td>
+						<td class="right-td" style="line-height: 35px;">
+				      	  <span id="append_addr" @click="close()" style="cursor: pointer;color:#757575;">请填写地址</span>
+				        </td>
+					</tr>
+					
+					<tr>
+						<td class="title">
+						<span>详细地址</span>
+						</td><td>
+						<input type="text" style="padding-left: 0px;" id="addrDetail" v-model="address" placeholder="请输入详细地址">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="def_box">
+			  	<input type='checkbox' style="outline:none;" name='checkbox' v-model="checked" class='checkbox' checked="checked"><span class='defaultAddrText'>设为默认地址</span>
+	  		</div>
+	  		<div class="bc_box" @click="save()">
+	  			
+	  		</div>
+		</div>
+		<!-- alert模态框 -->
+	   	<div id="alertModel" class="col-xs-9 col-md-3">
+	      <div class="modal-data">
+		        <span style="color: black;font-size: 15px;">提示</span>
+			  	<p><small id="alertMsg" style="line-height: 75px;"></small></p>
+	      </div>
+	    </div>
+		<section class="addrBox" style="visibility: hidden;">
+	    	<section class="addrBoxTop"><!-- 顶部 -->
+		    	<h4 class="addrBoxTitle">选择地址</h4><!-- title -->
+		    	<span class="addrBoxClose" @click="close()">×</span><!-- 关闭 -->
+	    	</section>
+	    	
+	    	<!-- <section class="country_box">
+		    	<span class="country">中国大陆</span>
+		    	<span class="country">海外国家/地区</span>
+	    	</section> -->
+	    	
+	    	<section class="addr_box"><!-- 已选择城市标题拼接 -->
+		    	<ul class="addr_box_title">
+		    		<li @click="t1C()"><span id="t1" class="addrs" :class="{active:tCode==1}">{{t1 | textFilter}}</span></li>
+		    		<li @click="t2C()"><span id="t2" class="addrs" :class="{active:tCode==2}">{{t2 | textFilter}}</span></li>
+		    		<li @click="t3C()"><span id="t3" class="addrs" :class="{active:tCode==3}">{{t3 | textFilter}}</span></li>
+		    		<li @click="t4C()"><span id="t4" class="addrs" :class="{active:tCode==4}">{{t4 | textFilter}}</span></li>
+		    	</ul>
+	    	</section>
+	    	
+	    	<section class="address">
+	    		<p style="margin-bottom: 0px;"><span style="line-height: 30px;padding-left: 25px;color: #afafaf;">选择省份/地区</span></p>
+		    	<ul>
+		    		<li v-for=" addr in addrListFilter" @click="cliAddr(addr)"><span>{{addr['name']}}</span></li>
+		    	</ul>
+	    	</section>
+	    </section>
+	</div>
+</body>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script type="text/javascript">
+	var ins = new Vue({
+		el: '#addr',
+		data: {
+			addr: null,
+			name: "",
+			phone: null,
+			area: null,
+			address: null,
+			checked:false,
+			
+			tCode: 1,
+			
+			t1: '-请选择-',
+			t2: '',
+			t3: '',
+			t4: '',
+			
+			addrArr: [],/* ADDRDATA */
+			/* addrList: [],/* 展示给用户的地址列表 */
+			
+			t1Id: 0,/* 选中的城市id */
+			t1Name: '',/* 选中的城市name */
+			
+			t2Id: 0,/* 选中的城市id */
+			t2Name: '',/* 选中的城市name */
+			
+			t3Id: 0,/* 选中的城市id */
+			t3Name: '',/* 选中的城市name */
+			
+		},
+		computed:{
+			addrListFilter: function(){
+				var code = this.tCode
+				var t1Id = this.t1Id
+				var t2Id = this.t2Id
+				var t3Id = this.t3Id
+				return this.addrArr.filter(function(addr){
+					if(code==1){
+							if(addr['parent_id']==0){
+								return addr;
+							}
+				 		}else if(code==2){
+		   			 		if(addr['parent_id'] == t1Id){
+								return addr;
+							}
+				 		}else if(code==3){
+		   			 		if(addr['parent_id'] == t2Id){
+								return addr;
+							}
+				 		}
+				})
+			}
+		},
+		methods:{
+			blur(){
+				this.area = $("#selVal").val()
+				console.log("选中:"+this.area)
+			},
+			checkForm(){//验证
+				debugger
+				var phoneM = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+				var nameM  = /^([\u4e00-\u9fa5 ]{2,20}|[a-zA-Z\.\s]{1,20})$/;
+				if(!nameM.test(this.name)){
+					alert2("收货人姓名有误")
+					return false;
+				}else if(!phoneM.test(this.phone)){
+					alert2("手机号码格式不对")
+					return false;
+				}else if(this.t1Name==''&&this.t2Name==''){
+					alert2("所在地区需要完善")
+					return false;
+				}else if(this.address==null||(this.address).trim().length<8){
+					alert2("详细地址信息需要完善")
+					return false;
+				}
+				return true;
+			},
+			save(){
+				if(!this.checkForm()){
+					return false;
+				}
+				var def = this.checked?1:0;
+				
+				if(this.addr==null){/* 如果为null 则说明是添加 不是更新 */
+					$.post('/v1/updataAddr',
+						{
+							type:"0",
+							name:this.name,
+							phone:this.phone,
+							area:(this.t1Name+" "+this.t2Name+" "+this.t3Name),
+							address:this.address,
+							def:def
+						},function(data){
+						if(JSON.parse(data)['code']==202){
+	  						window.location.href="/public/app/eshop/EShopLogin.html";
+	  					}
+						window.location.href = document.referrer;
+					})
+				}else{
+					$.post('/v1/updataAddr',{type:"1",idd:this.addr['idd'],name:this.name,phone:this.phone,area:(this.t1Name+" "+this.t2Name+" "+this.t3Name),address:this.address,def:def},function(data){
+						if(JSON.parse(data)['code']==202){
+	  						window.location.href="/public/app/eshop/EShopLogin.html";
+	  					}
+						window.location.href = document.referrer;
+					})
+				}
+				/* this.$router.back(-1); */
+				/* history.go(-1); */
+				/* window.location.href = document.referrer; */
+				/* go() */
+			},
+			t1C(){/* 点击标题 */
+					/* this.t2='-请选择-'; */
+					this.tCode=1;
+			 	},
+			 	t2C(){
+			 		if(this.t2Name==''){
+						this.t2='-请选择-'
+			 		}else{
+						this.t2=this.t2Name
+			 		}
+					this.tCode=2;
+			 	},
+			 	t3C(){
+			 		if(this.t3Name==''){
+						this.t3='-请选择-'
+			 		}else{
+						this.t3=this.t3Name
+			 		}
+					this.tCode=3;
+			 	},
+			 	close(){
+			 		close();
+			 	},
+			 	cliAddr(addr){/* 点击标题对应的地址 */
+			 		if(this.tCode==1){
+			 			this.t1Id=addr['id'];
+			 			this.t1Name=addr['name'];
+			 			this.t1=addr['name'];
+			 			if(!findMore(this.t1Id)){
+				 			this.t2Id=0;
+			 				this.t2Name='';
+			 				
+				 			this.t3Id=0;
+			 				this.t3Name='';
+			 				var text1 = "";
+			 				if((text1=this.t1Name).length>6){
+			 					text1 = text1.substr(0,6)+"...";
+			 				}
+				 			$("#append_addr").html(text1)
+				 			this.tCode=1;
+			 				close();
+			 			}else{
+			 				$("#t2").trigger('click')
+			 			}
+			 		}else if(this.tCode==2){
+			 			this.t2Id=addr['id'];
+			 			this.t2Name=addr['name'];
+			 			this.t2=addr['name'];
+		 				if(!findMore(this.t2Id)){
+		 					this.t3Id=0;
+			 				this.t3Name='';
+			 				var text1 = "";
+			 				if((text1=this.t1Name).length>6){
+			 					text1 = text1.substr(0,6)+"...";
+			 				}
+			 				var text2 = "";
+			 				if((text2=this.t2Name).length>6){
+			 					text2 = text2.substr(0,6)+"...";
+			 				}
+				 			$("#append_addr").html(text1+" "+text2)
+				 			this.tCode=2;
+			 				close();
+			 			}else{
+			 				$("#t3").trigger('click')
+			 			}
+			 		}else if(this.tCode==3){
+			 			this.t3Id=addr['id'];
+			 			this.t3Name=addr['name'];
+			 			this.t3=addr['name'];
+			 			
+			 			var text1 = "";
+			 			if((text1=this.t1Name).length>6){
+		 					text1 = text1.substr(0,5)+"...";
+		 				}
+		 				var text2 = "";
+		 				if((text2=this.t2Name).length>6){
+		 					text2 = text2.substr(0,5)+"...";
+		 				}
+		 				var text3 = "";
+		 				if((text3=this.t3Name).length>6){
+		 					text3 = text3.substr(0,6)+"...";
+		 				}
+			 			$("#append_addr").html(text1+" "+text2+" "+text3)
+			 			this.tCode=3;
+			 			close();
+			 		}
+			 	}
+		},
+		filters:{
+			textFilter: function(val){
+				if(val==""){
+					return '';
+				}
+				if(val.length > 6){
+					return val.substr(0,6)+"...";
+				}
+				return val;
+			},
+			dataFilter: function(timestamp){
+				let date = new Date(timestamp);
+		        let y = date.getFullYear();
+		        let MM = date.getMonth() + 1;
+		        MM = MM < 10 ? ('0' + MM) : MM;
+		        let d = date.getDate();
+		        d = d+5 < 10 ? ('0' + d+5) : d+5;
+		        
+				return y + '-' + MM + '-' + d;
+			},
+			dataYearFilter: function(timestamp){
+				let date = new Date(timestamp);
+		        let y = date.getFullYear();
+		        let MM = date.getMonth() + 1;
+		        MM = MM < 10 ? ('0' + MM) : MM;
+		        let d = date.getDate();
+		        d = d+4 < 10 ? ('0' + d+4) : d+4;
+		        
+				return y+1 + '-' + MM + '-' + d;
+			}
+		},
+		watch : {
+			AgreeOrNot: function(boo){/* 回调函数 */
+				if(boo){
+					$("#button").css({"background-color":"#f5b200"})
+				}else{
+					$("#button").css({"background-color":"#acabac"})
+				}
+			},
+			cardtype: function(type){/* 回调函数 */
+				console.log("选中的类型为:"+type)
+				if(this.cardtype=="01"){
+					return this.selV="身份证";
+				}else if(this.cardtype=="03"){
+					return this.selV="军官证";
+				}else if(this.cardtype=="05"){
+					return this.selV="港澳同胞证";
+				}else if(this.cardtype=="07"){
+					return this.selV="中国护照";
+				}else{
+					return this.selV="其他";
+				}
+			},
+		}
+	})
+	/* var addrInfo = new Vue({
+		el: '#addrForm',
+		data: {
+			
+		},
+		methods:{
+			
+		}
+	}) */
+	
+	window.onload = function(){
+		var idd = GetRequest()['idd'];
+		if(typeof(idd)!="undefined"){
+			$.post('/v1/findAddr',{},function(data){
+				if(data.code==202){
+					window.location.href="/public/app/eshop/EShopLogin.html";
+				}
+				console.log(data)
+				var arr = JSON.parse(data)['data'];
+				arr.forEach((addr,index,arr)=>{
+					if(arr[index]['idd']==idd){
+						console.log("从用户的地址中获取到要更改的地址:")
+						ins.addr = arr[index]
+						console.log(ins.addr)
+						init(arr[index])
+					}
+				})
+			})
+		}
+		$.ajax({
+			url: '/v1/findRegion',
+			data: {},
+			type: 'GET',
+			dataType: 'json',
+			async: false,
+			success: function(data){
+				ins.addrArr = data
+			},
+			error: function(err){
+				console.log(err)
+			}
+		})
+	}
+	function init(arr){
+		ins.name=arr['name'];
+		ins.phone=arr['phone'];
+		/* $("#selVal").val(addrInfo.area=arr['area']); */
+		ins.t1Name = typeof(arr['area'].split(" ")[0])=="undefined"?"":arr['area'].split(" ")[0];
+		ins.t2Name = typeof(arr['area'].split(" ")[1])=="undefined"?"":arr['area'].split(" ")[1];
+		ins.t3Name = typeof(arr['area'].split(" ")[2])=="undefined"?"":arr['area'].split(" ")[2];
+		if((ins.t1Name+ins.t2Name+ins.t3Name).trim()==""){
+			$("#append_addr").html("请填写地址");
+		}else{
+			$("#append_addr").html(ins.t1Name+" "+ins.t2Name+" "+ins.t3Name);
+		}
+		ins.address=arr['address'];
+		arr['isdefault']==1?ins.checked=true:false;
+	}
+	//自制弹窗
+	var alertSt = true;
+	function alert2(msg) {
+        if (alertSt) {
+        	$("#alertModel").css({'visibility': 'visible'})
+        	$("#alertMsg").html(msg)
+        	alertSt = false;
+        } else {
+        	$("#alertModel").css({'visibility': 'hidden'})
+        	alertSt = true;
+            return;
+        }
+        setTimeout(function() { alert2(msg) },1500) //每1000毫秒执行一次
+    }
+	//自制弹窗
+	var gostat = true;
+	function go() {
+        if (gostat) {
+        	gostat = false;
+        } else {
+        	window.location.href = document.referrer;
+        	gostat = true;
+            return;
+        }
+        setTimeout(function() { go() },1000) //每1000毫秒执行一次
+    }
+	/* 获取连接中携带的参数 */
+	function GetRequest() {
+  		var url = location.search; //获取url中"?"符后的字串
+  		var theRequest = new Object();
+  		if (url.indexOf("?") != -1) {
+	  		var str = url.substr(1);
+	  		strs = str.split("&");
+	  		for(var i = 0; i < strs.length; i ++) {
+	  			theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+	  		}
+  		}
+  		return theRequest;
+	}
+	function close(){
+        $(".addrBox").css("visibility")=="hidden"?
+        		$(".addrBox").css({"visibility":"visible"})
+        		:
+        		$(".addrBox").css({"visibility":"hidden"});
+	}
+	function findMore(id){
+ 		var i = ins.addrArr.length;
+	 	while (i--) {
+	        if (ins.addrArr[i]['parent_id'] == id) {
+	            return true;
+	        }
+	    }
+	    return false;
+ 	}
+</script>
+</html>

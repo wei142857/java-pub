@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/xuanwenchao.intelligentLockERP/!svn/ver/1681/trunk/IntelligentLockERP/app/app/service
+END
+SubOrdersService.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xuanwenchao.intelligentLockERP/!svn/ver/1290/trunk/IntelligentLockERP/app/app/service/SubOrdersService.java
+END
+DeviceService.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xuanwenchao.intelligentLockERP/!svn/ver/1681/trunk/IntelligentLockERP/app/app/service/DeviceService.java
+END
+MessageService.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/xuanwenchao.intelligentLockERP/!svn/ver/1601/trunk/IntelligentLockERP/app/app/service/MessageService.java
+END
+PayService.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/xuanwenchao.intelligentLockERP/!svn/ver/1295/trunk/IntelligentLockERP/app/app/service/PayService.java
+END
+UserService.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/xuanwenchao.intelligentLockERP/!svn/ver/1624/trunk/IntelligentLockERP/app/app/service/UserService.java
+END
+EShopService.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/xuanwenchao.intelligentLockERP/!svn/ver/1235/trunk/IntelligentLockERP/app/app/service/EShopService.java
+END
+SubWxUserService.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/xuanwenchao.intelligentLockERP/!svn/ver/1621/trunk/IntelligentLockERP/app/app/service/SubWxUserService.java
+END
+VipService.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/xuanwenchao.intelligentLockERP/!svn/ver/1000/trunk/IntelligentLockERP/app/app/service/VipService.java
+END
+ProductService.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xuanwenchao.intelligentLockERP/!svn/ver/619/trunk/IntelligentLockERP/app/app/service/ProductService.java
+END
+SubMsgService.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/xuanwenchao.intelligentLockERP/!svn/ver/1318/trunk/IntelligentLockERP/app/app/service/SubMsgService.java
+END

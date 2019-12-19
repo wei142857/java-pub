@@ -1,0 +1,43 @@
+10
+
+dir
+1721
+http://vip.svnspot.com/xuanwenchao.intelligentLockERP/trunk/IntelligentLockERP/app/app
+http://vip.svnspot.com/xuanwenchao.intelligentLockERP
+
+
+
+2019-11-29T06:55:19.730233Z
+1721
+maolx
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+821f2b5f-0e54-46f2-85b8-3c41456a46e9
+
+action
+dir
+
+dto
+dir
+
+gzh
+dir
+
+service
+dir
+
+util
+dir
+

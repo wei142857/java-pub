@@ -1,0 +1,67 @@
+@charset "utf-8";
+/* CSS Document */
+
+body,h1,h2,h3,h4,h5,h6,p,ul,li,dl,dt,dd,input{
+	margin:0px;
+	padding:0px;
+}
+ul,li,dl,dt,dd{
+	list-style:none;
+}
+body{
+	font-family:"Microsoft YaHei";
+	font-size:16px;
+	background:url("../images/bg01.jpg") top center no-repeat #026cc2;
+}
+.wrap{
+	width:440px;
+	height:380px;
+	margin:350px auto auto auto;
+}
+.tit{
+	color:#026cc2;
+	font-size:23px;
+	font-weight:normal;
+	padding-top:30px;
+	margin-left:35px;
+	margin-bottom:40px;
+}
+.main ul li{
+	height:64px;
+	line-height:64px;
+	position:relative;
+	margin-left:25px;
+}
+.main ul li input{
+	background:url("../images/input_bg.jpg") 0 0 no-repeat;
+	width:311px;
+	height:49px;
+	border:0;
+	margin-right:5px;
+	color:#b6b6b6;
+	font-size:18px;
+	text-indent:20px;
+}
+.veri{
+	position:absolute;
+	right:46px;
+	top:17px;
+}
+.main ul li .btn_cancel{
+	background:url("../images/btn_cancel.jpg") 0 0 no-repeat;
+	width:192px;
+	height:51px;
+	cursor:pointer;
+}
+.main ul li .btn_login{
+	background:url("../images/btn_login.jpg") 0 0 no-repeat;
+	width:192px;
+	height:51px;
+	cursor:pointer;
+}
+
+
+
+
+
+

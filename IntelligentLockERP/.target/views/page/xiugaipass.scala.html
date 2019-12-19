@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>流量银行后台管理</title>
+<link href="/public/crm/css/layout.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/public/javascripts/operamasks-ui-1.2/development-bundle/jquery.js"></script>
+
+</head>
+<script type="text/javascript">
+function changpass()
+{
+	    var text=$('#pwd').val();
+		if(text==""){
+			$("#pwd").focus(); 
+			$("#tip").html('旧密码不允许为空');
+			return;
+		}
+		else{
+			$("#tip").html('');
+		}
+		
+		var text11=$('#pwd1').val();
+		if(text11==""){
+			$("#pwd1").focus(); 
+			$("#tip1").html('密码不允许为空');
+			return;
+		}
+		else{
+			$("#tip1").html('');
+		}
+		
+		if(text11.length<6 || text11.length>16){
+			 $("#tip1").html("密码长度必须在6至16位之间!");
+			 $("#pwd1").focus(); 
+			 return;
+		}else{
+			$("#tip1").html('');
+		}
+		
+		var reg = /^(\w|[a-zA-Z0-9])*$/;
+		if(!text11.match(reg)){
+			$("#tip1").html("密码只能使用数字和字母!");
+			 $("#pwd1").focus(); 
+			 return;
+		}else{
+			$("#tip1").html('');
+		}
+		
+		var text22=$('#pwd2').val();
+		if(text22==""){
+			$("#pwd2").focus(); 
+			$("#tip2").html('密码确认不允许为空');
+			return;
+		}
+		else{
+			$("#tip2").html('');
+		}
+		
+		if( text22 != text11 ){
+			$("#pwd2").focus(); 
+			$("#tip2").html('俩次密码输入不一致，请重新输入！');
+			return;
+		}
+		else{
+			$("#tip2").html('');
+		}
+		
+		$.ajax({
+			type : 'get',
+			/* dataType : 'json', */
+			async : true,
+			data:{'oldpass':text,'newpass':text22},
+			url : '/mng/setpassDo',
+			success : function(returnData) {
+				if('ok'!=returnData){
+					$("#tip2").html(returnData);
+				}
+				else{
+					window.location.href="/public/crm/xiugaipassOk.html";
+				}
+			}
+		});
+}
+
+</script>
+
+<body>
+
+<div class="right_main">
+	<div class="system_ddmm_right">
+            <p class="zhjh">
+            <b>旧密码：</b><input name="" type="password" class="cg_inputbox" id="pwd"/></p>
+            <p class="tip" id="tip"></p>
+            <p><b>新密码：</b><input name="" type="password" class="cg_inputbox" id="pwd1"/></p>
+            <p class="tip" id="tip1"></p>
+            <p><b>密码确认：</b><input name="" type="password" class="cg_inputbox" id="pwd2"/></p>
+            <p class="tip" id="tip2"></p>
+            <p class="tj_button"><b></b>
+               <input name="" type="button" class="tj_btn" value="提 交" id="send" 
+                  onclick="changpass()"  /></p>
+        </div>
+</div>
+</body>
+</html>
